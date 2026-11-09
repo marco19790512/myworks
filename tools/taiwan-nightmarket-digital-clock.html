@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台灣夜市超大數字時鐘</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* 超大數字字級響應式調整 */
+        .giant-clock {
+            font-size: clamp(4.5rem, 21vw, 22rem);
+            line-height: 0.85;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.04em;
+        }
+
+        /* 背景圖片平滑漸變 */
+        .bg-fade {
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* 隱藏滾動條 */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-black text-white h-full flex flex-col justify-between select-none overflow-hidden font-sans relative">
+
+    <!-- 雙背景圖層 (實現 Seamless Crossfade 交叉淡入淡出) -->
+    <div id="bgLayer1" class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fade z-0" style="opacity: 1;"></div>
+    <div id="bgLayer2" class="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fade z-0" style="opacity: 0;"></div>
+
+    <!-- 暗化遮罩層 (保證數字閱讀清晰) -->
+    <div id="overlay" class="absolute inset-0 bg-black/40 z-0 transition-opacity duration-500"></div>
+
+    <!-- 頂部導覽 / 控制列 -->
+    <header class="w-full p-4 md:p-6 flex justify-between items-center z-10">
+        <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/15 text-xs md:text-sm font-medium tracking-wide">
+                <i data-lucide="map-pin" class="w-4 h-4 text-emerald-400"></i>
+                <span id="townLocation">台灣鄉鎮采風</span>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <!-- 上一張 / 下一張鄉鎮 手動切換按鈕 -->
+            <button onclick="prevTown()" class="p-2.5 rounded-full bg-black/30 backdrop-blur-md border border-white/10 hover:bg-white/20 active:scale-95 transition-all" title="上一個鄉鎮">
+                <i data-lucide="chevron-left" class="w-5 h-5"></i>
+            </button>
+            <button onclick="nextTown()" class="p-2.5 rounded-full bg-black/30 backdrop-blur-md border border-white/10 hover:bg-white/20 active:scale-95 transition-all" title="下一個鄉鎮">
+                <i data-lucide="chevron-right" class="w-5 h-5"></i>
+            </button>
+            
+            <!-- 全螢幕切換 -->
+            <button id="fullscreenToggle" onclick="toggleFullscreen()" class="p-2.5 rounded-full bg-black/30 backdrop-blur-md border border-white/10 hover:bg-white/20 active:scale-95 transition-all" title="全螢幕">
+                <i data-lucide="maximize" id="fullscreenIcon" class="w-5 h-5"></i>
+            </button>
+            
+            <!-- 設定按鈕 -->
+            <button onclick="openSettingsModal()" class="p-2.5 rounded-full bg-black/30 backdrop-blur-md border border-white/10 hover:bg-white/20 active:scale-95 transition-all" title="設定">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- 中央主要區域：超大時鐘 -->
+    <main class="flex-1 flex flex-col items-center justify-center relative z-10 px-4">
+        <!-- 時間顯示 -->
+        <div class="flex flex-col items-center justify-center text-center">
+            <div id="clockDisplay" class="giant-clock font-extrabold font-mono drop-shadow-[0_10px_35px_rgba(0,0,0,0.8)] tracking-tight">
+                00:00:00
+            </div>
+            
+            <!-- 日期與星期顯示 -->
+            <div class="mt-3 md:mt-6 flex items-center gap-3 bg-black/40 backdrop-blur-md px-5 py-2 rounded-full border border-white/15 text-sm md:text-xl font-medium tracking-widest text-slate-200 shadow-lg">
+                <i data-lucide="calendar" class="w-4 h-4 md:w-5 md:h-5 text-amber-400"></i>
+                <span id="dateDisplay">2026年10月28日 星期三</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- 底部：鄉鎮特色與必吃小吃卡片 -->
+    <footer class="w-full p-4 md:p-6 z-10 flex justify-center">
+        <div id="infoCard" class="w-full max-w-2xl bg-black/50 backdrop-blur-md border border-white/15 rounded-2xl p-4 md:p-5 shadow-2xl transition-all duration-300">
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                    <span id="townBadge" class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs px-2.5 py-0.5 rounded-md font-semibold">宜蘭縣</span>
+                    <h2 id="townName" class="text-lg md:text-xl font-bold text-white tracking-wide">礁溪鄉</h2>
+                </div>
+                <div class="text-xs text-slate-400 font-mono">每一分鐘自動輪播</div>
+            </div>
+            <p id="townDesc" class="text-xs md:text-sm text-slate-300 mb-3 leading-relaxed">
+                以平地溫泉聞名遐邇，擁有一抹清澈無味的碳酸氫鈉泉，是放鬆身心、享受溫泉美食的極佳勝地。
+            </p>
+            <div class="flex items-center gap-2 pt-2 border-t border-white/10 text-xs md:text-sm">
+                <span class="text-emerald-400 font-semibold flex items-center gap-1 shrink-0">
+                    <i data-lucide="utensils" class="w-3.5 h-3.5"></i> 必吃美食：
+                </span>
+                <span id="townFood" class="text-slate-200 font-medium truncate">蔥油餅、花生捲冰淇淋、溫泉空心菜、鴨賞</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 設定 Modal -->
+    <div id="settingsModal" class="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-slate-900 border border-slate-800 text-slate-100 rounded-3xl p-6 md:p-8 w-[90%] max-w-md shadow-2xl transform scale-95 transition-transform duration-300" id="settingsContent">
+            <div class="flex justify-between items-center mb-6 border-b border-slate-800 pb-4">
+                <h3 class="text-lg font-semibold flex items-center gap-2">
+                    <i data-lucide="sliders" class="w-5 h-5 text-amber-400"></i> 時鐘與背景設定
+                </h3>
+                <button onclick="closeSettingsModal()" class="text-slate-500 hover:text-slate-300">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <!-- 時間格式 -->
+            <div class="mb-6">
+                <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">時間顯示格式</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="setHourFormat(false)" id="format24Btn" class="py-2.5 rounded-xl border-2 transition-all text-xs font-bold bg-slate-950 border-amber-500 text-amber-400">24 小時制</button>
+                    <button onclick="setHourFormat(true)" id="format12Btn" class="py-2.5 rounded-xl border-2 transition-all text-xs font-bold bg-slate-950 border-transparent text-slate-400">12 小時制 (AM/PM)</button>
+                </div>
+            </div>
+
+            <!-- 秒數顯示開關 -->
+            <div class="mb-6 flex items-center justify-between bg-slate-950/60 p-3.5 rounded-xl border border-slate-800">
+                <span class="text-sm font-medium">顯示秒數</span>
+                <input type="checkbox" id="showSecondsCheckbox" checked class="w-5 h-5 accent-amber-500 rounded cursor-pointer" onchange="toggleSeconds(this.checked)">
+            </div>
+
+            <!-- 背景暗化深淺控制 -->
+            <div class="mb-6">
+                <div class="flex justify-between text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+                    <span>背景暗化程度</span>
+                    <span id="opacityVal">40%</span>
+                </div>
+                <input type="range" id="opacitySlider" min="10" max="80" value="40" class="w-full accent-amber-500 cursor-pointer" oninput="updateOverlayOpacity(this.value)">
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="closeSettingsModal()" class="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition-colors">關閉設定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 腳本區域 -->
+    <script>
+        // 台灣各地精選鄉鎮風景、特色與在地必吃小吃
+        const taiwanTowns = [
+            {
+                name: "礁溪鄉",
+                badge: "宜蘭縣",
+                desc: "台灣著名的溫泉勝地，擁有全台少見的平地碳酸氫鈉泉。四季景色宜人，融合溫泉農業與豐富自然瀑布景點。",
+                food: "礁溪蔥油餅、花生捲冰淇淋、溫泉蔬菜（空心菜）、宜蘭鴨賞",
+                image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80"
+            },
+            {
+                name: "九份（瑞芳區）",
+                badge: "新北市",
+                desc: "昔日採金山城，依山傍海，擁有濃濃復古懷舊山城風情與綿延的紅燈籠巷弄，俯瞰奇岩蔚藍海岸海岸景緻。",
+                food: "阿柑姨芋圓、草仔粿、深坑臭豆腐、魚丸湯、花生麥芽糖餅",
+                image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80"
+            },
+            {
+                name: "魚池鄉（日月潭）",
+                badge: "南投縣",
+                desc: "坐擁台灣最大的半天然淡水湖泊日月潭，湖光山色美不勝收，同時也是台灣優質阿薩姆紅茶與台茶18號紅玉的產地。",
+                food: "日月潭紅茶香菇蛋、阿薩姆紅茶冰淇淋、總統魚套餐、竹筒飯",
+                image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1920&q=80"
+            },
+            {
+                name: "阿里山鄉",
+                badge: "嘉義縣",
+                desc: "以日出、雲海、鐵道、森林與晚霞「五奇」景觀享譽國際，山林氣候涼爽宜人，鄒族原住民文化保存豐富。",
+                food: "阿里山高山茶、奮起湖便當、愛玉子野生甜湯、原住民烤豬肉",
+                image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=80"
+            },
+            {
+                name: "池上鄉",
+                badge: "臺東縣",
+                desc: "花東縱谷間的米鄉，擁有廣袤無垠的黃金稻浪景致與伯朗大道，氣候舒適，呈現純粹平靜的田園縱谷景觀。",
+                food: "池上木片鐵路便當、大池豆皮店煎豆包、福原豆腐店香豆腐、米蛋糕",
+                image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80"
+            },
+            {
+                name: "恆春鎮（墾丁）",
+                badge: "屏東縣",
+                desc: "位處台灣最南端，保存完好的清代古城牆，周邊緊鄰墾丁國家公園，擁有多彩多姿的海蝕地形與熱帶陽光沙灘。",
+                food: "綠豆蒜（綠豆饌）、洋蔥乾、港口茶、小灣熱帶海鮮燒烤、綠豆冰棒",
+                image: "https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format&fit=crop&w=1920&q=80"
+            }
+        ];
+
+        // 狀態變數
+        let currentIndex = 0;
+        let is12Hour = false;
+        let showSeconds = true;
+        let activeLayer = 1;
+        let lastMinute = -1;
+
+        // DOM 元素
+        const clockDisplay = document.getElementById('clockDisplay');
+        const dateDisplay = document.getElementById('dateDisplay');
+        const bgLayer1 = document.getElementById('bgLayer1');
+        const bgLayer2 = document.getElementById('bgLayer2');
+        const townLocation = document.getElementById('townLocation');
+        const townName = document.getElementById('townName');
+        const townBadge = document.getElementById('townBadge');
+        const townDesc = document.getElementById('townDesc');
+        const townFood = document.getElementById('townFood');
+        const settingsModal = document.getElementById('settingsModal');
+        const settingsContent = document.getElementById('settingsContent');
+        const overlay = document.getElementById('overlay');
+        const fullscreenIcon = document.getElementById('fullscreenIcon');
+
+        // 初始化
+        window.onload = () => {
+            lucide.createIcons();
+            updateClock();
+            updateTownUI(false);
+            setInterval(updateClock, 1000);
+        };
+
+        // 時鐘更新邏輯
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+
+            // 判斷是否跨過一分鐘 (自動切換台灣鄉鎮風景)
+            if (now.getMinutes() !== lastMinute) {
+                if (lastMinute !== -1) {
+                    nextTown();
+                }
+                lastMinute = now.getMinutes();
+            }
+
+            // 12 / 24 小時制格式處理
+            let ampmStr = '';
+            if (is12Hour) {
+                ampmStr = hours >= 12 ? ' PM' : ' AM';
+                hours = hours % 12 || 12;
+            }
+            const hoursStr = String(hours).padStart(2, '0');
+
+            // 顯示文字組合
+            if (showSeconds) {
+                clockDisplay.textContent = `${hoursStr}:${minutes}:${seconds}${ampmStr}`;
+            } else {
+                clockDisplay.textContent = `${hoursStr}:${minutes}${ampmStr}`;
+            }
+
+            // 更新日期與星期
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const date = now.getDate();
+            const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+            const dayName = days[now.getDay()];
+
+            dateDisplay.textContent = `${year}年${month}月${date}日 ${dayName}`;
+        }
+
+        // 更新鄉鎮風景背景與資訊小卡
+        function updateTownUI(animateBg = true) {
+            const town = taiwanTowns[currentIndex];
+
+            // 1. 更新卡片資訊
+            townLocation.textContent = `台灣鄉鎮采風 - ${town.name}`;
+            townName.textContent = town.name;
+            townBadge.textContent = town.badge;
+            townDesc.textContent = town.desc;
+            townFood.textContent = town.food;
+
+            // 2. 雙圖層漸變過渡切換背景 (Crossfade)
+            if (animateBg) {
+                if (activeLayer === 1) {
+                    bgLayer2.style.backgroundImage = `url('${town.image}')`;
+                    bgLayer2.style.opacity = '1';
+                    bgLayer1.style.opacity = '0';
+                    activeLayer = 2;
+                } else {
+                    bgLayer1.style.backgroundImage = `url('${town.image}')`;
+                    bgLayer1.style.opacity = '1';
+                    bgLayer2.style.opacity = '0';
+                    activeLayer = 1;
+                }
+            } else {
+                bgLayer1.style.backgroundImage = `url('${town.image}')`;
+                bgLayer1.style.opacity = '1';
+            }
+        }
+
+        // 下一個鄉鎮
+        function nextTown() {
+            currentIndex = (currentIndex + 1) % taiwanTowns.length;
+            updateTownUI(true);
+        }
+
+        // 上一個鄉鎮
+        function prevTown() {
+            currentIndex = (currentIndex - 1 + taiwanTowns.length) % taiwanTowns.length;
+            updateTownUI(true);
+        }
+
+        // 12/24小時制切換
+        function setHourFormat(is12) {
+            is12Hour = is12;
+            document.getElementById('format12Btn').className = is12 
+                ? 'py-2.5 rounded-xl border-2 transition-all text-xs font-bold bg-slate-950 border-emerald-500 text-emerald-400'
+                : 'py-2.5 rounded-xl border-2 transition-all text-xs font-bold bg-slate-950 border-transparent text-slate-400';
+            
+            document.getElementById('format24Btn').className = !is12 
+                ? 'py-2.5 rounded-xl border-2 transition-all text-xs font-bold bg-slate-950 border-emerald-500 text-emerald-400'
+                : 'py-2.5 rounded-xl border-2 transition-all text-xs font-bold bg-slate-950 border-transparent text-slate-400';
+            
+            updateClock();
+        }
+
+        // 切換秒數顯示
+        function toggleSeconds(checked) {
+            showSeconds = checked;
+            updateClock();
+        }
+
+        // 調整背景遮罩深淺
+        function updateOverlayOpacity(val) {
+            document.getElementById('opacityVal').textContent = `${val}%`;
+            overlay.style.backgroundColor = `rgba(0, 0, 0, ${val / 100})`;
+        }
+
+        // 全螢幕切換
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => console.log(err));
+                fullscreenIcon.setAttribute('data-lucide', 'minimize');
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                    fullscreenIcon.setAttribute('data-lucide', 'maximize');
+                }
+            }
+            lucide.createIcons();
+        }
+
+        // 設定 Modal
+        function openSettingsModal() {
+            settingsModal.classList.remove('hidden');
+            setTimeout(() => {
+                settingsModal.classList.remove('opacity-0');
+                settingsContent.classList.remove('scale-95');
+                settingsContent.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeSettingsModal() {
+            settingsModal.classList.add('opacity-0');
+            settingsContent.classList.remove('scale-100');
+            settingsContent.classList.add('scale-95');
+            setTimeout(() => {
+                settingsModal.classList.add('hidden');
+            }, 300);
+        }
+    </script>
+</body>
+</html>

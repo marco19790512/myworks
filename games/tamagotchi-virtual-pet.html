@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文字版電子雞 (Tamagotchi)</title>
+    <!-- 引入 Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 載入 Inter 字體與設定基本樣式 */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        /* 自訂滾動條樣式讓日誌區域更精緻 */
+        .log-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .log-container::-webkit-scrollbar-track {
+            background: #1f2937;
+            border-radius: 4px;
+        }
+        .log-container::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-center items-center p-4">
+
+    <!-- 主遊戲容器卡片 -->
+    <main class="w-full max-w-lg bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+        
+        <!-- 頂部標題區 -->
+        <header class="bg-slate-950 p-4 border-b border-slate-700 flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold text-amber-400 flex items-center gap-2">
+                    <span>🐣</span> <span id="pet-name-title">電子雞</span>
+                </h1>
+                <p class="text-xs text-slate-400">Vibe Coding 豪華迭代版</p>
+            </div>
+            <div class="flex gap-4 items-center">
+                <div class="text-right">
+                    <span class="text-xs text-slate-400">🏆 歷史紀錄</span>
+                    <div class="text-sm font-bold text-amber-300" id="stat-highscore">0 天</div>
+                </div>
+                <div class="text-right">
+                    <span class="text-xs text-slate-400">天數 / 回合</span>
+                    <div class="text-lg font-bold text-emerald-400" id="stat-age">第 1 天</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 寵物動畫與視覺顯示區 -->
+        <section class="p-6 bg-slate-900/50 flex flex-col items-center justify-center border-b border-slate-700 relative">
+            <!-- 難度與自動模式控制區 -->
+            <div class="absolute top-3 left-3 flex gap-2">
+                <select id="select-difficulty" onchange="changeDifficulty(this.value)" class="bg-slate-800 text-xs text-slate-300 border border-slate-700 rounded-lg px-2 py-1 outline-none">
+                    <option value="easy">🌱 輕鬆模式</option>
+                    <option value="normal" selected>⚖️ 標準模式</option>
+                    <option value="hard">🔥 困難模式</option>
+                </select>
+                <button id="btn-autotick" onclick="toggleAutoTick()" class="bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 border border-slate-700 px-2 py-1 rounded-lg transition flex items-center gap-1">
+                    <span>⏱️</span> <span id="autotick-text">開啟自動時鐘</span>
+                </button>
+            </div>
+
+            <!-- 狀態標籤 (如：生病中、警報) -->
+            <div id="status-badge" class="absolute top-3 right-3 hidden bg-red-500/20 text-red-400 border border-red-500/30 text-xs px-2.5 py-1 rounded-full font-semibold animate-pulse">
+                🤒 生病中
+            </div>
+
+            <!-- 寵物 Emoji / 圖像區 -->
+            <div id="pet-avatar" class="text-7xl mb-3 transform transition-transform duration-300 hover:scale-110 select-none">
+                🐣
+            </div>
+
+            <!-- 寵物目前的動態對話或狀態描述 -->
+            <p id="pet-dialogue" class="text-sm font-medium text-slate-300 bg-slate-800/80 px-4 py-1.5 rounded-full border border-slate-700 text-center">
+                啾啾！今天天氣真好～
+            </p>
+        </section>
+
+        <!-- 核心四項數值狀態區 (Progress Bars) -->
+        <section class="p-5 space-y-3.5 bg-slate-800">
+            <!-- 飽足感 (Fullness) -->
+            <div>
+                <div class="flex justify-between text-xs font-semibold mb-1">
+                    <span class="text-amber-300">🍖 飽足感 (Fullness)</span>
+                    <span id="val-fullness" class="text-slate-300">50 / 100</span>
+                </div>
+                <div class="w-full bg-slate-700 h-3 rounded-full overflow-hidden">
+                    <div id="bar-fullness" class="bg-amber-500 h-full transition-all duration-500" style="width: 50%;"></div>
+                </div>
+            </div>
+
+            <!-- 快樂值 (Happiness) -->
+            <div>
+                <div class="flex justify-between text-xs font-semibold mb-1">
+                    <span class="text-pink-300">⚽ 快樂值 (Happiness)</span>
+                    <span id="val-happiness" class="text-slate-300">50 / 100</span>
+                </div>
+                <div class="w-full bg-slate-700 h-3 rounded-full overflow-hidden">
+                    <div id="bar-happiness" class="bg-pink-500 h-full transition-all duration-500" style="width: 50%;"></div>
+                </div>
+            </div>
+
+            <!-- 體力值 (Energy) -->
+            <div>
+                <div class="flex justify-between text-xs font-semibold mb-1">
+                    <span class="text-cyan-300 font-semibold">⚡ 體力值 (Energy)</span>
+                    <span id="val-energy" class="text-slate-300">50 / 100</span>
+                </div>
+                <div class="w-full bg-slate-700 h-3 rounded-full overflow-hidden">
+                    <div id="bar-energy" class="bg-cyan-500 h-full transition-all duration-500" style="width: 50%;"></div>
+                </div>
+            </div>
+
+            <!-- 健康值 (Health) -->
+            <div>
+                <div class="flex justify-between text-xs font-semibold mb-1">
+                    <span class="text-emerald-300">❤️ 健康值 (Health)</span>
+                    <span id="val-health" class="text-slate-300">100 / 100</span>
+                </div>
+                <div class="w-full bg-slate-700 h-3 rounded-full overflow-hidden">
+                    <div id="bar-health" class="bg-emerald-500 h-full transition-all duration-500" style="width: 100%;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 動作控制按鈕區 -->
+        <section class="p-4 bg-slate-900 border-t border-slate-700 grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <button id="btn-feed" onclick="handleAction('feed')" class="bg-amber-600 hover:bg-amber-500 active:bg-amber-700 text-white font-semibold py-2.5 px-3 rounded-xl shadow transition flex flex-col items-center justify-center text-xs">
+                <span class="text-lg">🍱</span> 餵食 (+飽足)
+            </button>
+            <button id="btn-play" onclick="handleAction('play')" class="bg-pink-600 hover:bg-pink-500 active:bg-pink-700 text-white font-semibold py-2.5 px-3 rounded-xl shadow transition flex flex-col items-center justify-center text-xs">
+                <span class="text-lg">🎮</span> 遊玩 (+快樂)
+            </button>
+            <button id="btn-sleep" onclick="handleAction('sleep')" class="bg-cyan-600 hover:bg-cyan-500 active:bg-cyan-700 text-white font-semibold py-2.5 px-3 rounded-xl shadow transition flex flex-col items-center justify-center text-xs">
+                <span class="text-lg">😴</span> 休息 (+體力)
+            </button>
+            <button id="btn-heal" onclick="handleAction('heal')" class="bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-semibold py-2.5 px-3 rounded-xl shadow transition flex flex-col items-center justify-center text-xs">
+                <span class="text-lg">💊</span> 看醫生/投藥
+            </button>
+        </section>
+
+        <!-- 遊戲歷史日誌區 (Game Log) -->
+        <footer class="p-4 bg-slate-950 border-t border-slate-800">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-semibold text-slate-400">📜 冒險日誌</span>
+                <button onclick="handlePassTurn()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded border border-slate-700 transition">
+                    ⏩ 發呆 (跳過回合)
+                </button>
+            </div>
+            <div id="game-log" class="log-container h-28 overflow-y-auto text-xs space-y-1.5 text-slate-300 pr-1">
+                <!-- 歷史訊息會動態新增至此 -->
+            </div>
+        </footer>
+    </main>
+
+    <!-- 遊戲結束/勝利 彈出視窗 (Modal) -->
+    <div id="modal-gameover" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl">
+            <div id="modal-icon" class="text-6xl mb-3">👻</div>
+            <h2 id="modal-title" class="text-2xl font-bold text-white mb-2">遊戲結束</h2>
+            <p id="modal-desc" class="text-sm text-slate-300 mb-6">你的寵物離開了這個世界...</p>
+            <button onclick="resetGame()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl shadow transition">
+                重新開始養育
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript 遊戲核心邏輯 -->
+    <script>
+        // ==========================================
+        // 1. 遊戲集中配置檔 (Game Configuration)
+        // 集中管理數值與設定，方便未來進行平衡性調整
+        // ==========================================
+        const GAME_CONFIG = {
+            MAX_STAT: 100,
+            MIN_STAT: 0,
+            WIN_AGE: 15,
+            AUTO_TICK_MS: 3000, // 每 3 秒自動推進 1 回合
+            DIFFICULTIES: {
+                easy: { name: '輕鬆', sickChance: 0.08, decayMult: 0.7 },
+                normal: { name: '標準', sickChance: 0.15, decayMult: 1.0 },
+                hard: { name: '困難', sickChance: 0.25, decayMult: 1.4 }
+            },
+            INITIAL_STATE: {
+                name: "小雞",
+                age: 1,
+                isAlive: true,
+                isSick: false,
+                fullness: 50,
+                happiness: 50,
+                energy: 50,
+                health: 100,
+                difficulty: 'normal',
+                isAutoTick: false,
+                highScore: 0
+            },
+            // 動作對數值的影響配置
+            ACTIONS: {
+                feed: { fullness: 25, energy: -5, log: "🍱 餵食了美味的飼料！(飽足感 +25, 體力 -5)" },
+                play: { happiness: 25, energy: -15, fullness: -10, minEnergy: 15, log: "🎮 一起玩了球球！(快樂值 +25, 體力 -15, 飽足感 -10)" },
+                sleep: { energy: 35, fullness: -15, log: "😴 小雞好好休息了一覺。(體力 +35, 飽足感 -15)" },
+                healSick: { isSick: false, health: 20, log: "💊 吃了感冒藥，生病狀態恢復了！(健康值 +20)" },
+                healNormal: { health: 10, log: "🏥 進行了例行健康檢查。(健康值 +10)" }
+            },
+            // 基礎衰減與懲罰配置
+            BASE_DECAY: {
+                fullness: 8,
+                happiness: 5,
+                energy: 5,
+                starvingDamage: 15,
+                fatigueDamage: 10,
+                sickDamage: 15
+            }
+        };
+
+        // ==========================================
+        // 2. 遊戲狀態與 DOM 快取 (State & DOM Cache)
+        // ==========================================
+        let gameState = { ...GAME_CONFIG.INITIAL_STATE };
+        let autoTickTimer = null;
+
+        // DOM 元素快取，避免重複搜尋提升效能
+        let elements = {};
+
+        window.onload = function() {
+            cacheDOMElements();
+            addLog("🎮 電子雞遊戲升級版！新增自動流逝與難度系統。");
+            render();
+        };
+
+        function cacheDOMElements() {
+            elements = {
+                age: document.getElementById('stat-age'),
+                highScore: document.getElementById('stat-highscore'),
+                statusBadge: document.getElementById('status-badge'),
+                avatar: document.getElementById('pet-avatar'),
+                dialogue: document.getElementById('pet-dialogue'),
+                logContainer: document.getElementById('game-log'),
+                modalGameOver: document.getElementById('modal-gameover'),
+                modalIcon: document.getElementById('modal-icon'),
+                modalTitle: document.getElementById('modal-title'),
+                modalDesc: document.getElementById('modal-desc'),
+                selectDifficulty: document.getElementById('select-difficulty'),
+                btnAutoTick: document.getElementById('btn-autotick'),
+                autoTickText: document.getElementById('autotick-text'),
+                stats: {
+                    fullness: { val: document.getElementById('val-fullness'), bar: document.getElementById('bar-fullness') },
+                    happiness: { val: document.getElementById('val-happiness'), bar: document.getElementById('bar-happiness') },
+                    energy: { val: document.getElementById('val-energy'), bar: document.getElementById('bar-energy') },
+                    health: { val: document.getElementById('val-health'), bar: document.getElementById('bar-health') }
+                }
+            };
+        }
+
+        // 輔助純函式：數值區間防護 (Clamp)
+        function clamp(value, min = GAME_CONFIG.MIN_STAT, max = GAME_CONFIG.MAX_STAT) {
+            return Math.max(min, Math.min(max, value));
+        }
+
+        // ==========================================
+        // 3. 狀態導向的視覺與計算邏輯 (State Calculators)
+        // ==========================================
+        function computePetVisuals(state) {
+            if (!state.isAlive) {
+                return { avatar: '👻', dialogue: '小雞已經回到星空中了...' };
+            }
+            if (state.health <= 30) {
+                return { avatar: '🤒', dialogue: '我覺得身體好虛弱...（極度危險）' };
+            }
+            if (state.isSick) {
+                return { avatar: '😷', dialogue: '哈啾！我好像生病了... 需要吃藥。' };
+            }
+            if (state.fullness <= 20) {
+                return { avatar: '🥺', dialogue: '肚子好餓喔... 想吃東西！' };
+            }
+            if (state.energy <= 20) {
+                return { avatar: '😴', dialogue: '好累喔... 想好好睡一覺。' };
+            }
+            if (state.happiness >= 80) {
+                return { avatar: '🐥', dialogue: '今天心情超級棒！謝謝你～' };
+            }
+            return { avatar: '🐣', dialogue: '啾啾！今天又是充實的一天。' };
+        }
+
+        // ==========================================
+        // 4. 渲染引擎 (Render Function)
+        // ==========================================
+        function render() {
+            // A. 天數與最高紀錄
+            elements.age.innerText = `第 ${gameState.age} 天`;
+            elements.highScore.innerText = `${gameState.highScore} 天`;
+
+            // B. 數值與血條
+            renderStatBar('fullness', gameState.fullness);
+            renderStatBar('happiness', gameState.happiness);
+            renderStatBar('energy', gameState.energy);
+            renderStatBar('health', gameState.health, true);
+
+            // C. 生病標籤
+            elements.statusBadge.classList.toggle('hidden', !gameState.isSick);
+
+            // D. 動態表情與對話框
+            const visuals = computePetVisuals(gameState);
+            elements.avatar.innerText = visuals.avatar;
+            elements.dialogue.innerText = visuals.dialogue;
+
+            // E. 自動模式按鈕狀態
+            if (gameState.isAutoTick) {
+                elements.btnAutoTick.className = "bg-emerald-600 hover:bg-emerald-500 text-xs text-white px-2 py-1 rounded-lg transition flex items-center gap-1 animate-pulse";
+                elements.autoTickText.innerText = "自動流逝中...";
+            } else {
+                elements.btnAutoTick.className = "bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 border border-slate-700 px-2 py-1 rounded-lg transition flex items-center gap-1";
+                elements.autoTickText.innerText = "開啟自動時鐘";
+            }
+        }
+
+        function renderStatBar(key, value, isHealth = false) {
+            const item = elements.stats[key];
+            if (!item) return;
+
+            item.val.innerText = `${value} / ${GAME_CONFIG.MAX_STAT}`;
+            item.bar.style.width = `${value}%`;
+
+            if (isHealth) {
+                if (value <= 30) {
+                    item.bar.className = "bg-red-500 h-full transition-all duration-500";
+                } else if (value <= 60) {
+                    item.bar.className = "bg-amber-500 h-full transition-all duration-500";
+                } else {
+                    item.bar.className = "bg-emerald-500 h-full transition-all duration-500";
+                }
+            }
+        }
+
+        // ==========================================
+        // 5. 動作與自動時鐘邏輯 (Action & Timer Handlers)
+        // ==========================================
+        function changeDifficulty(diff) {
+            gameState.difficulty = diff;
+            addLog(`⚙️ 已將難度切換為【${GAME_CONFIG.DIFFICULTIES[diff].name}】模式。`);
+        }
+
+        function toggleAutoTick() {
+            if (!gameState.isAlive) return;
+            gameState.isAutoTick = !gameState.isAutoTick;
+
+            if (gameState.isAutoTick) {
+                autoTickTimer = setInterval(() => {
+                    if (gameState.isAlive) {
+                        processTick();
+                    } else {
+                        stopAutoTick();
+                    }
+                }, GAME_CONFIG.AUTO_TICK_MS);
+                addLog("⏱️ 自動時間流逝運作中 (每 3 秒 1 天)...");
+            } else {
+                stopAutoTick();
+                addLog("⏸️ 已暫停自動時間流逝。");
+            }
+            render();
+        }
+
+        function stopAutoTick() {
+            if (autoTickTimer) {
+                clearInterval(autoTickTimer);
+                autoTickTimer = null;
+            }
+            gameState.isAutoTick = false;
+        }
+
+        function handleAction(actionType) {
+            if (!gameState.isAlive) return;
+
+            if (actionType === 'play' && gameState.energy < GAME_CONFIG.ACTIONS.play.minEnergy) {
+                addLog("⚠️ 體力太低了，小雞累得不想動！");
+                return;
+            }
+
+            applyActionEffects(actionType);
+            processTick();
+        }
+
+        function applyActionEffects(actionType) {
+            let config;
+
+            if (actionType === 'heal') {
+                config = gameState.isSick ? GAME_CONFIG.ACTIONS.healSick : GAME_CONFIG.ACTIONS.healNormal;
+                if (gameState.isSick) gameState.isSick = false;
+            } else {
+                config = GAME_CONFIG.ACTIONS[actionType];
+            }
+
+            if (!config) return;
+
+            if (config.fullness) gameState.fullness = clamp(gameState.fullness + config.fullness);
+            if (config.happiness) gameState.happiness = clamp(gameState.happiness + config.happiness);
+            if (config.energy) gameState.energy = clamp(gameState.energy + config.energy);
+            if (config.health) gameState.health = clamp(gameState.health + config.health);
+
+            addLog(config.log);
+        }
+
+        function handlePassTurn() {
+            if (!gameState.isAlive) return;
+            addLog("⌛ 你選擇靜靜地看著小雞發呆...");
+            processTick();
+        }
+
+        function processTick() {
+            gameState.age += 1;
+
+            // 計算難度加權衰減
+            const diffConfig = GAME_CONFIG.DIFFICULTIES[gameState.difficulty];
+            const mult = diffConfig.decayMult;
+            const base = GAME_CONFIG.BASE_DECAY;
+
+            gameState.fullness = clamp(gameState.fullness - Math.round(base.fullness * mult));
+            gameState.happiness = clamp(gameState.happiness - Math.round(base.happiness * mult));
+            gameState.energy = clamp(gameState.energy - Math.round(base.energy * mult));
+
+            // 負面打擊檢查
+            if (gameState.fullness === 0) {
+                gameState.health = clamp(gameState.health - base.starvingDamage);
+                addLog(`🚨 極度飢餓！健康值下降了 ${base.starvingDamage}！`);
+            }
+
+            if (gameState.energy === 0) {
+                gameState.health = clamp(gameState.health - base.fatigueDamage);
+                addLog(`🚨 體力耗盡！健康值下降了 ${base.fatigueDamage}！`);
+            }
+
+            if (gameState.isSick) {
+                gameState.health = clamp(gameState.health - base.sickDamage);
+                addLog(`🤒 因為生病，健康值額外下降了 ${base.sickDamage}！`);
+            }
+
+            // 難度影響生病機率
+            if (!gameState.isSick && Math.random() < diffConfig.sickChance) {
+                gameState.isSick = true;
+                addLog("💥 不好了！小雞突發感冒生病了！");
+            }
+
+            // 更新最高紀錄
+            if (gameState.age > gameState.highScore) {
+                gameState.highScore = gameState.age;
+            }
+
+            render();
+            checkGameCondition();
+        }
+
+        // ==========================================
+        // 6. 勝負條件與 Modal 管理 (Game Lifecycle)
+        // ==========================================
+        function checkGameCondition() {
+            if (gameState.health <= 0) {
+                gameState.health = 0;
+                gameState.isAlive = false;
+                stopAutoTick(); // 死亡時停止計時器
+                render();
+                addLog("💀 小雞不幸去世了，遊戲結束。");
+                showGameOverModal(false);
+                return;
+            }
+
+            if (gameState.age >= GAME_CONFIG.WIN_AGE) {
+                gameState.isAlive = false;
+                stopAutoTick(); // 勝利時停止計時器
+                addLog(`🎉 恭喜！你成功養育小雞存活了 ${GAME_CONFIG.WIN_AGE} 天！`);
+                showGameOverModal(true);
+            }
+        }
+
+        function showGameOverModal(isWin) {
+            if (isWin) {
+                elements.modalIcon.innerText = "👑";
+                elements.modalTitle.innerText = "成功養育！";
+                elements.modalTitle.className = "text-2xl font-bold text-amber-400 mb-2";
+                elements.modalDesc.innerText = `太棒了！你細心照顧小雞度過了 ${GAME_CONFIG.WIN_AGE} 天！最高紀錄提升至 ${gameState.highScore} 天！`;
+            } else {
+                elements.modalIcon.innerText = "👻";
+                elements.modalTitle.innerText = "遊戲結束";
+                elements.modalTitle.className = "text-2xl font-bold text-red-400 mb-2";
+                elements.modalDesc.innerText = `小雞在第 ${gameState.age} 天離開了我們... 最高歷史紀錄為 ${gameState.highScore} 天。`;
+            }
+
+            elements.modalGameOver.classList.remove('hidden');
+        }
+
+        function resetGame() {
+            stopAutoTick();
+            const savedHighScore = gameState.highScore;
+            gameState = { 
+                ...GAME_CONFIG.INITIAL_STATE,
+                highScore: savedHighScore,
+                difficulty: elements.selectDifficulty.value
+            };
+            elements.modalGameOver.classList.add('hidden');
+            elements.logContainer.innerHTML = "";
+            addLog("🎮 新的冒險開始囉！請照顧好你的小雞。");
+            render();
+        }
+
+        function addLog(message) {
+            const logItem = document.createElement('div');
+            logItem.className = "bg-slate-900/80 p-1.5 rounded border border-slate-800/80";
+            logItem.innerText = `[D+${gameState.age}] ${message}`;
+            elements.logContainer.insertBefore(logItem, elements.logContainer.firstChild);
+        }
+    </script>
+</body>
+</html>

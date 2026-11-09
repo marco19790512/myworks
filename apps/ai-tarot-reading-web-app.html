@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>神秘星啟塔羅 - 免費線上塔羅牌占卜與 AI 深度中文解牌</title>
+    
+    <!-- SEO / AEO / GEO Meta Tags -->
+    <meta name="description" content="全台最專業的免費線上塔羅牌占卜工具！提供單牌指引、時間軸三牌陣與抉擇牌陣，結合經典塔羅權威牌義與 AI 靈魂導師深度繁體中文解牌，助您解答愛情、事業、財運與人生迷惘。">
+    <meta name="keywords" content="塔羅牌,線上占卜,免費塔羅,塔羅解牌,愛情塔羅,事業塔羅,塔羅牌義,單牌指引,三牌陣,神秘星啟塔羅,AI塔羅解牌">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://tarot.example.com/">
+
+    <!-- Open Graph / Social Media (SEO/GEO) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="神秘星啟塔羅 - 線上塔羅牌占卜與 AI 深度中文解讀">
+    <meta property="og:description" content="敞開心靈，抽取你的專屬塔羅牌。獲取愛情、事業與運勢的即時指引與深度解讀。">
+    <meta property="og:image" content="https://placehold.co/1200x630/1a102f/d4af37?text=Arcanum+Tarot+Divination">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="神秘星啟塔羅 - 免費線上塔羅牌占卜">
+    <meta name="twitter:description" content="專業線上塔羅牌占卜，提供深度中文牌義解析與靈性指引。">
+
+    <!-- JSON-LD Structured Data for SEO / GEO / AEO Engine Parsing -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "神秘星啟塔羅",
+      "url": "https://tarot.example.com/",
+      "description": "提供線上塔羅牌占卜服務，包含單牌指引、三牌陣解析與 AI 深度繁體中文解牌。",
+      "applicationCategory": "LifestyleApplication",
+      "operatingSystem": "All",
+      "inLanguage": "zh-TW",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "TWD"
+      }
+    }
+    </script>
+    
+    <!-- JSON-LD FAQPage Schema for AEO (Answer Engine Optimization) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "線上塔羅牌占卜準確嗎？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "塔羅牌是一面心靈與潛意識的鏡子。線上占卜透過亂數抽牌與心靈共振，反映您目前的心理狀態與能量趨勢，重點在於給予啟發與正向思考指引。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "什麼是塔羅牌正位與逆位？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "正位通常代表牌卡能量順暢顯化、顯著外露；逆位則常代表能量阻塞、內化思考、隱含挑戰或需要注意的隱憂。"
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        mystic: {
+                            900: '#0f0a1c',
+                            800: '#1a102f',
+                            700: '#2b1b4d',
+                            600: '#432978',
+                            accent: '#d4af37', // Gold
+                            glow: '#9d4edd',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Serif TC', 'serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 4s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* Base Dynamic Theme Styling (Dark Mystic - 紫金秘境) */
+        :root {
+            --bg-gradient: radial-gradient(circle at 50% 30%, #231245 0%, #0e071c 80%, #07030e 100%);
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+            --card-bg: rgba(30, 18, 58, 0.85);
+            --card-border: rgba(234, 179, 8, 0.45);
+            --accent-gold: #facc15;
+            --input-bg: rgba(18, 10, 36, 0.95);
+            --box-shadow-glow: rgba(168, 85, 247, 0.35);
+        }
+
+        /* Light Daybreak Theme (日光晨曦 - 柔高對比) */
+        body.theme-light {
+            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 50%, #c7d2fe 100%);
+            --text-main: #0f172a;
+            --text-muted: #334155;
+            --card-bg: rgba(255, 255, 255, 0.92);
+            --card-border: rgba(79, 70, 229, 0.5);
+            --accent-gold: #b45309;
+            --input-bg: rgba(241, 245, 249, 0.98);
+            --box-shadow-glow: rgba(99, 102, 241, 0.2);
+        }
+
+        /* Vintage Parchment Theme (羊皮古卷 - 沉穩古典) */
+        body.theme-parchment {
+            --bg-gradient: radial-gradient(circle at center, #fef9c3 0%, #fef08a 60%, #fde047 100%);
+            --text-main: #1c1917;
+            --text-muted: #44403c;
+            --card-bg: rgba(254, 243, 199, 0.95);
+            --card-border: rgba(146, 64, 14, 0.6);
+            --accent-gold: #92400e;
+            --input-bg: rgba(255, 251, 235, 0.98);
+            --box-shadow-glow: rgba(180, 83, 9, 0.25);
+        }
+
+        /* Cyber Nebula Theme (深空賽博 - 高對比霓虹) */
+        body.theme-cyber {
+            --bg-gradient: linear-gradient(135deg, #020617 0%, #0f172a 60%, #030712 100%);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --card-bg: rgba(15, 23, 42, 0.9);
+            --card-border: rgba(56, 189, 248, 0.6);
+            --accent-gold: #38bdf8;
+            --input-bg: rgba(2, 6, 23, 0.95);
+            --box-shadow-glow: rgba(56, 189, 248, 0.4);
+        }
+
+        body {
+            font-family: 'Noto Serif TC', serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+
+        /* Card Perspective and Flip effect */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+        }
+        
+        .card-inner.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-inner.is-reversed {
+            transform: rotateY(180deg) rotateZ(180deg);
+        }
+        
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card-front {
+            background-color: var(--input-bg);
+            transform: rotateY(180deg);
+            border: 2px solid var(--accent-gold);
+            color: var(--text-main);
+        }
+        
+        .card-back {
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Gold Shimmer & High Contrast Accent Styles */
+        .gold-border {
+            border: 1px solid var(--card-border);
+            box-shadow: 0 4px 20px var(--box-shadow-glow);
+        }
+
+        .gold-text-glow {
+            color: var(--accent-gold);
+            font-weight: 700;
+        }
+
+        .theme-card-bg {
+            background-color: var(--card-bg);
+            color: var(--text-main);
+        }
+
+        .theme-input-bg {
+            background-color: var(--input-bg);
+            color: var(--text-main);
+        }
+
+        /* Ensure high contrast text on muted paragraphs */
+        p, span, li, label {
+            color: var(--text-main);
+        }
+        
+        .text-opacity-subtle {
+            color: var(--text-muted);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--card-border);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen overflow-x-hidden theme-dark">
+
+    <!-- Stars Background Animation Layer -->
+    <div id="stars-container" class="fixed inset-0 pointer-events-none z-0 opacity-40"></div>
+
+    <!-- Header Navigation -->
+    <header class="relative z-30 border-b border-purple-900/40 bg-mystic-900/80 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="resetAll()">
+                <i class="fa-solid font-bold fa-om text-3xl text-amber-400 animate-pulse-slow"></i>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wider gold-text-glow">神秘星啟塔羅</h1>
+                    <p class="text-xs opacity-75 tracking-widest">ARCANUM TAROT DIVINATION</p>
+                </div>
+            </div>
+            
+            <nav class="hidden md:flex space-x-6 text-sm">
+                <button onclick="switchSpread('single')" class="nav-btn font-semibold hover:text-amber-400 transition-colors py-1 border-b-2 border-transparent hover:border-amber-400">單牌指引</button>
+                <button onclick="switchSpread('three')" class="nav-btn font-semibold hover:text-amber-400 transition-colors py-1 border-b-2 border-transparent hover:border-amber-400">三牌陣 (過去/現在/未來)</button>
+                <button onclick="switchSpread('choice')" class="nav-btn font-semibold hover:text-amber-400 transition-colors py-1 border-b-2 border-transparent hover:border-amber-400">二選一抉擇</button>
+            </nav>
+
+            <div class="flex items-center gap-3">
+                <!-- Theme Selector Switcher -->
+                <div class="relative inline-block text-left z-50">
+                    <button onclick="toggleThemeMenu()" class="p-2 rounded-full border border-amber-400/50 hover:bg-amber-400/10 transition flex items-center gap-1.5 text-xs font-semibold" title="切換視覺風格模式">
+                        <i id="theme-icon" class="fa-solid fa-moon text-amber-400 text-sm"></i>
+                        <span id="theme-name" class="hidden sm:inline">暗黑神秘</span>
+                    </button>
+
+                    <div id="theme-menu" class="hidden absolute right-0 mt-2 w-44 rounded-xl shadow-2xl bg-mystic-900 border border-amber-400/40 p-2 z-50 text-xs space-y-1">
+                        <button onclick="changeTheme('dark')" class="w-full text-left px-3 py-2 rounded-lg flex items-center gap-2 hover:bg-purple-900/40 text-amber-200">
+                            <i class="fa-solid fa-moon text-amber-400"></i> 暗黑神秘
+                        </button>
+                        <button onclick="changeTheme('light')" class="w-full text-left px-3 py-2 rounded-lg flex items-center gap-2 hover:bg-purple-900/40 text-amber-200">
+                            <i class="fa-solid fa-sun text-amber-500"></i> 日光晨曦 (淺色)
+                        </button>
+                        <button onclick="changeTheme('parchment')" class="w-full text-left px-3 py-2 rounded-lg flex items-center gap-2 hover:bg-purple-900/40 text-amber-200">
+                            <i class="fa-solid fa-scroll text-amber-600"></i> 羊皮古卷
+                        </button>
+                        <button onclick="changeTheme('cyber')" class="w-full text-left px-3 py-2 rounded-lg flex items-center gap-2 hover:bg-purple-900/40 text-amber-200">
+                            <i class="fa-solid fa-bolt text-sky-400"></i> 深空賽博
+                        </button>
+                    </div>
+                </div>
+
+                <button onclick="openModal('intro-modal')" class="hover:text-amber-300 transition-colors text-sm flex items-center gap-2 border border-purple-800 px-3 py-1.5 rounded-full bg-purple-950/40">
+                    <i class="fa-solid fa-circle-info"></i> <span class="hidden sm:inline">占卜須知</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="relative z-10 flex-grow max-w-6xl w-full mx-auto px-4 py-8 flex flex-col items-center">
+
+        <!-- Step 1: Input Question & Select Category -->
+        <section id="setup-section" class="w-full max-w-2xl theme-card-bg backdrop-blur-md p-6 sm:p-8 rounded-2xl border gold-border text-center transition-all duration-500">
+            <div class="mb-6">
+                <span class="inline-block p-3 bg-purple-950/40 rounded-full border border-purple-600/40 text-amber-400 mb-3">
+                    <i class="fa-solid fa-wand-magic-sparkles text-2xl"></i>
+                </span>
+                <h2 class="text-2xl font-bold gold-text-glow mb-2">敞開心靈，靜心祈禱</h2>
+                <p class="text-sm opacity-90">請在心中默想你想要請教塔羅牌的問題，或是具體輸入於下方。</p>
+            </div>
+
+            <!-- Question Input -->
+            <div class="mb-6 text-left">
+                <label class="block text-xs font-semibold mb-2 tracking-wider">你的問題或占卜主題（可選）：</label>
+                <input type="text" id="user-question" placeholder="例如：我與近期的對象未來發展如何？或是：近期工作轉職是否順利？" 
+                       class="w-full px-4 py-3 theme-input-bg border border-purple-700/60 rounded-xl placeholder-purple-400/50 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-all text-sm">
+            </div>
+
+            <!-- Category Selection -->
+            <div class="mb-6 text-left">
+                <label class="block text-xs font-semibold mb-2 tracking-wider">選擇占卜領域（有助於AI深度解讀）：</label>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <button type="button" onclick="selectCategory('love', this)" class="category-btn active px-3 py-2 border border-amber-400 font-semibold rounded-xl text-xs flex items-center justify-center gap-2 hover:opacity-80 transition">
+                        <i class="fa-solid fa-heart text-pink-500"></i> 愛情姻緣
+                    </button>
+                    <button type="button" onclick="selectCategory('career', this)" class="category-btn px-3 py-2 border border-purple-800 opacity-75 rounded-xl text-xs flex items-center justify-center gap-2 hover:opacity-100 transition">
+                        <i class="fa-solid fa-briefcase text-blue-500"></i> 事業學業
+                    </button>
+                    <button type="button" onclick="selectCategory('fortune', this)" class="category-btn px-3 py-2 border border-purple-800 opacity-75 rounded-xl text-xs flex items-center justify-center gap-2 hover:opacity-100 transition">
+                        <i class="fa-solid fa-coins text-amber-500"></i> 財運運勢
+                    </button>
+                    <button type="button" onclick="selectCategory('general', this)" class="category-btn px-3 py-2 border border-purple-800 opacity-75 rounded-xl text-xs flex items-center justify-center gap-2 hover:opacity-100 transition">
+                        <i class="fa-solid fa-compass text-emerald-500"></i> 綜合指引
+                    </button>
+                </div>
+            </div>
+
+            <!-- Spread Type Selection -->
+            <div class="mb-8 text-left">
+                <label class="block text-xs font-semibold mb-2 tracking-wider">選擇牌陣：</label>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div onclick="selectSpread('single', this)" class="spread-card active cursor-pointer p-3 border border-amber-400 rounded-xl hover:opacity-90 transition">
+                        <h4 class="text-sm font-bold gold-text-glow mb-1">單牌指引</h4>
+                        <p class="text-xs opacity-80">適合每日運勢、單一明確問題的快速解答。</p>
+                    </div>
+                    <div onclick="selectSpread('three', this)" class="spread-card cursor-pointer p-3 border border-purple-800 rounded-xl hover:border-amber-400 transition">
+                        <h4 class="text-sm font-bold mb-1">時間軸三牌陣</h4>
+                        <p class="text-xs opacity-80">解讀事件的「過去狀態」、「現在局勢」與「未來演變」。</p>
+                    </div>
+                    <div onclick="selectSpread('choice', this)" class="spread-card cursor-pointer p-3 border border-purple-800 rounded-xl hover:border-amber-400 transition">
+                        <h4 class="text-sm font-bold mb-1">二選一抉擇陣</h4>
+                        <p class="text-xs opacity-80">剖析現狀、選擇 A 方向利弊與選擇 B 方向展望。</p>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="startShuffle()" class="w-full py-3.5 bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-600 hover:from-amber-500 hover:to-yellow-500 text-mystic-900 font-bold rounded-xl shadow-lg shadow-amber-500/20 transform hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 text-base">
+                <i class="fa-solid font-bold fa-sparkles"></i> 開始洗牌與感應
+            </button>
+        </section>
+
+        <!-- Step 2: Interactive Deck & Shuffling -->
+        <section id="deck-section" class="hidden w-full flex-col items-center text-center">
+            <div class="mb-6">
+                <h3 id="shuffle-status" class="text-xl font-bold gold-text-glow mb-1">正在為您洗牌與匯聚能量...</h3>
+                <p id="shuffle-hint" class="text-xs opacity-80">請保持專注，靜心感應牌卡與靈感。</p>
+            </div>
+
+            <!-- Deck Container (Interactive card selection) -->
+            <div id="cards-draw-area" class="relative w-full max-w-4xl h-64 sm:h-80 flex items-center justify-center my-4 overflow-x-auto py-4">
+                <!-- Dynamic Deck Cards will be injected here -->
+            </div>
+
+            <!-- Drawing Status -->
+            <div class="mt-4 flex items-center gap-3">
+                <div id="drawn-count-badge" class="px-4 py-1.5 theme-card-bg border border-purple-600/50 rounded-full text-xs font-semibold">
+                    請選取第 <span id="current-draw-num" class="font-bold text-amber-400">1</span> 張牌 （共需 <span id="total-draw-num" class="font-bold">1</span> 張）
+                </div>
+                <button id="btn-auto-draw" onclick="autoDrawCards()" class="px-4 py-1.5 theme-card-bg hover:opacity-80 border border-amber-400/40 rounded-full text-xs font-semibold transition">
+                    <i class="fa-solid fa-wand-magic"></i> 直覺自動抽取
+                </button>
+            </div>
+        </section>
+
+        <!-- Step 3: Spread Display (Flipping Cards) -->
+        <section id="spread-display-section" class="hidden w-full flex-col items-center">
+            <div class="text-center mb-6">
+                <h3 class="text-xl font-bold gold-text-glow mb-1">神聖牌陣已就位</h3>
+                <p class="text-xs opacity-80">請依次點擊翻開塔羅牌，揭示隱含的訊息。</p>
+            </div>
+
+            <!-- Cards Display Container -->
+            <div id="spread-cards-container" class="flex flex-wrap justify-center gap-6 sm:gap-8 w-full max-w-5xl mb-8">
+                <!-- Cards will be populated here -->
+            </div>
+
+            <button id="btn-generate-ai" onclick="generateComprehensiveInterpretation()" class="hidden py-3 px-8 bg-gradient-to-r from-purple-700 via-indigo-600 to-purple-800 hover:from-purple-600 hover:to-indigo-500 text-amber-200 border border-amber-400/60 rounded-xl shadow-lg shadow-purple-900/50 font-bold transition transform hover:scale-105 items-center gap-2">
+                <i class="fa-solid fa-brain"></i> 生成大師級詳細中文解牌
+            </button>
+        </section>
+
+        <!-- Step 4: Comprehensive Interpretation Section -->
+        <section id="interpretation-section" class="hidden w-full max-w-4xl mt-8">
+            <div class="theme-card-bg backdrop-blur-lg rounded-2xl border gold-border p-6 sm:p-10 shadow-2xl">
+                <!-- Reading Header -->
+                <div class="border-b border-purple-800/60 pb-6 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest gold-text-glow font-bold">DIVINATION REPORT</span>
+                        <h2 class="text-2xl font-bold gold-text-glow">塔羅大師詳細中文解讀</h2>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="window.print()" class="px-3 py-1.5 theme-input-bg border border-purple-700 rounded-lg text-xs font-semibold transition">
+                            <i class="fa-solid fa-print"></i> 列印 / 儲存
+                        </button>
+                        <button onclick="resetAll()" class="px-3 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/60 rounded-lg text-xs font-semibold transition">
+                            <i class="fa-solid fa-rotate-right"></i> 重新占卜
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Google Sheet Auto Sync Status Banner -->
+                <div id="gsheet-status-banner" class="mb-6 p-2 rounded-xl text-xs border bg-purple-950/50 border-purple-600/40 overflow-hidden">
+                    <div class="w-full bg-purple-900/50 h-2 rounded-full overflow-hidden">
+                        <div id="gsheet-progress-bar" class="bg-gradient-to-r from-amber-500 to-emerald-400 h-full w-1/3 transition-all duration-500 animate-pulse"></div>
+                    </div>
+                </div>
+
+                <!-- Individual Cards Summary Cards -->
+                <div id="cards-summary-list" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                    <!-- Quick summary cards populated dynamically -->
+                </div>
+
+                <!-- AI Full Detailed Breakdown -->
+                <div class="theme-input-bg rounded-xl p-6 border border-purple-800/50 relative">
+                    <div id="ai-loading" class="hidden flex flex-col items-center justify-center py-12 text-center">
+                        <i class="fa-solid fa-spinner fa-spin text-4xl text-amber-400 mb-4"></i>
+                        <p class="font-bold mb-1 gold-text-glow">正在為您進行靈魂連結與深層解牌...</p>
+                        <p class="text-xs opacity-75">結合典籍牌義與語境感應中，請稍候片刻</p>
+                    </div>
+
+                    <div id="ai-content-wrapper" class="prose max-w-none text-sm leading-relaxed space-y-4">
+                        <!-- Markdown/HTML formatted detailed interpretation goes here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AEO / GEO Section: FAQ Section for AI Search Engine Crawlers & Users -->
+        <section class="w-full max-w-4xl mt-16 theme-card-bg rounded-2xl border gold-border p-6 sm:p-8">
+            <h3 class="text-lg font-bold gold-text-glow mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-circle-question"></i> 常見塔羅占卜問題 (FAQ)
+            </h3>
+            <div class="space-y-4 text-xs sm:text-sm">
+                <article class="border-b border-purple-800/40 pb-3">
+                    <h4 class="font-bold mb-1">Q: 線上塔羅牌占卜真的準確嗎？</h4>
+                    <p class="opacity-80 leading-relaxed">塔羅牌不是定數預言，而是一面顯化心靈與潛意識的鏡子。線上抽牌透過心靈專注與共振，能引導您看清當前的局勢困境與內心盲點。</p>
+                </article>
+                <article class="border-b border-purple-800/40 pb-3">
+                    <h4 class="font-bold mb-1">Q: 正位與逆位牌義有什麼差別？</h4>
+                    <p class="opacity-80 leading-relaxed">正位代表牌卡能量直接顯化、順暢流通；逆位則常代表能量受到阻礙、需要內省、或預示潛在的挑戰與過度執著。</p>
+                </article>
+                <article>
+                    <h4 class="font-bold mb-1">Q: 可以重複針對同一個問題占卜嗎？</h4>
+                    <p class="opacity-80 leading-relaxed">建議短期內不要就同一問題重複求牌。請相信第一次抽牌所帶來的靈性啟示與牌義指引。</p>
+                </article>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 border-t border-purple-950 bg-mystic-900/90 py-6 mt-12 text-center text-xs opacity-75">
+        <p>神秘星啟塔羅 &copy; 2026 | 塔羅指引僅供心靈啟發與參考，人生主導權掌握在你自己手中。</p>
+    </footer>
+
+    <!-- Instructions Modal -->
+    <div id="intro-modal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="theme-card-bg border gold-border max-w-lg w-full rounded-2xl p-6 shadow-2xl relative text-left">
+            <button onclick="closeModal('intro-modal')" class="absolute top-4 right-4 hover:opacity-75">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 class="text-lg font-bold gold-text-glow mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-book-sparkles"></i> 塔羅占卜小貼士
+            </h3>
+            <div class="text-xs space-y-3 leading-relaxed">
+                <p><strong>1. 誠心專注：</strong> 占卜時請保持內心平靜，避免在情緒過於繁雜或心存試探時進行。</p>
+                <p><strong>2. 明確問題：</strong> 越明確的問題越能得到清楚的指引。例如「未來三個月的職涯建議」比「我的未來」更能獲得準確方向。</p>
+                <p><strong>3. 不重複求牌：</strong> 同一個問題在短時間內建議只占卜一次，信任第一次出現的牌卡帶來的啟示。</p>
+                <p><strong>4. 正逆位意涵：</strong> 正位通常代表能量順暢顯化，逆位代表能量阻塞、內化或需要注意的隱患。</p>
+            </div>
+            <div class="mt-6 text-right">
+                <button onclick="closeModal('intro-modal')" class="px-5 py-2 bg-amber-500 text-mystic-900 font-bold rounded-xl text-xs hover:bg-amber-400 transition">我知道了</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Google Sheet Web App URL Setup Modal -->
+    <div id="gsheet-modal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="theme-card-bg border gold-border max-w-lg w-full rounded-2xl p-6 shadow-2xl relative text-left">
+            <button onclick="closeModal('gsheet-modal')" class="absolute top-4 right-4 hover:opacity-75">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 class="text-lg font-bold gold-text-glow mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-table"></i> 設定 Google Apps Script Web App URL
+            </h3>
+            <p class="text-xs opacity-80 leading-relaxed mb-4">
+                請貼上您部署好的 Google Apps Script (GAS) Web 應用程式網址，將這張牌陣記錄存入您的 Google 試算表中。
+            </p>
+            <div class="mb-4">
+                <label class="block text-xs font-semibold mb-1">GAS Web App URL：</label>
+                <input type="url" id="gas-url-input" placeholder="https://script.google.com/macros/s/AKfycb.../exec"
+                       class="w-full px-3 py-2 text-xs theme-input-bg border border-purple-700 rounded-lg focus:outline-none focus:border-amber-400">
+            </div>
+            <div class="flex justify-end gap-2">
+                <button onclick="closeModal('gsheet-modal')" class="px-4 py-2 border border-purple-800 rounded-lg text-xs opacity-80">取消</button>
+                <button onclick="submitToGas()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg text-xs transition">確認並同步</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Logic Script -->
+    <script>
+        /* -------------------------------------------------------------
+           1. TAROT DATA ENGINE & BACKUP DATABASE (FULL 22 MAJOR ARCANAS)
+           ------------------------------------------------------------- */
+        const TAROT_DATABASE = [
+            { name: "The Fool", name_tw: "愚者", num: 0, 
+              keywords_up: ["新的開始", "冒險", "天真", "自由", "潛能"], 
+              keywords_rev: ["魯莽", "冒險過度", "輕率", "不成熟", "迷茫"],
+              desc: "愚者代表純真、無限可能與踏上未知的勇氣。象徵展開一段全新旅程。" },
+            { name: "The Magician", name_tw: "魔術師", num: 1, 
+              keywords_up: ["創造力", "應變能力", "顯化力量", "資源充沛", "主動"], 
+              keywords_rev: ["欺騙", "意志動搖", "才能未發揮", "缺乏計劃", "操控"],
+              desc: "魔術師掌握四大元素，擁有將想法轉化為現實的能力與自信。" },
+            { name: "The High Priestess", name_tw: "女祭司", num: 2, 
+              keywords_up: ["直覺", "潛意識", "智慧", "靜默", "隱秘"], 
+              keywords_rev: ["壓抑情緒", "直覺受阻", "表面化", "秘事暴露", "冷漠"],
+              desc: "女祭司守護著二元世界的帷幕，指引你聆聽內在聲音與潛意識直覺。" },
+            { name: "The Empress", name_tw: "皇后", num: 3, 
+              keywords_up: ["豐盛", "母性", "滋養", "美感", "創造"], 
+              keywords_rev: ["過度依賴", "創造力受阻", "缺乏安全感", "浪費", "窒息的愛"],
+              desc: "皇后象徵大地的滋養與豐饒，代表愛、創造力與美好的生活享受。" },
+            { name: "The Emperor", name_tw: "皇帝", num: 4, 
+              keywords_up: ["權威", "秩序", "領導力", "穩定", "責任"], 
+              keywords_rev: ["專制", "控制欲強", "缺乏彈性", "效率低下", "無力感"],
+              desc: "皇帝代表理性的法則、建立秩序與掌控局勢的能力。" },
+            { name: "The Hierophant", name_tw: "教皇", num: 5, 
+              keywords_up: ["傳統", "指引", "信仰", "學習", "社會規範"], 
+              keywords_rev: ["固執己見", "反叛傳統", "盲從", "虛偽", "溝通障礙"],
+              desc: "教皇代表智慧的傳承、道德準則與精神導師的指引。" },
+            { name: "The Lovers", name_tw: "戀人", num: 6, 
+              keywords_up: ["愛與契合", "抉擇", "價值觀統合", "夥伴關係", "吸引力"], 
+              keywords_rev: ["關係不合", "分歧", "不道德的選擇", "逃避責任", "誘惑"],
+              desc: "戀人牌象徵心靈與肉體的和諧結合，以及面臨重要選擇時的內心抉擇。" },
+            { name: "The Chariot", name_tw: "戰車", num: 7, 
+              keywords_up: ["意志力", "勝利", "克服障礙", "控制力", "前進"], 
+              keywords_rev: ["失控", "衝動過度", "方向迷失", "挫折", "攻擊性"],
+              desc: "戰車代表憑藉強大的自律與意志力駕馭矛盾力量，衝破難關走向勝利。" },
+            { name: "Strength", name_tw: "力量", num: 8, 
+              keywords_up: ["以柔克剛", "勇氣", "包容", "自信", "內在力量"], 
+              keywords_rev: ["自我懷疑", "軟弱", "情緒失控", "自卑", "缺乏耐性"],
+              desc: "力量牌展現的是內心的堅韌與愛的包容，而非暴力的征服。" },
+            { name: "The Hermit", name_tw: "隱士", num: 9, 
+              keywords_up: ["內省", "探索真相", "孤獨", "智慧", "沉澱"], 
+              keywords_rev: ["孤立孤僻", "逃避現實", "偏執", "拒絕溝通", "空虛"],
+              desc: "隱士高舉明燈，提倡退回內心世界，透過獨處找尋問題的本質與解答。" },
+            { name: "Wheel of Fortune", name_tw: "命運之輪", num: 10, 
+              keywords_up: ["轉折點", "契機", "順應天命", "好運", "週期循環"], 
+              keywords_rev: ["抗拒改變", "運氣不佳", "惡性循環", "不安", "意外局勢"],
+              desc: "命運之輪代表生命的起伏與轉機，提醒我們順應變化，把握時代契機。" },
+            { name: "Justice", name_tw: "正義", num: 11, 
+              keywords_up: ["公平", "因果", "理性決策", "誠實", "法律"], 
+              keywords_rev: ["偏見", "不公不義", "逃避責任", "判斷失誤", "嚴苛"],
+              desc: "正義手握天平與寶劍，象徵客觀審視事實，承擔自己選擇所帶來的結果。" },
+            { name: "The Hanged Man", name_tw: "倒吊人", num: 12, 
+              keywords_up: ["換位思考", "犧牲奉獻", "等待Timing", "啟悟", "臣服"], 
+              keywords_rev: ["無謂犧牲", "停滯不前", "拖延", "掙扎", "自怨自艾"],
+              desc: "倒吊人以全新的視角看世界，代表甘願暫停步伐，透過換位思考獲得智慧。" },
+            { name: "Death", name_tw: "死神", num: 13, 
+              keywords_up: ["結束與重生", "轉變", "放下過去", "新階段", "脫胎換骨"], 
+              keywords_rev: ["恐懼改變", "死纏爛打", "停滯沉淪", "依戀過往", "抗拒轉型"],
+              desc: "死神並非代表肉體死亡，而是象徵舊階段的必然終結，為新生命讓出空間。" },
+            { name: "Temperance", name_tw: "節制", num: 14, 
+              keywords_up: ["平衡", "調和", "適度", "心靈療癒", "合作"], 
+              keywords_rev: ["失去平衡", "極端", "溝通無效", "過度浪費", "衝突"],
+              desc: "節制牌融合對立元素，代表情緒的和諧、內心的平靜與適度得宜的處事。" },
+            { name: "The Devil", name_tw: "惡魔", num: 15, 
+              keywords_up: ["執著", "物質慾望", "束縛", "上癮", "陰暗面"], 
+              keywords_rev: ["解脫束縛", "覺醒", "擺脫控制", "重新掌控", "清醒"],
+              desc: "惡魔象徵過度的慾望、不健康的依附關係與限制自我的心靈枷鎖。" },
+            { name: "The Tower", name_tw: "高塔", num: 16, 
+              keywords_up: ["突發劇變", "信念崩塌", "打破幻象", "覺醒", "釋放"], 
+              keywords_rev: ["避免災難", "抗拒變革", "隱患延後", "內在震撼", "餘震"],
+              desc: "高塔受到雷擊，雖然摧毀了虛妄的基礎，卻也帶來徹底清醒的契機。" },
+            { name: "The Star", name_tw: "星星", num: 17, 
+              keywords_up: ["希望", "靈感", "平靜", "療癒", "願景"], 
+              keywords_rev: ["失望", "信心缺失", "好高騖遠", "悲觀", "迷失方向"],
+              desc: "黑夜過後的星光象徵希望與靈魂的平靜，帶來豐沛的靈感與身心修復。" },
+            { name: "The Moon", name_tw: "月亮", num: 18, 
+              keywords_up: ["不安", "幻覺", "潛意識", "迷茫", "隱藏危機"], 
+              keywords_rev: ["撥雲見日", "真相大白", "克服恐懼", "迷霧散去", "直面真相"],
+              desc: "月光朦朧，代表不安與內心的恐懼，提醒你在迷霧中辨別虛實。" },
+            { name: "The Sun", name_tw: "太陽", num: 19, 
+              keywords_up: ["成功", "喜悅", "活力", "光明", "生命力"], 
+              keywords_rev: ["短暫受阻", "過度自負", "熱情衰退", "小挫折", "延遲"],
+              desc: "太陽散發溫暖與光芒，象徵極大的喜悅、成功、充沛活力與光明前景。" },
+            { name: "Judgement", name_tw: "審判", num: 20, 
+              keywords_up: ["號角召喚", "覺醒", "重大決定", "因果回報", "重生"], 
+              keywords_rev: ["自我懷疑", "錯失良機", "逃避審視", "悔恨", "猶豫不決"],
+              desc: "號角響起代表內心的覺醒時刻，召喚你聽從靈魂的天命，迎接新的升華。" },
+            { name: "The World", name_tw: "世界", num: 21, 
+              keywords_up: ["圓滿完成", "整合", "成就", "旅行", "自由"], 
+              keywords_rev: ["未達完美", "欠缺臨門一腳", "延遲", "停滯", "遺憾"],
+              desc: "世界牌象徵一個大循環的圓滿達成，內外世界的和諧與最高成就。" }
+        ];
+
+        /* -------------------------------------------------------------
+           2. APP STATE MANAGEMENT
+           ------------------------------------------------------------- */
+        let state = {
+            question: "",
+            category: "love", // love, career, fortune, general
+            spread: "single",  // single, three, choice
+            totalDrawNeeded: 1,
+            selectedCards: [],
+            drawnIndexes: new Set()
+        };
+
+        const SPREAD_CONFIG = {
+            single: { count: 1, labels: ["總體指引"] },
+            three: { count: 3, labels: ["過去 (Past)", "現在 (Present)", "未來 (Future)"] },
+            choice: { count: 3, labels: ["當前局勢", "選擇 A 的走向", "選擇 B 的走向"] }
+        };
+
+        /* -------------------------------------------------------------
+           DYNAMIC THEME SWITCHER LOGIC
+           ------------------------------------------------------------- */
+        function toggleThemeMenu() {
+            const menu = document.getElementById('theme-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function changeTheme(themeName) {
+            document.body.className = `flex flex-col min-h-screen overflow-x-hidden theme-${themeName}`;
+            const themeIcon = document.getElementById('theme-icon');
+            const themeLabel = document.getElementById('theme-name');
+            
+            const icons = {
+                dark: 'fa-moon text-amber-400',
+                light: 'fa-sun text-amber-500',
+                parchment: 'fa-scroll text-amber-700',
+                cyber: 'fa-bolt text-sky-400'
+            };
+
+            const labels = {
+                dark: '暗黑神秘',
+                light: '日光晨曦',
+                parchment: '羊皮古卷',
+                cyber: '深空賽博'
+            };
+
+            themeIcon.className = `fa-solid ${icons[themeName]} text-sm`;
+            themeLabel.innerText = labels[themeName];
+            
+            document.getElementById('theme-menu').classList.add('hidden');
+        }
+
+        // Close menu on outside click
+        window.addEventListener('click', (e) => {
+            const menu = document.getElementById('theme-menu');
+            const btn = e.target.closest('button');
+            if (!menu.classList.contains('hidden') && (!btn || !btn.onclick || !btn.onclick.toString().includes('toggleThemeMenu'))) {
+                menu.classList.add('hidden');
+            }
+        });
+
+        // Initialize Background Stars Animation
+        function initStarsBackground() {
+            const container = document.getElementById('stars-container');
+            const count = 50;
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('div');
+                star.className = 'absolute rounded-full bg-white opacity-70 animate-pulse';
+                const size = Math.random() * 3 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                container.appendChild(star);
+            }
+        }
+
+        function selectCategory(cat, btn) {
+            state.category = cat;
+            document.querySelectorAll('.category-btn').forEach(b => {
+                b.classList.remove('active', 'bg-purple-900/40', 'border-amber-400', 'text-amber-300');
+                b.classList.add('bg-mystic-900/80', 'border-purple-800', 'text-purple-300');
+            });
+            btn.classList.add('active', 'bg-purple-900/40', 'border-amber-400', 'text-amber-300');
+            btn.classList.remove('bg-mystic-900/80', 'border-purple-800', 'text-purple-300');
+        }
+
+        function selectSpread(spreadType, element) {
+            state.spread = spreadType;
+            state.totalDrawNeeded = SPREAD_CONFIG[spreadType].count;
+            document.querySelectorAll('.spread-card').forEach(el => {
+                el.classList.remove('active', 'bg-purple-900/40', 'border-amber-400');
+                el.classList.add('bg-mystic-900/80', 'border-purple-800');
+                el.querySelector('h4').classList.replace('text-amber-300', 'text-purple-200');
+            });
+            element.classList.add('active', 'bg-purple-900/40', 'border-amber-400');
+            element.classList.remove('bg-mystic-900/80', 'border-purple-800');
+            element.querySelector('h4').classList.replace('text-purple-200', 'text-amber-300');
+        }
+
+        function switchSpread(spreadType) {
+            resetAll();
+            const cards = document.querySelectorAll('.spread-card');
+            if (spreadType === 'single') selectSpread('single', cards[0]);
+            if (spreadType === 'three') selectSpread('three', cards[1]);
+            if (spreadType === 'choice') selectSpread('choice', cards[2]);
+        }
+
+        function startShuffle() {
+            state.question = document.getElementById('user-question').value.trim();
+            state.selectedCards = [];
+            state.drawnIndexes.clear();
+
+            document.getElementById('setup-section').classList.add('hidden');
+            document.getElementById('deck-section').classList.remove('hidden');
+            document.getElementById('deck-section').classList.add('flex');
+
+            document.getElementById('total-draw-num').innerText = state.totalDrawNeeded;
+            document.getElementById('current-draw-num').innerText = 1;
+
+            renderInteractiveDeck();
+        }
+
+        /* -------------------------------------------------------------
+           4. INTERACTIVE DECK & CARD DRAWING
+           ------------------------------------------------------------- */
+        function renderInteractiveDeck() {
+            const container = document.getElementById('cards-draw-area');
+            container.innerHTML = '';
+            
+            // Generate 22 Major Arcana cards spread horizontally
+            const cardCount = 22;
+            for (let i = 0; i < cardCount; i++) {
+                const cardEl = document.createElement('div');
+                cardEl.className = `deck-card absolute w-24 sm:w-28 h-36 sm:h-44 rounded-xl border-2 border-purple-500/50 bg-gradient-to-br from-purple-900 via-mystic-800 to-indigo-950 shadow-xl cursor-pointer transform transition-all duration-300 hover:-translate-y-4 hover:border-amber-400 flex items-center justify-center`;
+                
+                // Fan out effect
+                const offset = (i - cardCount / 2) * 14;
+                const rotation = (i - cardCount / 2) * 1.5;
+                cardEl.style.transform = `translateX(${offset}px) rotate(${rotation}deg)`;
+                cardEl.dataset.index = i;
+
+                // Card Back Pattern
+                cardEl.innerHTML = `
+                    <div class="w-full h-full p-2 flex flex-col items-center justify-between border border-purple-400/20 rounded-lg">
+                        <i class="fa-solid fa-star text-amber-400/40 text-xs"></i>
+                        <i class="fa-solid fa-sparkles text-amber-300/60 text-lg"></i>
+                        <i class="fa-solid fa-star text-amber-400/40 text-xs"></i>
+                    </div>
+                `;
+
+                cardEl.addEventListener('click', () => drawCard(i, cardEl));
+                container.appendChild(cardEl);
+            }
+        }
+
+        function drawCard(cardDeckIdx, element) {
+            if (state.drawnIndexes.has(cardDeckIdx)) return;
+            if (state.selectedCards.length >= state.totalDrawNeeded) return;
+
+            state.drawnIndexes.add(cardDeckIdx);
+            
+            // Pick a random tarot card from database
+            let availableTarots = TAROT_DATABASE.filter(t => !state.selectedCards.some(s => s.num === t.num));
+            let pickedTarot = availableTarots[Math.floor(Math.random() * availableTarots.length)];
+            
+            // Determine Reversed or Upright (40% chance of reversed)
+            let isReversed = Math.random() < 0.4;
+            
+            state.selectedCards.push({
+                ...pickedTarot,
+                isReversed: isReversed,
+                positionLabel: SPREAD_CONFIG[state.spread].labels[state.selectedCards.length]
+            });
+
+            // Animate drawn card
+            element.style.opacity = '0.3';
+            element.style.pointerEvents = 'none';
+
+            // Update Badge
+            if (state.selectedCards.length < state.totalDrawNeeded) {
+                document.getElementById('current-draw-num').innerText = state.selectedCards.length + 1;
+            } else {
+                // All cards drawn -> Move to Spread Reveal
+                setTimeout(showSpreadDisplay, 500);
+            }
+        }
+
+        function autoDrawCards() {
+            const availableCards = Array.from(document.querySelectorAll('.deck-card')).filter(el => el.style.opacity !== '0.3');
+            while (state.selectedCards.length < state.totalDrawNeeded && availableCards.length > 0) {
+                const randomEl = availableCards.pop();
+                const idx = parseInt(randomEl.dataset.index);
+                drawCard(idx, randomEl);
+            }
+        }
+
+        /* -------------------------------------------------------------
+           5. SPREAD DISPLAY & CARD REVEAL ANIMATION
+           ------------------------------------------------------------- */
+        function showSpreadDisplay() {
+            document.getElementById('deck-section').classList.add('hidden');
+            document.getElementById('spread-display-section').classList.remove('hidden');
+            document.getElementById('spread-display-section').classList.add('flex');
+
+            const container = document.getElementById('spread-cards-container');
+            container.innerHTML = '';
+
+            state.selectedCards.forEach((card, idx) => {
+                const cardContainer = document.createElement('div');
+                cardContainer.className = 'flex flex-col items-center flex-1 min-w-[200px] max-w-[240px]';
+
+                const positionTitle = document.createElement('h4');
+                positionTitle.className = 'text-sm font-bold text-amber-300 mb-2 gold-text-glow';
+                positionTitle.innerText = card.positionLabel;
+
+                const flipCard = document.createElement('div');
+                flipCard.className = 'w-48 h-80 perspective-1000 cursor-pointer group';
+                flipCard.onclick = () => flipSingleCard(flipCard, idx);
+
+                flipCard.innerHTML = `
+                    <div class="card-inner ${card.isFlipped ? (card.isReversed ? 'is-reversed' : 'is-flipped') : ''}" id="card-inner-${idx}">
+                        <!-- Back of Card -->
+                        <div class="card-back p-4">
+                            <div class="w-full h-full border border-purple-400/40 rounded-lg flex flex-col items-center justify-center p-3 text-center">
+                                <i class="fa-solid fa-eye text-3xl text-amber-400/80 mb-2 animate-pulse"></i>
+                                <span class="text-xs text-amber-200">點擊翻牌揭示</span>
+                            </div>
+                        </div>
+                        <!-- Front of Card -->
+                        <div class="card-front p-4 flex flex-col justify-between items-center bg-mystic-900 text-amber-100">
+                            <div class="w-full flex justify-between items-center text-xs text-amber-400">
+                                <span>#${card.num}</span>
+                                <span>${card.isReversed ? '【逆位】' : '【正位】'}</span>
+                            </div>
+                            <div class="my-auto text-center">
+                                <div class="w-16 h-16 rounded-full bg-purple-900/60 border border-amber-400/40 flex items-center justify-center mx-auto mb-3">
+                                    <i class="fa-solid fa-sun text-2xl text-amber-300"></i>
+                                </div>
+                                <h3 class="text-base font-bold text-amber-200">${card.name_tw}</h3>
+                                <p class="text-xs text-purple-300/70 mt-1">${card.name}</p>
+                            </div>
+                            <div class="w-full text-center border-t border-purple-800/60 pt-2">
+                                <span class="text-[10px] text-amber-300/90 block">${(card.isReversed ? card.keywords_rev : card.keywords_up).join(' • ')}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                cardContainer.appendChild(positionTitle);
+                cardContainer.appendChild(flipCard);
+                container.appendChild(cardContainer);
+            });
+        }
+
+        function flipSingleCard(flipCardEl, idx) {
+            const inner = document.getElementById(`card-inner-${idx}`);
+            const card = state.selectedCards[idx];
+            
+            if (!card.isFlipped) {
+                card.isFlipped = true;
+                if (card.isReversed) {
+                    inner.classList.add('is-reversed');
+                } else {
+                    inner.classList.add('is-flipped');
+                }
+            }
+
+            // Check if all cards flipped to show "Generate AI Interpretation" button
+            const allFlipped = state.selectedCards.every(c => c.isFlipped);
+            if (allFlipped) {
+                const aiBtn = document.getElementById('btn-generate-ai');
+                aiBtn.classList.remove('hidden');
+                aiBtn.classList.add('flex');
+            }
+        }
+
+        /* -------------------------------------------------------------
+           6. COMPREHENSIVE CHINESE INTERPRETATION ENGINE (GEMINI LLM)
+           ------------------------------------------------------------- */
+        async function generateComprehensiveInterpretation() {
+            document.getElementById('spread-display-section').classList.add('hidden');
+            document.getElementById('interpretation-section').classList.remove('hidden');
+            
+            const summaryList = document.getElementById('cards-summary-list');
+            summaryList.innerHTML = '';
+
+            // Populate Quick Cards Summary
+            state.selectedCards.forEach(card => {
+                const cardSummary = document.createElement('div');
+                cardSummary.className = 'bg-mystic-900/80 border border-purple-800 rounded-xl p-4 text-center';
+                cardSummary.innerHTML = `
+                    <span class="text-xs text-amber-400 font-bold block mb-1">${card.positionLabel}</span>
+                    <h4 class="text-base font-bold text-amber-200">${card.name_tw} ${card.isReversed ? '<span class="text-red-400 text-xs">（逆位）</span>' : '<span class="text-emerald-400 text-xs">（正位）</span>'}</h4>
+                    <p class="text-xs text-purple-300 mt-2">${(card.isReversed ? card.keywords_rev : card.keywords_up).join(', ')}</p>
+                `;
+                summaryList.appendChild(cardSummary);
+            });
+
+            // Show Loading Indicator
+            const loadingEl = document.getElementById('ai-loading');
+            const contentEl = document.getElementById('ai-content-wrapper');
+            loadingEl.classList.remove('hidden');
+            contentEl.innerHTML = '';
+
+            // Construct Gemini AI Prompt
+            const prompt = constructGeminiPrompt();
+
+            try {
+                // Call Gemini API (using gemini-3-flash-preview)
+                const apiKey = ""; // Canvas runtime auto-injects API key if empty
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        systemInstruction: {
+                            parts: [{ text: "你是一位經驗豐富、溫暖且具有深厚心理學與神秘學素養的塔羅占卜大師。請提供結構清晰、詳盡且富有靈性指引的繁體中文塔羅解牌分析。" }]
+                        }
+                    })
+                });
+
+                const data = await response.json();
+                const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                loadingEl.classList.add('hidden');
+
+                if (aiText) {
+                    contentEl.innerHTML = formatMarkdownToHTML(aiText);
+                } else {
+                    contentEl.innerHTML = generateFallbackInterpretation();
+                }
+
+                // 解牌完成後自動記錄至 Google 試算表（不需手動點擊）
+                autoSubmitToGas();
+
+            } catch (error) {
+                console.error("Gemini API Error:", error);
+                loadingEl.classList.add('hidden');
+                // Fallback to built-in rule-based comprehensive reading if API fails or offline
+                contentEl.innerHTML = generateFallbackInterpretation();
+                
+                // 備用解牌產生後同樣自動記錄
+                autoSubmitToGas();
+            }
+        }
+
+        function constructGeminiPrompt() {
+            const catMap = { love: "愛情與人際關係", career: "事業與學業發展", fortune: "財運與整體運勢", general: "綜合人生指引" };
+            
+            let cardDetails = state.selectedCards.map(c => 
+                `- 位置【${c.positionLabel}】：${c.name_tw} (${c.name})，位階：${c.isReversed ? '逆位' : '正位'}。核心關鍵字：${(c.isReversed ? c.keywords_rev : c.keywords_up).join('、')}。牌義概要：${c.desc}`
+            ).join('\n');
+
+            return `
+請為來訪者進行一次專業且詳盡的塔羅牌占卜解讀。
+
+【占卜背景資訊】
+- 問卜者問題：${state.question || "未指定特定問題（請給予整體靈性與近期指引）"}
+- 占卜領域：${catMap[state.category]}
+- 使用牌陣：${SPREAD_CONFIG[state.spread].labels.join(' / ')}
+
+【抽取到的塔羅牌組合】
+${cardDetails}
+
+【解讀要求的結構與格式】
+請使用繁體中文，並包含以下四個主要章節（請使用 <h3> 標題）：
+1. 🔮 牌陣能量總覽：簡述目前整體能量場景、各牌之間的相互作用與核心基調。
+2. 🃏 逐張牌卡深層剖析：依序針對每張牌的位置、正逆位涵義，結合問卜者的問題/領域進行深入解讀。
+3. 💡 針對問題的實質建議：提供 2~3 點具體、可執行的行動指引或心態調整方向。
+4. ✨ 大師靈魂祝福與心靈箴言：給予一段溫暖、充滿力量的總結祝福。
+`;
+        }
+
+        // Format Markdown returned by Gemini into styled HTML
+        function formatMarkdownToHTML(text) {
+            let html = text
+                .replace(/^### (.*$)/gim, '<h3 class="text-lg font-bold text-amber-300 mt-6 mb-3 border-b border-purple-800 pb-1 flex items-center gap-2">$1</h3>')
+                .replace(/^## (.*$)/gim, '<h2 class="text-xl font-bold text-amber-200 mt-6 mb-3">$1</h2>')
+                .replace(/^\*\* (.*$)/gim, '<p class="font-bold text-amber-200 mb-1">$1</p>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong class="text-amber-300 font-semibold">$1</strong>')
+                .replace(/^\* (.*$)/gim, '<li class="ml-4 list-disc text-purple-200">$1</li>')
+                .replace(/^- (.*$)/gim, '<li class="ml-4 list-disc text-purple-200">$1</li>')
+                .replace(/\n\n/g, '</p><p class="mb-3 leading-relaxed">');
+
+            return `<div class="space-y-3">${html}</div>`;
+        }
+
+        // Fallback local engine if API fails
+        function generateFallbackInterpretation() {
+            const catNames = { love: "感情", career: "事業", fortune: "運勢", general: "生活" };
+            
+            let cardAnalyses = state.selectedCards.map(c => `
+                <div class="mb-4 bg-mystic-950/60 p-4 rounded-xl border border-purple-900">
+                    <h4 class="text-sm font-bold text-amber-300 mb-1">【${c.positionLabel}】${c.name_tw}（${c.isReversed ? '逆位' : '正位'}）</h4>
+                    <p class="text-xs text-purple-200 leading-relaxed mb-2">${c.desc}</p>
+                    <p class="text-xs text-amber-200/80"><strong>關鍵提示：</strong>${(c.isReversed ? c.keywords_rev : c.keywords_up).join('、')}</p>
+                </div>
+            `).join('');
+
+            return `
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold text-amber-300 border-b border-purple-800 pb-1">🔮 牌陣總體解析</h3>
+                    <p class="text-sm text-purple-100">針對你在${catNames[state.category]}領域的探索，本次出現的牌陣顯示出當前正處於一個關鍵的能量轉折點。牌卡提醒你需要整合內在直覺與外在行動。</p>
+                    
+                    <h3 class="text-lg font-bold text-amber-300 border-b border-purple-800 pb-1 mt-6">🃏 各牌位置詳解</h3>
+                    ${cardAnalyses}
+
+                    <h3 class="text-lg font-bold text-amber-300 border-b border-purple-800 pb-1 mt-6">💡 大師心靈指引</h3>
+                    <ul class="list-disc pl-5 space-y-1 text-xs text-purple-200">
+                        <li>保持內心的平靜，切勿因為一時的焦慮而急於做出未經思考的決定。</li>
+                        <li>順應目前的局勢發展，有時放下過度的掌控欲反而能迎來意想不到的好結果。</li>
+                    </ul>
+                </div>
+            `;
+        }
+
+        /* -------------------------------------------------------------
+           7. UTILS & MODAL CONTROLLERS & GOOGLE SHEETS AUTOMATIC SYNC
+           ------------------------------------------------------------- */
+        let gasEndpointUrl = "https://script.google.com/macros/s/AKfycbwiUIZXU92bWstoE7YL8EH5qaJ0jxQdonphwSHAs1YQV1lxlHNRyWZ5AknLkrrYUr0j/exec";
+
+        async function autoSubmitToGas() {
+            if (!gasEndpointUrl) return;
+
+            const statusBanner = document.getElementById('gsheet-status-banner');
+            statusBanner.className = "mb-6 p-2 rounded-xl text-xs border bg-purple-950/50 border-purple-600/40 overflow-hidden";
+            statusBanner.innerHTML = `
+                <div class="w-full bg-purple-900/50 h-2 rounded-full overflow-hidden">
+                    <div id="gsheet-progress-bar" class="bg-gradient-to-r from-amber-500 to-emerald-400 h-full w-1/3 transition-all duration-500 animate-pulse"></div>
+                </div>
+            `;
+            statusBanner.classList.remove('hidden');
+
+            const progressBar = document.getElementById('gsheet-progress-bar');
+            const catNames = { love: "愛情姻緣", career: "事業學業", fortune: "財運運勢", general: "綜合指引" };
+            const cardsText = state.selectedCards.map(c => `${c.positionLabel}: ${c.name_tw}(${c.isReversed ? '逆位' : '正位'})`).join(" | ");
+
+            // 擷取解牌摘要內容
+            const contentWrapper = document.getElementById('ai-content-wrapper');
+            const summaryText = contentWrapper.innerText.substring(0, 150) + "...";
+
+            const payload = {
+                question: state.question || "未填寫問題",
+                category: catNames[state.category] || state.category,
+                spread: SPREAD_CONFIG[state.spread].labels.join(" / "),
+                cards: cardsText,
+                summary: summaryText
+            };
+
+            try {
+                if (progressBar) progressBar.style.width = '70%';
+
+                // 使用 text/plain 發送，避免預檢請求 (CORS)
+                const response = await fetch(gasEndpointUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+
+                const resData = await response.json();
+
+                if (resData.result === "success") {
+                    if (progressBar) {
+                        progressBar.className = "bg-emerald-400 h-full w-full transition-all duration-300";
+                        progressBar.style.width = '100%';
+                    }
+                    setTimeout(() => {
+                        statusBanner.classList.add('hidden');
+                    }, 1200);
+                } else {
+                    throw new Error(resData.message || "同步失敗");
+                }
+            } catch (err) {
+                console.error("GAS Sync Error:", err);
+                if (progressBar) {
+                    progressBar.className = "bg-red-500 h-full w-full transition-all duration-300";
+                    progressBar.style.width = '100%';
+                }
+                setTimeout(() => {
+                    statusBanner.classList.add('hidden');
+                }, 2000);
+            }
+        }
+
+        function resetAll() {
+            state.selectedCards = [];
+            state.drawnIndexes.clear();
+            document.getElementById('user-question').value = '';
+            
+            document.getElementById('setup-section').classList.remove('hidden');
+            document.getElementById('deck-section').classList.add('hidden');
+            document.getElementById('deck-section').classList.remove('flex');
+            document.getElementById('spread-display-section').classList.add('hidden');
+            document.getElementById('spread-display-section').classList.remove('flex');
+            document.getElementById('interpretation-section').classList.add('hidden');
+            document.getElementById('btn-generate-ai').classList.add('hidden');
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

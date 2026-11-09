@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聰明美業與醫美自我選擇指南｜找到最適合你的美麗方案</title>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#FAF5EE',
+                            100: '#FAEDCD',
+                            300: '#E8C89B',
+                            500: '#D4A373',
+                            600: '#BC8A5F',
+                            700: '#A06E47',
+                            900: '#4A3525',
+                        },
+                        roseBrand: {
+                            50: '#FFF0F2',
+                            100: '#FCEADE',
+                            400: '#E8AEB4',
+                            500: '#D9777F',
+                            700: '#C94A29',
+                        },
+                        darkBg: '#12131A',
+                        darkCard: '#1E202B',
+                        darkText: '#E2E8F0',
+                    },
+                    fontFamily: {
+                        sans: ['"Noto Sans TC"', '"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#FAF9F6] text-slate-800 dark:bg-darkBg dark:text-darkText transition-colors duration-300 font-sans antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- Top Navigation Bar -->
+    <nav class="sticky top-0 z-50 backdrop-blur-md bg-white/80 dark:bg-darkCard/80 border-b border-slate-200/60 dark:border-slate-800 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-brand-500 to-roseBrand-400 flex items-center justify-center text-white font-bold text-lg shadow-sm">
+                    ✦
+                </div>
+                <span class="font-bold text-lg tracking-wide text-slate-800 dark:text-white">美業 vs 醫美決策指南</span>
+            </div>
+            
+            <button id="themeToggle" class="p-2.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-amber-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all focus:outline-none" aria-label="Toggle Theme">
+                <i class="fa-solid fa-moon dark:hidden text-lg"></i>
+                <i class="fa-solid fa-sun hidden dark:block text-lg"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Header Hero Section -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-roseBrand-50 via-brand-50 to-amber-50/40 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 py-16 sm:py-20 px-4 text-center border-b border-slate-200/50 dark:border-slate-800">
+        <div class="max-w-4xl mx-auto relative z-10">
+            <span class="inline-block px-4 py-1.5 rounded-full bg-brand-100 text-brand-900 dark:bg-brand-900/60 dark:text-brand-100 text-sm font-semibold tracking-wide mb-4 shadow-sm">
+                ✦ 理性愛美 ‧ 精準投資 ✦
+            </span>
+            <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6 leading-tight">
+                聰明美業與醫美選擇指南
+            </h1>
+            <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
+                不盲目跟風、不掉入話術陷阱。從個人預算與肌膚真實需求出發，客觀挑選最符合您綜合效益的生活美容或醫美療程。
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16 flex-grow">
+
+        <!-- 1. 定位分析核心觀念區 -->
+        <section>
+            <div class="text-center mb-10">
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">一分鐘搞懂核心差異</h2>
+                <p class="text-slate-500 dark:text-slate-400 mt-2 text-sm sm:text-base">先了解本質，才能花最少的錢達到預期效果</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- 生活美容 -->
+                <div class="bg-white dark:bg-darkCard rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-md border border-slate-100 dark:border-slate-800 transition-all hover:-translate-y-1">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-brand-100 dark:bg-brand-900/50 flex items-center justify-center text-brand-600 dark:text-brand-300">
+                            <i class="fa-solid fa-spa text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-brand-600 dark:text-brand-300">生活美容 (Skin Management)</h3>
+                    </div>
+                    <p class="text-xs sm:text-sm font-medium text-slate-400 dark:text-slate-400 mb-6 pb-3 border-b border-slate-100 dark:border-slate-800">
+                        定位：長期維養、科學膚質調理、無修復期
+                    </p>
+                    <ul class="space-y-4 text-sm sm:text-base text-slate-700 dark:text-slate-300">
+                        <li class="flex items-start">
+                            <span class="text-brand-500 mr-2">✦</span>
+                            <span><strong>本質：</strong>非侵入性物理/化學保養，作用層級多在表皮角質層，不傷及真皮層。</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-brand-500 mr-2">✦</span>
+                            <span><strong>優點：</strong>價格平實、無恢復期、隨做隨走，且極具身心舒壓與放鬆感。</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-brand-500 mr-2">✦</span>
+                            <span><strong>適合：</strong>日常粉刺清潔、基礎保濕導入、定期肌膚角質代謝維護。</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-brand-500 mr-2">✦</span>
+                            <span><strong>預算區間：</strong>單次約 NT$ 1,000 – $ 5,000。</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 醫療美容 -->
+                <div class="bg-white dark:bg-darkCard rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-md border border-slate-100 dark:border-slate-800 transition-all hover:-translate-y-1">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-roseBrand-100 dark:bg-roseBrand-900/50 flex items-center justify-center text-roseBrand-500">
+                            <i class="fa-solid fa-user-md text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-roseBrand-500">醫療美容 (Medical Aesthetics)</h3>
+                    </div>
+                    <p class="text-xs sm:text-sm font-medium text-slate-400 dark:text-slate-400 mb-6 pb-3 border-b border-slate-100 dark:border-slate-800">
+                        定位：高效破壞重建、結構性拉提、需醫師專業操作
+                    </p>
+                    <ul class="space-y-4 text-sm sm:text-base text-slate-700 dark:text-slate-300">
+                        <li class="flex items-start">
+                            <span class="text-roseBrand-500 mr-2">✦</span>
+                            <span><strong>本質：</strong>高能量醫療儀器雷射、微針或針劑注射，需具備衛福部醫療器材認證。</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-roseBrand-500 mr-2">✦</span>
+                            <span><strong>優點：</strong>能深入真皮層甚至筋膜層，解決結構性問題（如深層斑、鬆弛、深皺紋），見效快。</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-roseBrand-500 mr-2">✦</span>
+                            <span><strong>適合：</strong>緊緻拉提、斑點根除、膠原蛋白增生、凹疤治療、輪廓重塑。</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-roseBrand-500 mr-2">✦</span>
+                            <span><strong>預算區間：</strong>單次約 NT$ 4,000 – $ 100,000+。</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. 動態篩選器 (Interactive Calculator) -->
+        <section class="bg-white dark:bg-darkCard rounded-3xl p-6 sm:p-10 shadow-lg border-2 border-brand-100 dark:border-slate-800">
+            <div class="text-center max-w-xl mx-auto mb-8">
+                <div class="inline-flex items-center space-x-2 text-brand-600 dark:text-brand-300 font-semibold mb-2">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>智慧評估</span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">3秒智慧項目推薦</h2>
+                <p class="text-slate-500 dark:text-slate-400 text-sm mt-2">選擇您的核心需求與單次預算，系統將為您分析最適選擇！</p>
+            </div>
+
+            <form id="quizForm" class="space-y-6 max-w-4xl mx-auto">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- 下拉 1: 肌膚困擾 -->
+                    <div>
+                        <label for="needSelect" class="block font-semibold text-slate-800 dark:text-slate-200 mb-2 text-sm sm:text-base">
+                            1. 您的主要肌膚困擾？
+                        </label>
+                        <select id="needSelect" class="w-full p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-brand-500 focus:outline-none transition-all">
+                            <option value="clean">日常粉刺清潔、毛孔粗大、油水平衡</option>
+                            <option value="spots">雀斑、曬斑、痘疤、膚色不均</option>
+                            <option value="sagging">臉部鬆弛、下顎線模糊、抗老拉提</option>
+                            <option value="dry">乾燥脫皮、化妝不服貼、缺乏光澤</option>
+                        </select>
+                    </div>
+
+                    <!-- 下拉 2: 預算區間 -->
+                    <div>
+                        <label for="budgetSelect" class="block font-semibold text-slate-800 dark:text-slate-200 mb-2 text-sm sm:text-base">
+                            2. 您的單次預算區間？
+                        </label>
+                        <select id="budgetSelect" class="w-full p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-brand-500 focus:outline-none transition-all">
+                            <option value="low">NT$ 1,000 – 3,000 / 次</option>
+                            <option value="medium">NT$ 3,000 – 8,000 / 次</option>
+                            <option value="high">NT$ 8,000 – 25,000 / 次</option>
+                            <option value="luxury">NT$ 25,000+ / 次</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full sm:w-auto mx-auto block px-8 py-3.5 bg-slate-900 hover:bg-slate-800 dark:bg-brand-500 dark:hover:bg-brand-600 text-white font-semibold rounded-full shadow-md transition-all hover:scale-105 active:scale-95 text-center">
+                    <i class="fa-solid fa-calculator mr-2"></i>開始分析最推薦方案
+                </button>
+            </form>
+
+            <!-- 結果顯示區 -->
+            <div id="resultPanel" class="hidden mt-8 p-6 sm:p-8 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border-l-4 border-brand-500 space-y-4 animate-fade-in">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white" id="resultTitle">分析結果</h3>
+                    <span id="resultCategory" class="px-3 py-1 rounded-full text-xs font-semibold bg-brand-100 text-brand-900 dark:bg-brand-900 dark:text-brand-100">推薦類別</span>
+                </div>
+                <p id="resultDesc" class="text-slate-700 dark:text-slate-300 leading-relaxed text-sm sm:text-base"></p>
+                <div id="resultAdvice" class="p-4 rounded-xl bg-white dark:bg-darkCard text-xs sm:text-sm text-slate-600 dark:text-slate-400 border border-slate-100 dark:border-slate-700/50"></div>
+            </div>
+        </section>
+
+        <!-- 3. 詳細項目與價格比較 Matrix -->
+        <section>
+            <div class="text-center mb-10">
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">熱門療程與保養項目全比對</h2>
+                <p class="text-slate-500 dark:text-slate-400 mt-2 text-sm sm:text-base">透視價格、效果維繫期與最適族群</p>
+            </div>
+
+            <div class="overflow-x-auto rounded-2xl shadow-sm border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-darkCard">
+                <table class="w-full text-left border-collapse min-w-[750px]">
+                    <thead>
+                        <tr class="bg-brand-50/60 dark:bg-slate-800/80 text-slate-800 dark:text-slate-200 border-b border-slate-200 dark:border-slate-700">
+                            <th class="p-4 sm:p-5 font-semibold">項目名稱</th>
+                            <th class="p-4 sm:p-5 font-semibold">分類</th>
+                            <th class="p-4 sm:p-5 font-semibold">主要功效</th>
+                            <th class="p-4 sm:p-5 font-semibold">單次市場行情</th>
+                            <th class="p-4 sm:p-5 font-semibold">恢復期 / 建議頻率</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-sm sm:text-base">
+                        <!-- Row 1 -->
+                        <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
+                            <td class="p-4 sm:p-5 font-semibold text-slate-800 dark:text-slate-100">水飛梭 / 無痛清粉刺</td>
+                            <td class="p-4 sm:p-5"><span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-200">生活美容</span></td>
+                            <td class="p-4 sm:p-5 text-slate-600 dark:text-slate-300">深層清潔毛孔、清除老廢角質、補水保濕</td>
+                            <td class="p-4 sm:p-5 font-bold text-roseBrand-700 dark:text-roseBrand-400">NT$ 1,500 – 3,500</td>
+                            <td class="p-4 sm:p-5 text-slate-500 dark:text-slate-400">無恢復期 / 每 3-4 週 1 次</td>
+                        </tr>
+                        <!-- Row 2 -->
+                        <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
+                            <td class="p-4 sm:p-5 font-semibold text-slate-800 dark:text-slate-100">酸類煥膚 (杏仁酸/果酸)</td>
+                            <td class="p-4 sm:p-5"><span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-200">生活美容</span></td>
+                            <td class="p-4 sm:p-5 text-slate-600 dark:text-slate-300">代謝痘痘、淡化表層痘印、控油提亮</td>
+                            <td class="p-4 sm:p-5 font-bold text-roseBrand-700 dark:text-roseBrand-400">NT$ 1,200 – 2,500</td>
+                            <td class="p-4 sm:p-5 text-slate-500 dark:text-slate-400">1-3 天微脫皮 / 每 2-4 週 1 次</td>
+                        </tr>
+                        <!-- Row 3 -->
+                        <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
+                            <td class="p-4 sm:p-5 font-semibold text-slate-800 dark:text-slate-100">皮秒雷射 (Picosure)</td>
+                            <td class="p-4 sm:p-5"><span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-roseBrand-100 text-roseBrand-700 dark:bg-roseBrand-900/60 dark:text-roseBrand-400">醫療美容</span></td>
+                            <td class="p-4 sm:p-5 text-slate-600 dark:text-slate-300">淡化色斑、擊碎黑色素、改善膚色不均</td>
+                            <td class="p-4 sm:p-5 font-bold text-roseBrand-700 dark:text-roseBrand-400">NT$ 4,000 – 12,000</td>
+                            <td class="p-4 sm:p-5 text-slate-500 dark:text-slate-400">3-7 天微泛紅 / 每 1-2 個月 1 次</td>
+                        </tr>
+                        <!-- Row 4 -->
+                        <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
+                            <td class="p-4 sm:p-5 font-semibold text-slate-800 dark:text-slate-100">音波 / 電波拉提 (HIFU/Thermage)</td>
+                            <td class="p-4 sm:p-5"><span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-roseBrand-100 text-roseBrand-700 dark:bg-roseBrand-900/60 dark:text-roseBrand-400">醫療美容</span></td>
+                            <td class="p-4 sm:p-5 text-slate-600 dark:text-slate-300">深層筋膜收縮、刺激膠原蛋白、緊緻輪廓</td>
+                            <td class="p-4 sm:p-5 font-bold text-roseBrand-700 dark:text-roseBrand-400">NT$ 25,000 – 90,000</td>
+                            <td class="p-4 sm:p-5 text-slate-500 dark:text-slate-400">無明顯傷口 / 每 1-2 年 1 次</td>
+                        </tr>
+                        <!-- Row 5 -->
+                        <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
+                            <td class="p-4 sm:p-5 font-semibold text-slate-800 dark:text-slate-100">玻尿酸 / 肉毒桿菌注射</td>
+                            <td class="p-4 sm:p-5"><span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-roseBrand-100 text-roseBrand-700 dark:bg-roseBrand-900/60 dark:text-roseBrand-400">醫療美容</span></td>
+                            <td class="p-4 sm:p-5 text-slate-600 dark:text-slate-300">撫平動態紋路、局部凹陷填充、立體輪廓</td>
+                            <td class="p-4 sm:p-5 font-bold text-roseBrand-700 dark:text-roseBrand-400">NT$ 6,000 – 25,000</td>
+                            <td class="p-4 sm:p-5 text-slate-500 dark:text-slate-400">1-3 天針孔痕跡 / 每 6-12 個月 1 次</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 4. 防坑避雷與聰明選擇 Tips -->
+        <section>
+            <div class="text-center mb-10">
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">消費避雷與聰明選擇觀念</h2>
+                <p class="text-slate-500 dark:text-slate-400 mt-2 text-sm sm:text-base">掌握 4 大原則，不做冤大頭</p>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Tip 1 -->
+                <div class="bg-white dark:bg-darkCard p-6 rounded-2xl border-t-4 border-brand-500 shadow-sm space-y-2">
+                    <div class="text-brand-500 text-xl font-bold flex items-center space-x-2">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span>認明官方認證</span>
+                    </div>
+                    <h4 class="font-bold text-slate-800 dark:text-slate-100">拒絕無牌原廠假貨</h4>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                        醫美儀器與探頭務必要求現場拆封掃碼驗證原廠正貨，美容院則應確認產品成分透明。
+                    </p>
+                </div>
+
+                <!-- Tip 2 -->
+                <div class="bg-white dark:bg-darkCard p-6 rounded-2xl border-t-4 border-roseBrand-400 shadow-sm space-y-2">
+                    <div class="text-roseBrand-400 text-xl font-bold flex items-center space-x-2">
+                        <i class="fa-solid fa-user-doctor"></i>
+                        <span>醫師親自評估</span>
+                    </div>
+                    <h4 class="font-bold text-slate-800 dark:text-slate-100">拒絕諮詢師代理開單</h4>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                        醫美療程屬於醫療行為，切勿只聽諮詢師推銷，務必由執業醫師親自面診評估能量與安全性。
+                    </p>
+                </div>
+
+                <!-- Tip 3 -->
+                <div class="bg-white dark:bg-darkCard p-6 rounded-2xl border-t-4 border-brand-500 shadow-sm space-y-2">
+                    <div class="text-brand-500 text-xl font-bold flex items-center space-x-2">
+                        <i class="fa-solid fa-piggy-bank"></i>
+                        <span>按需購買包堂</span>
+                    </div>
+                    <h4 class="font-bold text-slate-800 dark:text-slate-100">避免高額包堂陷阱</h4>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                        美業常有高折扣長期包堂，建議先單次體驗確認服務品質與膚質適應度，再決定是否購課。
+                    </p>
+                </div>
+
+                <!-- Tip 4 -->
+                <div class="bg-white dark:bg-darkCard p-6 rounded-2xl border-t-4 border-roseBrand-400 shadow-sm space-y-2">
+                    <div class="text-roseBrand-400 text-xl font-bold flex items-center space-x-2">
+                        <i class="fa-solid fa-hand-holding-medical"></i>
+                        <span>術後修復優先</span>
+                    </div>
+                    <h4 class="font-bold text-slate-800 dark:text-slate-100">三分做，七分養</h4>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                        醫美破壞後防曬與純保濕不可少，可搭配美業的溫和保濕導入作為術後黃金修復期的養護。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center text-xs sm:text-sm border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <p>© 2026 聰明美業與醫美選擇指南｜理性愛美 ‧ 安全第一</p>
+            <p class="text-slate-500">本網站資訊僅供自我參考，涉及醫療行為之療程請務必諮詢合格之醫療機構與專業醫師。</p>
+        </div>
+    </footer>
+
+    <!-- Interactive JavaScript Logic -->
+    <script>
+        // Dark Mode Toggle Logic
+        const themeToggleBtn = document.getElementById('themeToggle');
+        
+        // System / Local Storage Theme Check
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        // 3-Second Smart Recommendation Logic
+        const quizForm = document.getElementById('quizForm');
+        const resultPanel = document.getElementById('resultPanel');
+        const resultTitle = document.getElementById('resultTitle');
+        const resultCategory = document.getElementById('resultCategory');
+        const resultDesc = document.getElementById('resultDesc');
+        const resultAdvice = document.getElementById('resultAdvice');
+
+        quizForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const need = document.getElementById('needSelect').value;
+            const budget = document.getElementById('budgetSelect').value;
+
+            let title = "";
+            let category = "";
+            let desc = "";
+            let advice = "";
+
+            if (need === 'clean') {
+                if (budget === 'low' || budget === 'medium') {
+                    category = "生活美容（高CP值）";
+                    title = "推薦：水飛梭 / 無痛清粉刺 + 酸類煥膚";
+                    desc = "針對日常粉刺清潔與毛孔調理，生活美容是最經濟且舒適的選擇。無須恢復期，可定期作為日常肌膚清潔保養。";
+                    advice = "💡 建議頻率：每月 1-2 次。若出油狀況較嚴重，可搭配低濃度杏仁酸促進角質代謝。";
+                } else {
+                    category = "醫美 / 高階美業組合";
+                    title = "推薦：水飛梭 + 蜂巢皮秒 / 淨膚雷射";
+                    desc = "您的預算充足，可以在基礎清粉刺保養之外，加入微能量雷射療程，進一步縮小毛孔與改善肌膚細緻度。";
+                    advice = "💡 建議頻率：先進行水飛梭深層清潔，間隔 1-2 週後施打雷射效果最佳。";
+                }
+            } else if (need === 'spots') {
+                if (budget === 'low') {
+                    category = "生活美容溫和調理";
+                    title = "推薦：高濃度維他命C導入 + 淡斑酸類煥膚";
+                    desc = "預算較受限時，生活美容能協助代謝表層角質黑色素，並提供肌膚基礎抗氧化提亮。";
+                    advice = "💡 提示：生活美容對深層斑點效果有限，若要根治深層斑建議積累預算選擇皮秒雷射。";
+                } else {
+                    category = "醫療美容（精準高效）";
+                    title = "推薦：蜂巢皮秒雷射 (Picosure / Picoway)";
+                    desc = "對於雀斑、曬斑與痘疤，醫美的皮秒雷射能利用極短脈衝擊碎黑色素，比傳統保養品與生活美容見效快數倍。";
+                    advice = "💡 建議頻率：安排 3-5 次為一療程，每次間隔 4-6 週，術後務必加強防曬與純保濕。";
+                }
+            } else if (need === 'sagging') {
+                if (budget === 'luxury' || budget === 'high') {
+                    category = "醫療美容（結構拉提）";
+                    title = "推薦：美國音波拉提 (Ulthera) 或 美國電波 (Thermage FLX)";
+                    desc = "鬆弛與輪廓線模糊屬於筋膜層與真皮層膠原蛋白流失問題，生活美容無法作用至此深度，必須依靠醫美高能量儀器。";
+                    advice = "💡 效果發揮：施打後 2-3 個月膠原蛋白新生效果最為明顯，可維持約 1-2 年。";
+                } else {
+                    category = "醫美輕量方案 / 美業保養";
+                    title = "推薦：韓系音波 / 電波單區局部施打 或 筋膜撥筋提拉";
+                    desc = "預算有限時，可選擇韓系音波進行局部下顎線加強，或搭配美業的定期筋膜拉提按摩維持肌肉彈性。";
+                    advice = "💡 建議：音波建議選擇局部條數施打，搭配良好作息與補充膠原蛋白。";
+                }
+            } else if (need === 'dry') {
+                category = "生活美容 / 水光療程";
+                title = "推薦：深層玻尿酸水導入 / 潤澤敷膜 (或醫美水光針)";
+                desc = "缺水乾燥主要需提升肌膚角質層含水量與屏障修復。美業的水導入療程價格平實且高度舒適。";
+                advice = "💡 若預算充足（Medium以上）且希望維持長效，亦可考慮醫美「水光針」直接將玻尿酸注入真皮層。";
+            }
+
+            // Populate Result
+            resultCategory.textContent = category;
+            resultTitle.textContent = title;
+            resultDesc.textContent = desc;
+            resultAdvice.innerHTML = advice;
+
+            // Show Panel
+            resultPanel.classList.remove('hidden');
+            resultPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+    </script>
+</body>
+</html>

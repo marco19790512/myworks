@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌟 豪華幸運轉盤抽獎程式 🌟</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap');
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+        .glow-text {
+            text-shadow: 0 0 20px rgba(251, 191, 36, 0.6), 0 0 40px rgba(245, 158, 11, 0.4);
+        }
+        /* 轉盤外框霓虹陰影 */
+        .wheel-shadow {
+            box-shadow: 0 0 30px rgba(236, 72, 153, 0.4), inset 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+        /* 自訂卷軸樣式 */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 text-white min-h-screen flex flex-col items-center justify-center p-4 relative overflow-x-hidden">
+
+    <!-- 煙火 Canvas -->
+    <canvas id="fireworks-canvas" class="absolute inset-0 pointer-events-none z-10"></canvas>
+
+    <!-- 主排版容器：在大螢幕時左右並排，行動裝置上下堆疊 -->
+    <div class="relative z-20 flex flex-col lg:flex-row gap-6 max-w-5xl w-full items-center justify-center my-auto">
+        
+        <!-- 左側/上方：轉盤與核心抽獎區 -->
+        <div class="bg-white/10 backdrop-blur-xl border border-white/20 p-6 md:p-8 rounded-3xl shadow-2xl max-w-lg w-full text-center flex flex-col items-center">
+            <h1 class="text-3xl md:text-4xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-400 glow-text">
+                🎯 幸運大轉盤 🎯
+            </h1>
+            <p id="status" class="text-indigo-200 mb-6 text-sm">正在載入禮物清單...</p>
+
+            <!-- 轉盤外框容器 -->
+            <div class="relative flex items-center justify-center mb-6">
+                <!-- 指針 (上方頂點) -->
+                <div class="absolute -top-3 z-30 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[24px] border-t-yellow-400 drop-shadow-[0_4px_4px_rgba(0,0,0,0.6)]"></div>
+
+                <!-- 轉盤本體 (只保留純顏色區塊) -->
+                <div class="relative w-72 h-72 md:w-80 md:h-80 rounded-full border-4 border-yellow-400 wheel-shadow overflow-hidden bg-slate-900">
+                    <canvas id="wheel-canvas" width="400" height="400" class="w-full h-full transition-transform duration-700 ease-out"></canvas>
+                    <!-- 中間轉軸按鈕/裝飾 -->
+                    <div class="absolute inset-0 m-auto w-16 h-16 bg-gradient-to-tr from-yellow-500 to-amber-300 rounded-full border-4 border-slate-900 shadow-xl flex items-center justify-center z-20 pointer-events-none">
+                        <span class="text-slate-900 font-black text-xl">🎁</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 中獎結果提示 -->
+            <div id="result-display" class="mb-6 h-12 flex items-center justify-center font-bold text-xl text-yellow-300">
+                準備就緒，轉動命運之輪！
+            </div>
+
+            <!-- 按鈕群組 -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center w-full">
+                <button id="draw-btn" onclick="startWheelSpin()" disabled 
+                    class="flex-1 bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-bold text-xl py-3 px-8 rounded-2xl shadow-lg shadow-pink-500/30 transform hover:-translate-y-1 active:translate-y-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                    開始轉動 🎡
+                </button>
+                <button id="reset-btn" onclick="resetList()" style="display:none;"
+                    class="bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold py-3 px-6 rounded-2xl transition-all">
+                    重置清單
+                </button>
+            </div>
+        </div>
+
+        <!-- 右側/下方：禮物清單總覽與中獎歷史側邊欄 -->
+        <div class="bg-white/10 backdrop-blur-xl border border-white/20 p-6 rounded-3xl shadow-2xl max-w-md w-full flex flex-col h-[520px]">
+            <!-- 禮物總清單 (上方) -->
+            <div class="flex-1 flex flex-col min-h-0 mb-4">
+                <h3 class="text-md font-bold text-pink-400 mb-2 flex items-center justify-between">
+                    <span>📋 禮物清單總覽</span>
+                    <span id="total-badge" class="text-xs bg-pink-500/20 px-2 py-0.5 rounded-full border border-pink-500/40">共 0 項</span>
+                </h3>
+                <div id="gift-list-sidebar" class="flex-1 overflow-y-auto space-y-1.5 pr-1">
+                    <!-- 動態帶入 -->
+                </div>
+            </div>
+
+            <!-- 中獎紀錄 (下方) -->
+            <div class="h-40 flex flex-col border-t border-white/10 pt-4">
+                <h3 class="text-sm font-bold text-yellow-400 mb-2 flex items-center justify-between">
+                    <span>🏆 中獎紀錄</span>
+                    <span id="count-badge" class="text-xs bg-yellow-400/20 px-2 py-0.5 rounded-full border border-yellow-400/40">0</span>
+                </h3>
+                <div class="flex-1 overflow-y-auto bg-black/30 p-3 rounded-xl border border-white/10">
+                    <ul id="history-list" class="space-y-1 text-sm text-indigo-100">
+                        <li class="text-slate-400 text-xs text-center py-2">尚無中獎紀錄</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSwImsctdIwURdlL2BF-S7ePC1qmIUI7cIVrbnWbDEgYFtF0zD3Ci7UL2NJ6ExwAzaOHVU--Yx7YLwn/pub?output=csv";
+        
+        let originalGiftList = [];
+        let availableGifts = [];
+        let isSpinning = false;
+        let audioCtx = null;
+        let currentAngle = 0; 
+
+        // 配色方案（供轉盤及側邊欄標籤使用）
+        const colorPalette = ['#f43f5e', '#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#6366f1', '#14b8a6'];
+
+        // 初始化 Web Audio API
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        // 音效播放
+        function playSound(type) {
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+
+            if (type === 'tick') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.exponentialRampToValueAtTime(700, now + 0.03);
+                gain.gain.setValueAtTime(0.06, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+                osc.start(now);
+                osc.stop(now + 0.03);
+            } else if (type === 'win') {
+                const freqs = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+                freqs.forEach((f, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(f, now + i * 0.1);
+                    gain.gain.setValueAtTime(0.15, now + i * 0.1);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.1 + 0.5);
+                    osc.start(now + i * 0.1);
+                    osc.stop(now + i * 0.1 + 0.5);
+                });
+            }
+        }
+
+        // 載入 CSV
+        async function loadGifts() {
+            try {
+                const response = await fetch(csvUrl);
+                const data = await response.text();
+                const rows = data.split('\n').map(r => r.trim()).filter(r => r.length > 0);
+                
+                originalGiftList = rows.map(r => r.replace(/^["']|["']$/g, '').split(',')[0])
+                                       .filter(item => item && !['禮品', '獎項', 'gift'].includes(item));
+
+                if (originalGiftList.length === 0) throw new Error("清單為空");
+
+                availableGifts = [...originalGiftList];
+                document.getElementById('status').innerText = `已載入 ${originalGiftList.length} 項禮品（支援不重複抽取）`;
+                document.getElementById('draw-btn').disabled = false;
+                
+                drawWheel();
+                renderSidebarList();
+            } catch (error) {
+                console.error(error);
+                document.getElementById('status').innerText = "無法載入清單，請檢查網路連線。";
+            }
+        }
+
+        // 繪製純色轉盤
+        const wheelCanvas = document.getElementById('wheel-canvas');
+        const wheelCtx = wheelCanvas.getContext('2d');
+
+        function drawWheel() {
+            const items = originalGiftList;
+            const len = items.length;
+            const centerX = wheelCanvas.width / 2;
+            const centerY = wheelCanvas.height / 2;
+            const radius = 180;
+
+            wheelCtx.clearRect(0, 0, wheelCanvas.width, wheelCanvas.height);
+            if (len === 0) return;
+
+            const arcSize = (2 * Math.PI) / len;
+
+            for (let i = 0; i < len; i++) {
+                const angle = i * arcSize;
+                wheelCtx.beginPath();
+                wheelCtx.fillStyle = colorPalette[i % colorPalette.length];
+                wheelCtx.moveTo(centerX, centerY);
+                wheelCtx.arc(centerX, centerY, radius, angle, angle + arcSize);
+                wheelCtx.lineTo(centerX, centerY);
+                wheelCtx.fill();
+            }
+        }
+
+        // 渲染側邊欄禮物清單
+        function renderSidebarList() {
+            const container = document.getElementById('gift-list-sidebar');
+            const totalBadge = document.getElementById('total-badge');
+            container.innerHTML = '';
+            totalBadge.innerText = `共 ${originalGiftList.length} 項`;
+
+            originalGiftList.forEach((gift, index) => {
+                const isAvailable = availableGifts.includes(gift);
+                const color = colorPalette[index % colorPalette.length];
+
+                const itemDiv = document.createElement('div');
+                itemDiv.className = `flex items-center justify-between p-2 rounded-xl transition-all ${isAvailable ? 'bg-white/5 border border-white/5' : 'bg-black/40 opacity-40 line-through'}`;
+                
+                itemDiv.innerHTML = `
+                    <div class="flex items-center gap-2.5 overflow-hidden">
+                        <span class="w-3 h-3 rounded-full flex-shrink-0" style="background-color: ${color};"></span>
+                        <span class="text-sm truncate ${isAvailable ? 'text-indigo-100 font-medium' : 'text-slate-400'}">${gift}</span>
+                    </div>
+                    <span class="text-xs px-2 py-0.5 rounded-md flex-shrink-0 ${isAvailable ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'}">
+                        ${isAvailable ? '待抽' : '已中獎'}
+                    </span>
+                `;
+                container.appendChild(itemDiv);
+            });
+        }
+
+        // 煙火特效系統
+        const canvas = document.getElementById('fireworks-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class FireworkParticle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 8 + 2;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
+                this.alpha = 1;
+                this.decay = Math.random() * 0.015 + 0.01;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vy += 0.15;
+                this.alpha -= this.decay;
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function launchFireworks() {
+            const colors = ['#f43f5e', '#fbbf24', '#38bdf8', '#c084fc', '#34d399'];
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const x = Math.random() * canvas.width * 0.8 + canvas.width * 0.1;
+                    const y = Math.random() * canvas.height * 0.5 + canvas.height * 0.1;
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    for (let j = 0; j < 50; j++) {
+                        particles.push(new FireworkParticle(x, y, color));
+                    }
+                }, i * 300);
+            }
+        }
+
+        function animateFireworks() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, index) => {
+                p.update();
+                p.draw();
+                if (p.alpha <= 0) particles.splice(index, 1);
+            });
+            requestAnimationFrame(animateFireworks);
+        }
+        animateFireworks();
+
+        // 轉盤旋轉抽獎主邏輯
+        function startWheelSpin() {
+            if (isSpinning) return;
+            if (availableGifts.length === 0) {
+                return;
+            }
+
+            initAudio();
+            isSpinning = true;
+            const btn = document.getElementById('draw-btn');
+            const resultDisplay = document.getElementById('result-display');
+            btn.disabled = true;
+            resultDisplay.innerText = "轉盤高速旋轉中...";
+
+            const targetWinner = availableGifts[Math.floor(Math.random() * availableGifts.length)];
+            const targetIndex = originalGiftList.indexOf(targetWinner);
+
+            const totalItems = originalGiftList.length;
+            const degreesPerItem = 360 / totalItems;
+
+            const targetAngleOffset = 360 - (targetIndex * degreesPerItem + degreesPerItem / 2);
+            const extraSpins = 360 * (5 + Math.floor(Math.random() * 3));
+            
+            currentAngle = currentAngle - (currentAngle % 360) + extraSpins + targetAngleOffset;
+
+            wheelCanvas.style.transition = 'transform 4s cubic-bezier(0.15, 0.85, 0.15, 1)';
+            wheelCanvas.style.transform = `rotate(${currentAngle}deg)`;
+
+            let tickInterval = setInterval(() => {
+                playSound('tick');
+            }, 150);
+
+            setTimeout(() => {
+                clearInterval(tickInterval);
+                const availableIdx = availableGifts.indexOf(targetWinner);
+                if (availableIdx > -1) availableGifts.splice(availableIdx, 1);
+
+                resultDisplay.innerHTML = `🎁 恭喜抽中：<span class="text-pink-400 font-black">${targetWinner}</span>`;
+                playSound('win');
+                launchFireworks();
+
+                // 更新側邊欄與紀錄
+                renderSidebarList();
+
+                const historyList = document.getElementById('history-list');
+                const countBadge = document.getElementById('count-badge');
+                
+                // 如果是第一筆，清空預設提示
+                if (historyList.children.length === 1 && historyList.children[0].tagName === 'LI' && historyList.children[0].classList.contains('text-slate-400')) {
+                    historyList.innerHTML = '';
+                }
+
+                const li = document.createElement('li');
+                li.className = "flex justify-between items-center border-b border-white/5 py-1";
+                li.innerHTML = `<span class="font-bold text-yellow-300">✨ ${targetWinner}</span><span class="text-xs text-slate-400">${new Date().toLocaleTimeString()}</span>`;
+                historyList.prepend(li);
+                
+                const drawnCount = originalGiftList.length - availableGifts.length;
+                countBadge.innerText = drawnCount;
+
+                isSpinning = false;
+                btn.disabled = availableGifts.length === 0;
+                btn.innerText = availableGifts.length === 0 ? "禮物已抽完" : "再次轉動 🎡";
+                if (availableGifts.length === 0) {
+                    document.getElementById('reset-btn').style.display = 'inline-block';
+                }
+            }, 4000);
+        }
+
+        function resetList() {
+            availableGifts = [...originalGiftList];
+            document.getElementById('draw-btn').disabled = false;
+            document.getElementById('draw-btn').innerText = "開始轉動 🎡";
+            document.getElementById('reset-btn').style.display = 'none';
+            document.getElementById('result-display').innerText = "清單已重置，準備就緒！";
+            
+            const historyList = document.getElementById('history-list');
+            historyList.innerHTML = '<li class="text-slate-400 text-xs text-center py-2">尚無中獎紀錄</li>';
+            document.getElementById('count-badge').innerText = '0';
+
+            renderSidebarList();
+        }
+
+        window.onload = loadGifts;
+    </script>
+</body>
+</html>

@@ -1,0 +1,2153 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="h-full bg-[#F7F5EE]">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微美地圖 Micro Beauty Map - 找到適合你的美｜皮膚保養體驗社群與地區美容探索</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="微美地圖 Micro Beauty Map 是結合美容保養體驗分享、地區店家探索、肌膚基礎知識問答與積分回饋的美容社群平台。協助你安心探索臉部保養、SPA舒壓與各類美容服務。">
+    <meta name="keywords" content="微美地圖,美容體驗,皮膚保養QA,臉部保養,台北美容推薦,SPA舒壓,保養知識庫,美容積分換優惠,SKINORA">
+    <meta name="robots" content="index, follow">
+
+    <!-- GEO / Local Search Meta Tags -->
+    <meta name="geo.region" content="TW-TPE">
+    <meta name="geo.placename" content="Taipei, Taiwan">
+    <meta name="geo.position" content="25.040857;121.545803">
+    <meta name="ICBM" content="25.040857, 121.545803">
+
+    <!-- Open Graph / Social Media (SEO & GEO Shareability) -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://microbeautymap.tw/">
+    <meta property="og:title" content="微美地圖 Micro Beauty Map - 找到適合你的美">
+    <meta property="og:description" content="真實心得、安心探索，分享每一次變美的故事。看心得、找店家、學習肌膚基礎保養、賺積分換優惠。">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=1200&auto=format&fit=crop&q=80">
+    <meta property="og:locale" content="zh_TW">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="微美地圖 Micro Beauty Map">
+    <meta name="twitter:description" content="找到適合你的美，分享經驗累積回饋。美容保養社群與體驗探索平台。">
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=1200&auto=format&fit=crop&q=80">
+
+    <!-- Schema.org Structured Data for SEO / GEO / AEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://microbeautymap.tw/#website",
+          "url": "https://microbeautymap.tw/",
+          "name": "微美地圖 Micro Beauty Map",
+          "description": "台灣美容體驗分享與地區店家探索社群平台",
+          "inLanguage": "zh-TW"
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://microbeautymap.tw/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "如何判斷自己的肌膚類型（乾性、油性、混合性、敏感肌）？",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "最簡單的判斷方式是「早晨觀察法」：清潔臉部後不安裝任何保養品，靜置30分鐘。若全臉緊繃乾澀為乾性肌；若T字部位與兩頰皆明顯泛油光為油性肌；若僅T字泛油、兩頰偏乾則為混合性肌；若容易泛紅、刺痛、癢則偏向敏感性肌膚。"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "基礎皮膚保養的正確順序是什麼？",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "日常基礎保養遵循『由稀到濃、先水後油』的原則：日間為溫和清潔 ➔ 化妝水（補水） ➔ 精華液（功能修護） ➔ 乳液/乳霜（鎖水） ➔ 防曬（抵禦紫外線）；夜間則為卸妝清潔 ➔ 化妝水 ➔ 精華液 ➔ 保濕乳霜。"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "每天都需要敷面膜嗎？面膜過度使用會怎樣？",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "不需要。一般保濕片狀面膜建議每週使用 2~3 次即可，每次敷 10~15 分鐘。若每天敷面膜容易導致角質層過度水合、皮膚屏障受損，反而引發敏感或冒痘問題。"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "防曬到底有多重要？室內也需要擦防曬嗎？",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "防曬是抗老與維持肌膚健康最關鍵的一步。紫外線中的 UVA 能穿透玻璃並深入真皮層引發曬黑與光老化。若長時間位於靠窗室內或有強烈光線環境，仍建議使用 SPF30 / PA+++ 以上的輕透防曬。"
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@400;600&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            sage: '#A8C382',
+                            sageDark: '#567138',
+                            pink: '#EAD3CD',
+                            cream: '#F7F5EE',
+                            gold: '#D4B89E',
+                            dark: '#686868',
+                            darkHover: '#4A4A4A',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Noto Sans TC"', 'Montserrat', 'sans-serif'],
+                        serif: ['"Noto Serif TC"', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Noto Sans TC', 'Montserrat', sans-serif;
+            background-color: #F7F5EE;
+            color: #686868;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .font-serif-title {
+            font-family: 'Noto Serif TC', serif;
+        }
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F7F5EE;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D4B89E;
+            border-radius: 9999px;
+        }
+
+        /* Floating AI Assistant Animation */
+        @keyframes floatCute {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(3deg); }
+        }
+        .animate-float-cute {
+            animation: floatCute 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col">
+    <div id="root" class="min-h-screen flex flex-col"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo, useRef } = React;
+
+        // --- Skin Care Basics QA Data (AEO / Knowledge Base Optimized) ---
+        const SKINCARE_FAQS = [
+            {
+                id: 'faq-1',
+                category: '膚質檢測',
+                question: '如何正確判斷自己的肌膚類型（乾性、油性、混合性、敏感肌）？',
+                answer: '建議使用「洗臉測試法」：早晨洗完臉後暫不塗抹任何保養品，靜置 30 分鐘觀察。全臉感到緊繃乾澀為【乾性肌】；T字部位與雙頰皆明顯出油為【油性肌】；T字部位出油但雙頰乾燥為【混合肌】；若容易泛紅、刺痛或溫差大即不適則偏向【敏感肌】。',
+                tags: ['膚質判斷', '基礎概念']
+            },
+            {
+                id: 'faq-2',
+                category: '保養步驟',
+                question: '早晚基礎保養的正確順序與原則是什麼？',
+                answer: '掌握「由稀到濃、先水後油」的基本金律。早晨：溫和清潔 ➔ 化妝水補水 ➔ 功效精華 ➔ 保濕乳液 ➔ 防曬（最重要的抗老步驟）；夜晚：徹底卸妝清潔 ➔ 化妝水 ➔ 深度修護精華 ➔ 滋潤封膜乳霜。',
+                tags: ['保養順序', '日常護膚']
+            },
+            {
+                id: 'faq-3',
+                category: '面膜維護',
+                question: '天天敷面膜效果更好嗎？敷完面膜需要洗臉嗎？',
+                answer: '不需要天天敷！片狀面膜建議每週 2～3 次、每次 10～15 分鐘即可。過度敷面膜會導致角質層「水合過度」，破壞皮膚天然屏障。若敷完感覺黏膩或敏感肌族群，建議用清水稍作沖洗後再擦拭乳液鎖水。',
+                tags: ['面膜保養', '角質健康']
+            },
+            {
+                id: 'faq-4',
+                category: '防曬防護',
+                question: '陰天或長期在室內需要擦防曬嗎？防曬係數怎麼選？',
+                answer: '需要！紫外線中的 UVA 能穿透雲層與玻璃，是引發皮膚光老化與斑點的主因。室內或陰天選用 SPF30 / PA+++ 的清爽型防曬即可；若戶外活動則建議選擇 SPF50+ / PA++++ 並每 2 小時補擦一次。',
+                tags: ['紫外線', '防曬抗老']
+            }
+        ];
+
+        // --- Mock Centralized Data ---
+        const MOCK_CATEGORIES = [
+            { id: 'facial', name: '臉部保養', icon: 'Sparkles', desc: '深層清潔、水光保濕' },
+            { id: 'body', name: '身體保養', icon: 'Sun', desc: '去角質、體雕保養' },
+            { id: 'spa', name: 'SPA 舒壓', icon: 'Heart', desc: '精油按摩、頭皮 Spa' },
+            { id: 'nails', name: '美甲美睫', icon: 'Smile', desc: '日系光療、角睫造型' },
+            { id: 'tattoo', name: '紋繡服務', icon: 'Feather', desc: '霧眉、飄眉、隱形眼線' },
+            { id: 'skin', name: '肌膚紋路調整', icon: 'ShieldCheck', desc: '撫紋、肌膚調理' },
+        ];
+
+        const MOCK_REVIEWS = [
+            {
+                id: 'rev-1',
+                title: '第一次體驗臉部皮膚管理，整個過程比想像中放省又專業！',
+                content: '走進這家位於台北的店家，環境空間讓人放鬆。美容師小雅非常親切，先做了詳細的膚質檢測，告訴我目前肌膚偏乾的情況。施作時的清粉刺過程完全沒有強烈的刺痛感，後續的水光保濕精華導入超級舒服，做完後皮膚真的有透亮感！下次一定會再回訪。',
+                author: '小柔愛美',
+                avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+                category: '臉部保養',
+                location: '台北市大安區',
+                providerName: '花漾美學診所',
+                rating: 5,
+                likes: 128,
+                commentsCount: 32,
+                isSponsored: false,
+                coverImage: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&auto=format&fit=crop&q=80',
+                images: [
+                    'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&auto=format&fit=crop&q=80',
+                    'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=800&auto=format&fit=crop&q=80'
+                ],
+                date: '2026-10-12',
+                status: 'published',
+                comments: [
+                    { id: 'c1', user: 'Emma', text: '請問會推銷課程嗎？想了解！', date: '2026-10-12 14:30' },
+                    { id: 'c2', user: '小柔愛美', text: '回覆 Emma：完全不會強迫推銷喔！會給建議但過程很放鬆。', date: '2026-10-12 15:10' }
+                ]
+            },
+            {
+                id: 'rev-2',
+                title: '找到適合自己的日常有機精油 SPA，釋放工作積累的壓力',
+                content: '平時工作壓力大肩頸超級緊繃，這次試了沉香精油全身 SPA。技師手勁剛好，環境瀰漫著淡淡草本香氣，讓人不知不覺就睡著了。做完身體輕盈很多，真心推薦給長期坐辦公室的大家！',
+                author: 'Sophie Green',
+                avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80',
+                category: 'SPA 舒壓',
+                location: '台中市西區',
+                providerName: '綠漾 SPA 概念館',
+                rating: 5,
+                likes: 95,
+                commentsCount: 14,
+                isSponsored: true,
+                coverImage: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&auto=format&fit=crop&q=80',
+                images: [
+                    'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&auto=format&fit=crop&q=80'
+                ],
+                date: '2026-10-18',
+                status: 'published',
+                comments: [
+                    { id: 'c3', user: 'Vicky', text: '環境真的看起來好優雅～', date: '2026-10-19 09:12' }
+                ]
+            },
+            {
+                id: 'rev-3',
+                title: '自然系霧眉初體驗！拍照再也不用花時間畫眉毛了',
+                content: '一直很擔心霧眉會像海苔一樣不自然，諮詢了很久才決定施做。老師很細心地跟是我溝通眉型，根據我的臉型設計。脫痂後的顏色非常自然柔順，親友都稱讚像自己畫的粉霧感！',
+                author: '心怡 Lin',
+                avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150&auto=format&fit=crop&q=80',
+                category: '紋繡服務',
+                location: '高雄市左營區',
+                providerName: '素顏美學工作室',
+                rating: 4,
+                likes: 76,
+                commentsCount: 9,
+                isSponsored: false,
+                coverImage: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80',
+                images: [
+                    'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop&q=80'
+                ],
+                date: '2026-10-25',
+                status: 'published',
+                comments: []
+            }
+        ];
+
+        const MOCK_COUPONS = [
+            {
+                id: 'cp-1',
+                title: '美容療程折抵券',
+                discountText: '折抵 NT$ 300',
+                providerName: '花漾美學診所',
+                pointsRequired: 300,
+                validUntil: '2026-12-31',
+                image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=600&auto=format&fit=crop&q=80',
+                description: '適用於全系列深層臉部保養課程，單次體驗可折抵 NT$ 300。',
+                terms: '1. 需提前至少一日電話或線上預約。\n2. 每人限使用乙次，不可與其他優惠併用。'
+            },
+            {
+                id: 'cp-2',
+                title: '品牌保養品試用組',
+                discountText: '專屬免費兌換',
+                providerName: 'SKINORA 綠色植萃保養',
+                pointsRequired: 200,
+                validUntil: '2026-11-30',
+                image: 'https://images.unsplash.com/photo-1608248597260-2fe5069f1092?w=600&auto=format&fit=crop&q=80',
+                description: '內含修護精華液 5ml + 水光保濕霜 10ml 展示組。',
+                terms: '1. 可於合作門市出示核銷碼領取。\n2. 數量有限，換完為止。'
+            },
+            {
+                id: 'cp-3',
+                title: 'SPA 頭部舒壓 15分鐘體驗券',
+                discountText: '免費加價體驗',
+                providerName: '綠漾 SPA 概念館',
+                pointsRequired: 150,
+                validUntil: '2026-12-15',
+                image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=600&auto=format&fit=crop&q=80',
+                description: '凡預約任一全身主療程，出示此券即可免費升級頭部紓壓 15 分鐘。',
+                terms: '1. 限搭配指定主要 SPA 療程。\n2. 不得折換現金。'
+            }
+        ];
+
+        const MOCK_PROVIDERS = [
+            {
+                id: 'pv-1',
+                name: '花漾美學診所',
+                category: '臉部保養',
+                location: '台北市大安區忠孝東路四段',
+                rating: 4.9,
+                reviewCount: 42,
+                image: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=600&auto=format&fit=crop&q=80',
+                intro: '專注於極簡自然肌膚護理，提供舒適無壓力的沉浸式保養體驗。合作技師均具備專業國家認證。',
+                phone: '02-2771-XXXX',
+                hours: '11:00 - 20:00 (週日公休)'
+            },
+            {
+                id: 'pv-2',
+                name: '綠漾 SPA 概念館',
+                category: 'SPA 舒壓',
+                location: '台中市西區公益路',
+                rating: 4.8,
+                reviewCount: 38,
+                image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=600&auto=format&fit=crop&q=80',
+                intro: '採用國際認證有機精油，打造植物系紓壓防護空間，為都市女性提供一處心靈與肌膚的棲息地。',
+                phone: '04-2328-XXXX',
+                hours: '10:00 - 21:00'
+            }
+        ];
+
+        // --- Notification Banner Component ---
+        const NotificationToast = ({ message, type, onClose }) => {
+            if (!message) return null;
+            return (
+                <div className="fixed top-20 right-4 z-50 max-w-sm bg-white border border-[#D4B89E] rounded-xl shadow-lg p-4 flex items-center gap-3 animate-fade-in">
+                    <div className="w-8 h-8 rounded-full bg-[#A8C382]/20 flex items-center justify-center text-[#567138] flex-shrink-0">
+                        ✓
+                    </div>
+                    <div className="flex-1 text-sm text-[#686868]">{message}</div>
+                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xs font-bold">✕</button>
+                </div>
+            );
+        };
+
+        // --- Q-Version AI Assistant Component ---
+        const AiAssistant = ({ onNavigate }) => {
+            const [isOpen, setIsOpen] = useState(false);
+            const [messages, setMessages] = useState([
+                { sender: 'ai', text: '你好呀！我是你的微美 AI 美容助理 ✦ 很高興見到你！請問今天想了解什麼皮膚保養知識，或是想找哪類的美容體驗呢？' }
+            ]);
+            const [inputQuery, setInputQuery] = useState('');
+
+            const handleSend = (textToSend) => {
+                const query = textToSend || inputQuery;
+                if (!query.trim()) return;
+
+                const userMsg = { sender: 'user', text: query };
+                let aiReplyText = '收到您的詢問！建議您可以先在「體驗探索」選擇符合需求的地區與星級評分，或參考「皮膚基礎保養 FAQ」喔！';
+
+                const q = query.toLowerCase();
+                if (q.includes('臉部') || q.includes('保養') || q.includes('水光')) {
+                    aiReplyText = '想要皮膚透亮光澤嗎？推薦體驗【臉部保養】項目的深層清潔與水光保濕！台北的花漾美學診所有好評折扣券喔！';
+                } else if (q.includes('積分') || q.includes('點數') || q.includes('賺')) {
+                    aiReplyText = '賺取積分超簡單！只要登入平台發布真實心得可獲得 +50 Pt，留言互動加 +10 Pt，累積點數就能免費兌換體驗券囉！';
+                } else if (q.includes('spa') || q.includes('按摩') || q.includes('放鬆')) {
+                    aiReplyText = '最近工作辛苦了嗎？推薦試試【綠漾 SPA 概念館】的有機精油紓壓，或是領取專屬頭皮紓壓加價券喔！';
+                } else if (q.includes('乾') || q.includes('脫皮') || q.includes('敏感')) {
+                    aiReplyText = '肌膚偏乾時，請務必遵循「先水後油」原則！補充化妝水後使用含有神經醯胺的乳霜鎖水，並減少片狀面膜頻率喔！';
+                }
+
+                setMessages(prev => [...prev, userMsg, { sender: 'ai', text: aiReplyText }]);
+                if (!textToSend) setInputQuery('');
+            };
+
+            return (
+                <div className="fixed bottom-16 md:bottom-6 right-4 z-50 flex flex-col items-end font-sans">
+                    {/* Chat Window Box */}
+                    {isOpen && (
+                        <div className="mb-3 w-80 sm:w-96 bg-white border-2 border-[#EAD3CD] rounded-3xl shadow-2xl overflow-hidden flex flex-col h-[400px] animate-fade-in">
+                            {/* Chat Header */}
+                            <div className="bg-gradient-to-r from-[#EAD3CD] via-[#F7F5EE] to-[#A8C382]/30 p-3.5 border-b border-[#EAD3CD] flex items-center justify-between">
+                                <div className="flex items-center gap-2.5">
+                                    <div className="w-9 h-9 rounded-full bg-[#A8C382] border-2 border-white flex items-center justify-center text-lg shadow-sm">
+                                        👩🏻‍⚕️
+                                    </div>
+                                    <div>
+                                        <div className="font-bold text-xs text-[#567138] flex items-center gap-1">
+                                            <span>微美 AI 小助手</span>
+                                            <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-ping"></span>
+                                        </div>
+                                        <div className="text-[10px] text-gray-500">線上美容顧問 ‧ 即時答覆</div>
+                                    </div>
+                                </div>
+                                <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-[#567138] text-sm font-bold px-2">✕</button>
+                            </div>
+
+                            {/* Chat Messages */}
+                            <div className="flex-1 p-3.5 overflow-y-auto space-y-3 bg-[#F7F5EE]/40 text-xs">
+                                {messages.map((m, idx) => (
+                                    <div key={idx} className={`flex ${m.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                        {m.sender === 'ai' && (
+                                            <div className="w-6 h-6 rounded-full bg-[#A8C382] text-white flex items-center justify-center text-[10px] mr-1.5 flex-shrink-0 mt-1">
+                                                ✨
+                                            </div>
+                                        )}
+                                        <div className={`max-w-[80%] p-2.5 rounded-2xl leading-relaxed ${
+                                            m.sender === 'user' 
+                                                ? 'bg-[#567138] text-white rounded-tr-none' 
+                                                : 'bg-white border border-[#EAD3CD] text-[#686868] rounded-tl-none shadow-sm'
+                                        }`}>
+                                            {m.text}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Quick Suggestion Chips */}
+                            <div className="p-2 bg-white border-t border-gray-100 flex gap-1.5 overflow-x-auto text-[10px]">
+                                <button onClick={() => handleSend('推薦臉部保養')} className="whitespace-nowrap bg-[#F7F5EE] hover:bg-[#EAD3CD]/50 text-[#567138] px-2.5 py-1 rounded-full border border-[#EAD3CD]">
+                                    ✨ 推薦臉部保養
+                                </button>
+                                <button onClick={() => handleSend('如何賺取積分？')} className="whitespace-nowrap bg-[#F7F5EE] hover:bg-[#EAD3CD]/50 text-[#567138] px-2.5 py-1 rounded-full border border-[#EAD3CD]">
+                                    🎁 如何賺積分？
+                                </button>
+                                <button onClick={() => handleSend('皮膚乾要怎麼保養？')} className="whitespace-nowrap bg-[#F7F5EE] hover:bg-[#EAD3CD]/50 text-[#567138] px-2.5 py-1 rounded-full border border-[#EAD3CD]">
+                                    💡 乾性肌保養
+                                </button>
+                            </div>
+
+                            {/* Input Footer */}
+                            <div className="p-2.5 bg-white border-t border-gray-100 flex gap-2">
+                                <input 
+                                    type="text"
+                                    placeholder="詢問保養建議、店家或優惠..."
+                                    className="flex-1 bg-[#F7F5EE] border border-gray-200 rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:border-[#A8C382]"
+                                    value={inputQuery}
+                                    onChange={(e) => setInputQuery(e.target.value)}
+                                    onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                                />
+                                <button 
+                                    onClick={() => handleSend()}
+                                    className="bg-[#567138] text-white px-3 py-1.5 rounded-xl text-xs font-medium hover:bg-[#43592a]"
+                                >
+                                    發送
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Cute Floating Trigger Avatar */}
+                    <button 
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="group relative flex items-center justify-center animate-float-cute focus:outline-none"
+                    >
+                        {/* Speech Bubble Hint when collapsed */}
+                        {!isOpen && (
+                            <div className="absolute right-14 bg-white border border-[#EAD3CD] text-[#567138] font-semibold text-[11px] px-3 py-1.5 rounded-2xl shadow-md whitespace-nowrap opacity-90 group-hover:opacity-100 transition-opacity">
+                                💬 需要美容建議嗎？點我聊天！
+                                <div className="absolute top-1/2 -right-1 w-2 h-2 bg-white border-t border-r border-[#EAD3CD] transform rotate-45 -translate-y-1/2"></div>
+                            </div>
+                        )}
+
+                        {/* Outer Soft Circle Avatar */}
+                        <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-[#A8C382] via-[#EAD3CD] to-[#F7F5EE] p-0.5 shadow-xl hover:scale-105 transition-transform flex items-center justify-center border-2 border-white">
+                            <div className="w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden relative">
+                                <svg className="w-10 h-10 text-[#567138]" viewBox="0 0 64 64" fill="none">
+                                    <circle cx="32" cy="32" r="30" fill="#F7F5EE"/>
+                                    <path d="M16 32C16 20 22 14 32 14C42 14 48 20 48 32C48 36 47 44 45 48C43 42 41 38 41 38H23C23 38 21 42 19 48C17 44 16 36 16 32Z" fill="#686868"/>
+                                    <circle cx="32" cy="33" r="13" fill="#FFE5D9"/>
+                                    <circle cx="27" cy="32" r="1.8" fill="#567138"/>
+                                    <circle cx="37" cy="32" r="1.8" fill="#567138"/>
+                                    <circle cx="24" cy="35" r="2.5" fill="#EAD3CD" opacity="0.8"/>
+                                    <circle cx="40" cy="35" r="2.5" fill="#EAD3CD" opacity="0.8"/>
+                                    <path d="M30 36Q32 38 34 36" stroke="#D4B89E" strokeWidth="1.5" strokeLinecap="round"/>
+                                    <circle cx="40" cy="22" r="3.5" fill="#A8C382"/>
+                                    <circle cx="40" cy="22" r="1.5" fill="#FFFFFF"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+            );
+        };
+
+        // --- Main App Container ---
+        function App() {
+            // Navigation State
+            const [currentRoute, setCurrentRoute] = useState('home'); // home, explore, review-detail, write-review, coupons, coupon-detail, providers, provider-detail, member, points, favorites, admin
+            const [selectedId, setSelectedId] = useState(null);
+            const [selectedCategory, setSelectedCategory] = useState(null);
+            const [searchKeyword, setSearchKeyword] = useState('');
+
+            // Audio Player State
+            const [isPlayingMusic, setIsPlayingMusic] = useState(true);
+            const audioRef = useRef(null);
+
+            // Auto-start music on initial load
+            useEffect(() => {
+                if (audioRef.current) {
+                    audioRef.current.play().then(() => {
+                        setIsPlayingMusic(true);
+                    }).catch(err => {
+                        console.log("Autoplay blocked by browser policy until interaction:", err);
+                        setIsPlayingMusic(false);
+                    });
+                }
+            }, []);
+
+            const toggleMusic = () => {
+                if (!audioRef.current) return;
+                if (isPlayingMusic) {
+                    audioRef.current.pause();
+                    setIsPlayingMusic(false);
+                    setToast('背景音樂已暫停');
+                } else {
+                    audioRef.current.play().then(() => {
+                        setIsPlayingMusic(true);
+                        setToast('背景音樂播放中 🎵');
+                    }).catch(err => {
+                        console.log("Audio play error:", err);
+                        setToast('無法播放背景音樂，請稍後重試');
+                    });
+                }
+            };
+
+            // Global Demo User State
+            const [user, setUser] = useState({
+                name: '小柔愛美',
+                avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+                points: 680,
+                badge: '體驗分享新星',
+                joinedDate: '2026-01-15',
+                reviewCount: 3
+            });
+
+            // Demo User Wallet & Favorites
+            const [userCoupons, setUserCoupons] = useState([
+                {
+                    code: 'MBDEMO-8892',
+                    title: '美容療程折抵券',
+                    providerName: '花漾美學診所',
+                    validUntil: '2026-12-31',
+                    status: 'unused'
+                },
+                {
+                    code: 'MBDEMO-3341',
+                    title: '品牌保養品試用組',
+                    providerName: 'SKINORA 綠色植萃保養',
+                    validUntil: '2026-11-30',
+                    status: 'unused'
+                }
+            ]);
+
+            const [userFavorites, setUserFavorites] = useState(['rev-1']);
+            const [likedReviews, setLikedReviews] = useState(['rev-1', 'rev-2']);
+            const [reviews, setReviews] = useState(MOCK_REVIEWS);
+
+            // Toast Message State
+            const [toast, setToast] = useState('');
+
+            // Point Transaction History Logs
+            const [pointLogs, setPointLogs] = useState([
+                { id: 'l1', event: '首次登入體驗獎勵', points: '+100', date: '2026-10-01', status: '已發放' },
+                { id: 'l2', event: '發布體驗心得《第一次體驗臉部保養...》', points: '+50', date: '2026-10-12', status: '已發放' },
+                { id: 'l3', event: '完成文章問答互動', points: '+10', date: '2026-10-15', status: '已發放' }
+            ]);
+
+            // Helper Router Nav
+            const navigateTo = (route, id = null, category = null) => {
+                setCurrentRoute(route);
+                if (id) setSelectedId(id);
+                if (category) setSelectedCategory(category);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+
+            // Actions
+            const handleToggleLike = (reviewId) => {
+                if (likedReviews.includes(reviewId)) {
+                    setLikedReviews(likedReviews.filter(id => id !== reviewId));
+                    setReviews(reviews.map(r => r.id === reviewId ? { ...r, likes: r.likes - 1 } : r));
+                    setToast('已取消按讚');
+                } else {
+                    setLikedReviews([...likedReviews, reviewId]);
+                    setReviews(reviews.map(r => r.id === reviewId ? { ...r, likes: r.likes + 1 } : r));
+                    setToast('按讚成功！');
+                }
+            };
+
+            const handleToggleFavorite = (reviewId) => {
+                if (userFavorites.includes(reviewId)) {
+                    setUserFavorites(userFavorites.filter(id => id !== reviewId));
+                    setToast('已從收藏清單移除');
+                } else {
+                    setUserFavorites([...userFavorites, reviewId]);
+                    setToast('已加入我的收藏清單！');
+                }
+            };
+
+            const handleAddComment = (reviewId, commentText) => {
+                if (!commentText.trim()) return;
+                const newComment = {
+                    id: 'c-' + Date.now(),
+                    user: user.name,
+                    text: commentText,
+                    date: '剛剛'
+                };
+                setReviews(reviews.map(r => r.id === reviewId ? {
+                    ...r,
+                    commentsCount: r.commentsCount + 1,
+                    comments: [...r.comments, newComment]
+                } : r));
+
+                // Add points reward for commenting
+                setUser(u => ({ ...u, points: u.points + 10 }));
+                setPointLogs(prev => [{
+                    id: 'l-' + Date.now(),
+                    event: '發表社群留言獎勵',
+                    points: '+10',
+                    date: new Date().toISOString().split('T')[0],
+                    status: '已發放'
+                }, ...prev]);
+
+                setToast('留言成功！獲得 +10 積分獎勵 🎉');
+            };
+
+            const handleRedeemCoupon = (coupon) => {
+                if (user.points < coupon.pointsRequired) {
+                    setToast('積分不足無法兌換此券！');
+                    return;
+                }
+                // Deduct points
+                setUser(u => ({ ...u, points: u.points - coupon.pointsRequired }));
+                // Add to wallet
+                const newCoupon = {
+                    code: 'MBDEMO-' + Math.floor(1000 + Math.random() * 9000),
+                    title: coupon.title,
+                    providerName: coupon.providerName,
+                    validUntil: coupon.validUntil,
+                    status: 'unused'
+                };
+                setUserCoupons([newCoupon, ...userCoupons]);
+                // Log point deduction
+                setPointLogs(prev => [{
+                    id: 'l-' + Date.now(),
+                    event: `兌換優惠券《${coupon.title}》`,
+                    points: `-${coupon.pointsRequired}`,
+                    date: new Date().toISOString().split('T')[0],
+                    status: '已完成'
+                }, ...prev]);
+
+                setToast('優惠券兌換成功！已存入會員錢包 🎁');
+                navigateTo('member');
+            };
+
+            const handleCreateReview = (formData) => {
+                const newRev = {
+                    id: 'rev-' + Date.now(),
+                    title: formData.title,
+                    content: formData.content,
+                    author: user.name,
+                    avatar: user.avatar,
+                    category: formData.category,
+                    location: formData.location || '台北市',
+                    providerName: formData.providerName || '微美精選合作店家',
+                    rating: Number(formData.rating),
+                    likes: 1,
+                    commentsCount: 0,
+                    isSponsored: formData.isSponsored,
+                    coverImage: formData.image || 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&auto=format&fit=crop&q=80',
+                    images: [formData.image || 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&auto=format&fit=crop&q=80'],
+                    date: new Date().toISOString().split('T')[0],
+                    status: 'published',
+                    comments: []
+                };
+
+                setReviews([newRev, ...reviews]);
+                setUser(u => ({ ...u, points: u.points + 50, reviewCount: u.reviewCount + 1 }));
+                setPointLogs(prev => [{
+                    id: 'l-' + Date.now(),
+                    event: `發表心得文章《${formData.title.substring(0, 10)}...》`,
+                    points: '+50',
+                    date: new Date().toISOString().split('T')[0],
+                    status: '已發放'
+                }, ...prev]);
+
+                setToast('發布成功！感謝分享，獲得 +50 積分！✨');
+                navigateTo('review-detail', newRev.id);
+            };
+
+            const handleUseCoupon = (code) => {
+                setUserCoupons(userCoupons.map(cp => cp.code === code ? { ...cp, status: 'used' } : cp));
+                setToast(`優惠券 (${code}) 出示核銷成功！`);
+            };
+
+            return (
+                <div className="min-h-screen flex flex-col font-sans text-[#686868] bg-[#F7F5EE]">
+                    {/* Toast Notification */}
+                    <NotificationToast message={toast} onClose={() => setToast('')} />
+
+                    {/* AI Q-Version Assistant */}
+                    <AiAssistant onNavigate={navigateTo} />
+
+                    {/* Background Audio Player */}
+                    <audio 
+                        ref={audioRef} 
+                        src="https://img.ai365.fans/artworks/1b00ba84-1fff-4997-a838-4e228b02681a/24s75hm4pag.mp3" 
+                        loop 
+                        autoPlay
+                        preload="auto"
+                    />
+
+                    {/* DEMO Indicator Banner */}
+                    <div className="bg-[#D4B89E]/30 border-b border-[#D4B89E]/50 py-1.5 px-4 text-center text-xs text-[#686868] flex items-center justify-center gap-2">
+                        <span className="inline-block w-2 h-2 rounded-full bg-[#567138] animate-pulse"></span>
+                        <span className="font-semibold">DEMO 展示模式中</span>
+                        <span>｜ 已登入為展示體驗會員：{user.name} ({user.points} 積分)</span>
+                        <button 
+                            onClick={() => alert("正式環境將串接 Supabase Auth 與 Google OAuth 認證系統。展示模式已包含完整模擬體驗。")}
+                            className="underline font-medium hover:text-[#567138] ml-2"
+                        >
+                            說明
+                        </button>
+                    </div>
+
+                    {/* Desktop Navigation */}
+                    <header className="sticky top-0 z-40 bg-[#F7F5EE]/95 backdrop-blur border-b border-[#EAD3CD]/60">
+                        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+                            {/* Logo */}
+                            <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigateTo('home')}>
+                                <div className="w-9 h-9 rounded-full bg-[#A8C382]/30 flex items-center justify-center border border-[#A8C382]">
+                                    <svg className="w-5 h-5 text-[#567138]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div className="font-serif-title font-bold text-lg text-[#567138] leading-none">微美地圖</div>
+                                    <div className="text-[9px] tracking-widest text-[#686868] font-sans">MICRO BEAUTY MAP</div>
+                                </div>
+                            </div>
+
+                            {/* Center Navigation Links */}
+                            <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
+                                <button onClick={() => navigateTo('home')} className={`hover:text-[#567138] transition-colors ${currentRoute === 'home' ? 'text-[#567138] font-semibold border-b-2 border-[#567138] pb-1' : ''}`}>首頁</button>
+                                <button onClick={() => navigateTo('explore')} className={`hover:text-[#567138] transition-colors ${currentRoute === 'explore' || currentRoute === 'review-detail' ? 'text-[#567138] font-semibold border-b-2 border-[#567138] pb-1' : ''}`}>探索體驗</button>
+                                <button onClick={() => navigateTo('coupons')} className={`hover:text-[#567138] transition-colors ${currentRoute === 'coupons' || currentRoute === 'coupon-detail' ? 'text-[#567138] font-semibold border-b-2 border-[#567138] pb-1' : ''}`}>優惠體驗券</button>
+                                <button onClick={() => navigateTo('providers')} className={`hover:text-[#567138] transition-colors ${currentRoute === 'providers' || currentRoute === 'provider-detail' ? 'text-[#567138] font-semibold border-b-2 border-[#567138] pb-1' : ''}`}>合作店家</button>
+                                <button onClick={() => navigateTo('admin')} className={`hover:text-[#567138] text-xs bg-[#EAD3CD]/40 px-2.5 py-1 rounded-full transition-colors ${currentRoute === 'admin' ? 'bg-[#D4B89E] text-white' : ''}`}>管理後台</button>
+                            </nav>
+
+                            {/* Right Actions */}
+                            <div className="flex items-center gap-4">
+                                {/* Music Toggle Button */}
+                                <button 
+                                    onClick={toggleMusic}
+                                    title={isPlayingMusic ? "關閉背景音樂" : "播放背景音樂"}
+                                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all border ${
+                                        isPlayingMusic 
+                                            ? 'bg-[#A8C382] border-[#567138] text-white shadow-sm animate-pulse' 
+                                            : 'bg-white/80 border-[#EAD3CD] text-[#686868] hover:border-[#A8C382]'
+                                    }`}
+                                >
+                                    <span>{isPlayingMusic ? '🎵' : '🔇'}</span>
+                                    <span className="hidden sm:inline">{isPlayingMusic ? '音樂：開啟' : '音樂：關閉'}</span>
+                                </button>
+
+                                <button onClick={() => navigateTo('points')} className="flex items-center gap-1.5 bg-[#EAD3CD]/50 hover:bg-[#EAD3CD] px-3 py-1.5 rounded-full text-xs font-medium text-[#686868] transition-all">
+                                    <span className="text-[#D4B89E] font-bold">✦</span>
+                                    <span>{user.points} 積分</span>
+                                </button>
+                                <button onClick={() => navigateTo('write-review')} className="hidden sm:inline-flex items-center gap-1 bg-[#567138] hover:bg-[#43592a] text-white text-xs px-4 py-2 rounded-full font-medium transition-all shadow-sm">
+                                    <span>+ 發布心得</span>
+                                </button>
+                                <div className="flex items-center gap-2 cursor-pointer border border-[#EAD3CD] rounded-full p-1 pl-2 hover:border-[#A8C382]" onClick={() => navigateTo('member')}>
+                                    <span className="text-xs text-[#686868] hidden lg:inline">{user.name}</span>
+                                    <img src={user.avatar} alt="User Avatar" className="w-7 h-7 rounded-full object-cover"/>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+
+                    {/* Dynamic Main Body Content */}
+                    <main className="flex-1 pb-20 md:pb-12">
+                        {currentRoute === 'home' && (
+                            <HomePage 
+                                onNavigate={navigateTo} 
+                                reviews={reviews} 
+                                coupons={MOCK_COUPONS} 
+                                providers={MOCK_PROVIDERS} 
+                                onLike={handleToggleLike}
+                                onFavorite={handleToggleFavorite}
+                                userFavorites={userFavorites}
+                                likedReviews={likedReviews}
+                            />
+                        )}
+
+                        {currentRoute === 'explore' && (
+                            <ExplorePage 
+                                onNavigate={navigateTo} 
+                                reviews={reviews} 
+                                categories={MOCK_CATEGORIES}
+                                onLike={handleToggleLike}
+                                onFavorite={handleToggleFavorite}
+                                userFavorites={userFavorites}
+                                likedReviews={likedReviews}
+                                initialCategory={selectedCategory}
+                                searchKeyword={searchKeyword}
+                                setSearchKeyword={setSearchKeyword}
+                            />
+                        )}
+
+                        {currentRoute === 'review-detail' && (
+                            <ReviewDetailPage 
+                                reviewId={selectedId}
+                                reviews={reviews}
+                                onNavigate={navigateTo}
+                                onLike={handleToggleLike}
+                                onFavorite={handleToggleFavorite}
+                                userFavorites={userFavorites}
+                                likedReviews={likedReviews}
+                                onAddComment={handleAddComment}
+                            />
+                        )}
+
+                        {currentRoute === 'write-review' && (
+                            <WriteReviewPage 
+                                onSubmit={handleCreateReview}
+                                onCancel={() => navigateTo('home')}
+                                categories={MOCK_CATEGORIES}
+                            />
+                        )}
+
+                        {currentRoute === 'coupons' && (
+                            <CouponsPage 
+                                coupons={MOCK_COUPONS}
+                                userPoints={user.points}
+                                onRedeem={handleRedeemCoupon}
+                                onNavigate={navigateTo}
+                            />
+                        )}
+
+                        {currentRoute === 'coupon-detail' && (
+                            <CouponDetailPage 
+                                couponId={selectedId}
+                                coupons={MOCK_COUPONS}
+                                userPoints={user.points}
+                                onRedeem={handleRedeemCoupon}
+                                onNavigate={navigateTo}
+                            />
+                        )}
+
+                        {currentRoute === 'providers' && (
+                            <ProvidersPage 
+                                providers={MOCK_PROVIDERS}
+                                onNavigate={navigateTo}
+                            />
+                        )}
+
+                        {currentRoute === 'provider-detail' && (
+                            <ProviderDetailPage 
+                                providerId={selectedId}
+                                providers={MOCK_PROVIDERS}
+                                reviews={reviews}
+                                onNavigate={navigateTo}
+                            />
+                        )}
+
+                        {currentRoute === 'member' && (
+                            <MemberCenterPage 
+                                user={user}
+                                userCoupons={userCoupons}
+                                userFavorites={userFavorites}
+                                reviews={reviews}
+                                onNavigate={navigateTo}
+                                onUseCoupon={handleUseCoupon}
+                            />
+                        )}
+
+                        {currentRoute === 'points' && (
+                            <PointsPage 
+                                user={user}
+                                pointLogs={pointLogs}
+                                coupons={MOCK_COUPONS}
+                                onRedeem={handleRedeemCoupon}
+                                onNavigate={navigateTo}
+                            />
+                        )}
+
+                        {currentRoute === 'admin' && (
+                            <AdminPage 
+                                reviews={reviews}
+                                userCount={1248}
+                                totalPointsIssued={56400}
+                                userCoupons={userCoupons}
+                                onNavigate={navigateTo}
+                            />
+                        )}
+                    </main>
+
+                    {/* Footer */}
+                    <footer className="bg-white border-t border-[#EAD3CD]/60 py-10 px-4 mt-auto">
+                        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+                            <div className="space-y-3">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-7 h-7 rounded-full bg-[#A8C382]/30 flex items-center justify-center border border-[#A8C382]">
+                                        <span className="text-xs text-[#567138]">✦</span>
+                                    </div>
+                                    <span className="font-serif-title font-bold text-lg text-[#567138]">微美地圖</span>
+                                </div>
+                                <p className="text-xs text-[#686868] leading-relaxed">
+                                    找到適合你的美，分享經驗累積回饋。結合真實體驗、店家探索與積分獎勵的美容生活社群。
+                                </p>
+                                <p className="text-[10px] text-gray-400">第一階段針對台灣市場優化系統體驗</p>
+                            </div>
+                            <div>
+                                <h4 className="text-xs font-bold text-[#567138] uppercase tracking-wider mb-3">平台探索</h4>
+                                <ul className="space-y-2 text-xs">
+                                    <li><button onClick={() => navigateTo('explore')} className="hover:text-[#567138]">美容心得列表</button></li>
+                                    <li><button onClick={() => navigateTo('coupons')} className="hover:text-[#567138]">專屬體驗優惠券</button></li>
+                                    <li><button onClick={() => navigateTo('providers')} className="hover:text-[#567138]">合作精選店家</button></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 className="text-xs font-bold text-[#567138] uppercase tracking-wider mb-3">會員服務</h4>
+                                <ul className="space-y-2 text-xs">
+                                    <li><button onClick={() => navigateTo('member')} className="hover:text-[#567138]">會員個人中心</button></li>
+                                    <li><button onClick={() => navigateTo('points')} className="hover:text-[#567138]">積分與任務獎勵</button></li>
+                                    <li><button onClick={() => navigateTo('write-review')} className="hover:text-[#567138]">發布體驗心得</button></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 className="text-xs font-bold text-[#567138] uppercase tracking-wider mb-3">關於與條款</h4>
+                                <ul className="space-y-2 text-xs">
+                                    <li><a href="#about" onClick={(e) => {e.preventDefault(); alert('關於微美地圖：我們致力於打造透明、真實的美容保養社群。');}} className="hover:text-[#567138]">關於微美地圖</a></li>
+                                    <li><a href="#privacy" onClick={(e) => {e.preventDefault(); alert('隱私權條款：我們嚴格保護使用者個人資料安全。');}} className="hover:text-[#567138]">隱私權政策與服務條款</a></li>
+                                    <li><a href="#contact" onClick={(e) => {e.preventDefault(); alert('聯絡我們：contact@microbeautymap.tw');}} className="hover:text-[#567138]">店家合作聯絡</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div className="max-w-6xl mx-auto mt-8 pt-6 border-t border-[#F7F5EE] text-center text-xs text-gray-400">
+                            © 2026 微美地圖 Micro Beauty Map. All rights reserved. (Demo System Prototype)
+                        </div>
+                    </footer>
+
+                    {/* Mobile Navigation Bar */}
+                    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur border-t border-[#EAD3CD] z-50 px-3 py-2 flex items-center justify-around text-center shadow-lg">
+                        <button onClick={() => navigateTo('home')} className={`flex flex-col items-center gap-0.5 text-[11px] ${currentRoute === 'home' ? 'text-[#567138] font-bold' : 'text-gray-400'}`}>
+                            <span>🏠</span>
+                            <span>首頁</span>
+                        </button>
+                        <button onClick={() => navigateTo('explore')} className={`flex flex-col items-center gap-0.5 text-[11px] ${currentRoute === 'explore' ? 'text-[#567138] font-bold' : 'text-gray-400'}`}>
+                            <span>🔍</span>
+                            <span>探索</span>
+                        </button>
+                        <button onClick={() => navigateTo('write-review')} className="flex flex-col items-center justify-center w-10 h-10 rounded-full bg-[#567138] text-white shadow-md transform -translate-y-2">
+                            <span className="text-lg font-light">+</span>
+                        </button>
+                        <button onClick={() => navigateTo('coupons')} className={`flex flex-col items-center gap-0.5 text-[11px] ${currentRoute === 'coupons' ? 'text-[#567138] font-bold' : 'text-gray-400'}`}>
+                            <span>🎁</span>
+                            <span>優惠</span>
+                        </button>
+                        <button onClick={() => navigateTo('member')} className={`flex flex-col items-center gap-0.5 text-[11px] ${currentRoute === 'member' || currentRoute === 'points' ? 'text-[#567138] font-bold' : 'text-gray-400'}`}>
+                            <span>👤</span>
+                            <span>我的</span>
+                        </button>
+                    </nav>
+                </div>
+            );
+        }
+
+        // ==========================================
+        // SECTION: PAGE COMPONENTS
+        // ==========================================
+
+        // 1. HOME PAGE
+        function HomePage({ onNavigate, reviews, coupons, providers, onLike, onFavorite, userFavorites, likedReviews }) {
+            const [keyword, setKeyword] = useState('');
+            const [openFaq, setOpenFaq] = useState(null);
+
+            const handleSearchSubmit = (e) => {
+                e.preventDefault();
+                onNavigate('explore');
+            };
+
+            return (
+                <div className="space-y-12">
+                    {/* Hero Section */}
+                    <section className="relative overflow-hidden bg-gradient-to-b from-[#F7F5EE] via-[#EAD3CD]/20 to-[#F7F5EE] pt-8 pb-16 px-4">
+                        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                            <div className="space-y-6 text-center md:text-left">
+                                <div className="inline-flex items-center gap-2 bg-[#A8C382]/20 border border-[#A8C382] text-[#567138] px-3.5 py-1.5 rounded-full text-xs font-semibold">
+                                    <span>✦</span> 台灣美學社群首選
+                                </div>
+                                <h1 className="font-serif-title text-3xl sm:text-4xl md:text-5xl font-bold text-[#567138] leading-tight">
+                                    找到適合你的美，<br />分享經驗累積回饋。
+                                </h1>
+                                <p className="text-sm sm:text-base text-[#686868] max-w-lg leading-relaxed">
+                                    真實心得、安心探索，分享每一次變美的故事。看心得、找店家、賺積分、換優惠。
+                                </p>
+                                <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-2">
+                                    <button onClick={() => onNavigate('explore')} className="bg-[#567138] hover:bg-[#43592a] text-white px-6 py-3 rounded-full text-xs sm:text-sm font-semibold shadow-md hover:shadow-lg transition-all">
+                                        探索美容體驗
+                                    </button>
+                                    <button onClick={() => onNavigate('write-review')} className="bg-[#EAD3CD] hover:bg-[#dfc1b9] text-[#686868] px-6 py-3 rounded-full text-xs sm:text-sm font-semibold transition-all">
+                                        分享我的體驗
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="relative flex justify-center">
+                                <div className="w-72 h-80 sm:w-80 sm:h-96 rounded-3xl overflow-hidden border-4 border-white shadow-xl relative z-10">
+                                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800&auto=format&fit=crop&q=80" alt="Micro Beauty Map Hero Banner" className="w-full h-full object-cover" />
+                                </div>
+                                <div className="absolute -bottom-6 -left-4 bg-white/95 backdrop-blur border border-[#EAD3CD] p-4 rounded-2xl shadow-lg z-20 flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-[#A8C382]/30 flex items-center justify-center text-[#567138] font-bold">
+                                        ✨
+                                    </div>
+                                    <div className="text-left">
+                                        <div className="text-xs font-bold text-[#567138]">分享即獲積分</div>
+                                        <div className="text-[10px] text-gray-500">真實評價即可換獨家體驗券</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Search Bar */}
+                    <section className="max-w-4xl mx-auto px-4 -mt-8 relative z-20">
+                        <form onSubmit={handleSearchSubmit} className="bg-white p-4 sm:p-5 rounded-3xl border border-[#EAD3CD] shadow-lg flex flex-col sm:flex-row gap-3">
+                            <div className="flex-1 flex items-center gap-2 bg-[#F7F5EE] px-4 py-2.5 rounded-2xl border border-gray-100">
+                                <span className="text-gray-400">🔍</span>
+                                <input 
+                                    type="text" 
+                                    placeholder="搜尋美容服務、店家名稱或地區..." 
+                                    className="w-full bg-transparent text-xs text-[#686868] focus:outline-none"
+                                    value={keyword}
+                                    onChange={(e) => setKeyword(e.target.value)}
+                                />
+                            </div>
+                            <button type="submit" className="bg-[#567138] hover:bg-[#43592a] text-white px-6 py-2.5 rounded-2xl text-xs font-semibold transition-all">
+                                開始探索
+                            </button>
+                        </form>
+                    </section>
+
+                    {/* Categories */}
+                    <section className="max-w-6xl mx-auto px-4 space-y-4">
+                        <div className="text-center space-y-1">
+                            <h2 className="font-serif-title text-xl font-bold text-[#567138]">熱門美容體驗分類</h2>
+                            <p className="text-xs text-gray-500">選擇您感興趣的保養與美學領域</p>
+                        </div>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+                            {MOCK_CATEGORIES.map(cat => (
+                                <div 
+                                    key={cat.id} 
+                                    onClick={() => onNavigate('explore')}
+                                    className="bg-white p-4 rounded-2xl border border-[#EAD3CD]/60 text-center hover:border-[#A8C382] hover:shadow-md cursor-pointer transition-all space-y-2 group"
+                                >
+                                    <div className="w-10 h-10 mx-auto rounded-full bg-[#F7F5EE] border border-[#EAD3CD] flex items-center justify-center text-[#567138] group-hover:bg-[#A8C382]/20">
+                                        ✦
+                                    </div>
+                                    <div className="font-bold text-xs text-[#686868]">{cat.name}</div>
+                                    <div className="text-[10px] text-gray-400 leading-tight">{cat.desc}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+
+                    {/* Featured Reviews */}
+                    <section className="max-w-6xl mx-auto px-4 space-y-4">
+                        <div className="flex justify-between items-end">
+                            <div>
+                                <h2 className="font-serif-title text-xl font-bold text-[#567138]">精選真實體驗心得</h2>
+                                <p className="text-xs text-gray-500 mt-1">來自社群會員的親身評價與保養分享</p>
+                            </div>
+                            <button onClick={() => onNavigate('explore')} className="text-xs text-[#567138] hover:underline">查看更多 ➔</button>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            {reviews.slice(0, 3).map(rev => (
+                                <ReviewCard 
+                                    key={rev.id} 
+                                    review={rev} 
+                                    onNavigate={onNavigate}
+                                    onLike={onLike}
+                                    onFavorite={onFavorite}
+                                    isFav={userFavorites.includes(rev.id)}
+                                    isLiked={likedReviews.includes(rev.id)}
+                                />
+                            ))}
+                        </div>
+                    </section>
+
+                    {/* Points Rewards Flow Section */}
+                    <section className="bg-gradient-to-r from-[#EAD3CD]/40 via-[#F7F5EE] to-[#A8C382]/20 py-12 px-4 border-y border-[#EAD3CD]/60">
+                        <div className="max-w-5xl mx-auto text-center space-y-8">
+                            <div className="space-y-2">
+                                <span className="bg-[#D4B89E] text-white text-[10px] px-3 py-1 rounded-full font-bold">REWARD SYSTEM</span>
+                                <h2 className="font-serif-title text-2xl font-bold text-[#567138]">每一次分享，都值得被看見</h2>
+                                <p className="text-xs text-gray-500 max-w-md mx-auto">簡單三個步驟，讓您的美麗體驗變身為實際的回饋與專屬體驗優惠</p>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
+                                <div className="bg-white p-6 rounded-2xl border border-[#EAD3CD] space-y-2 shadow-sm">
+                                    <div className="w-10 h-10 rounded-full bg-[#567138] text-white flex items-center justify-center font-bold mx-auto">1</div>
+                                    <h3 className="font-bold text-sm text-[#686868]">發布真實體驗</h3>
+                                    <p className="text-xs text-gray-400">紀錄每次美容保養心得，上傳體驗照片</p>
+                                </div>
+                                <div className="bg-white p-6 rounded-2xl border border-[#EAD3CD] space-y-2 shadow-sm">
+                                    <div className="w-10 h-10 rounded-full bg-[#D4B89E] text-white flex items-center justify-center font-bold mx-auto">2</div>
+                                    <h3 className="font-bold text-sm text-[#686868]">輕鬆累積積分</h3>
+                                    <p className="text-xs text-gray-400">發文、留言互動與社群分享均可賺取點數</p>
+                                </div>
+                                <div className="bg-white p-6 rounded-2xl border border-[#EAD3CD] space-y-2 shadow-sm">
+                                    <div className="w-10 h-10 rounded-full bg-[#A8C382] text-white flex items-center justify-center font-bold mx-auto">3</div>
+                                    <h3 className="font-bold text-sm text-[#686868]">兌換專屬優惠</h3>
+                                    <p className="text-xs text-gray-400">憑積分免費用好禮，兌換合作店家體驗券</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Featured Coupons */}
+                    <section className="max-w-6xl mx-auto px-4 space-y-4">
+                        <div className="flex justify-between items-end">
+                            <div>
+                                <h2 className="font-serif-title text-xl font-bold text-[#567138]">精選體驗優惠券</h2>
+                                <p className="text-xs text-gray-500 mt-1">積分專屬兌換項，限定限量優惠</p>
+                            </div>
+                            <button onClick={() => onNavigate('coupons')} className="text-xs text-[#567138] hover:underline">看全部優惠券 ➔</button>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            {coupons.map(cp => (
+                                <CouponCard key={cp.id} coupon={cp} onNavigate={onNavigate} />
+                            ))}
+                        </div>
+                    </section>
+
+                    {/* Featured Providers */}
+                    <section className="max-w-6xl mx-auto px-4 space-y-4">
+                        <div className="flex justify-between items-end">
+                            <div>
+                                <h2 className="font-serif-title text-xl font-bold text-[#567138]">合作優質店家</h2>
+                                <p className="text-xs text-gray-500 mt-1">嚴選安心店家，透明真實好評</p>
+                            </div>
+                            <button onClick={() => onNavigate('providers')} className="text-xs text-[#567138] hover:underline">探索全部店家 ➔</button>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            {providers.map(pv => (
+                                <ProviderCard key={pv.id} provider={pv} onNavigate={onNavigate} />
+                            ))}
+                        </div>
+                    </section>
+
+                    {/* AEO / SEO Skin Care Knowledge Base (FAQ Section) */}
+                    <section className="max-w-5xl mx-auto px-4 py-8 bg-[#F7F5EE] border border-[#EAD3CD] rounded-3xl space-y-6">
+                        <div className="text-center space-y-2">
+                            <div className="inline-block bg-[#A8C382]/20 text-[#567138] px-3 py-1 rounded-full text-xs font-bold">
+                                💡 保養知識庫 Knowledge Base
+                            </div>
+                            <h2 className="font-serif-title text-2xl font-bold text-[#567138]">皮膚基礎保養常見問答 (AEO)</h2>
+                            <p className="text-xs text-gray-500 max-w-lg mx-auto">
+                                釐清基礎護養觀念，建立正確認知，讓每一次體驗與保養都能事半功倍
+                            </p>
+                        </div>
+
+                        <div className="space-y-3">
+                            {SKINCARE_FAQS.map(faq => (
+                                <div key={faq.id} className="bg-white rounded-2xl border border-[#EAD3CD]/60 overflow-hidden shadow-sm transition-all">
+                                    <button 
+                                        onClick={() => setOpenFaq(openFaq === faq.id ? null : faq.id)}
+                                        className="w-full p-4 text-left font-bold text-xs sm:text-sm text-[#567138] flex justify-between items-center gap-3 hover:bg-[#F7F5EE]/50"
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            <span className="bg-[#EAD3CD]/50 text-[#686868] text-[10px] px-2 py-0.5 rounded font-normal">{faq.category}</span>
+                                            <span>{faq.question}</span>
+                                        </div>
+                                        <span className="text-sm font-light text-[#D4B89E]">{openFaq === faq.id ? '−' : '+'}</span>
+                                    </button>
+                                    {openFaq === faq.id && (
+                                        <div className="p-4 pt-0 text-xs text-[#686868] leading-relaxed border-t border-gray-50 bg-[#F7F5EE]/20 space-y-2">
+                                            <p className="pt-2">{faq.answer}</p>
+                                            <div className="flex gap-1.5 pt-1">
+                                                {faq.tags.map(t => (
+                                                    <span key={t} className="text-[10px] text-gray-400">#{t}</span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                </div>
+            );
+        }
+
+        // 2. EXPLORE REVIEWS PAGE
+        function ExplorePage({ onNavigate, reviews, categories, onLike, onFavorite, userFavorites, likedReviews, initialCategory, searchKeyword, setSearchKeyword }) {
+            const [selectedCategory, setSelectedCategory] = useState(initialCategory || 'all');
+            const [selectedRating, setSelectedRating] = useState('all');
+
+            const filteredReviews = useMemo(() => {
+                return reviews.filter(rev => {
+                    const matchCategory = selectedCategory === 'all' || rev.category === selectedCategory;
+                    const matchKeyword = !searchKeyword || rev.title.includes(searchKeyword) || rev.content.includes(searchKeyword) || rev.location.includes(searchKeyword);
+                    const matchRating = selectedRating === 'all' || rev.rating >= Number(selectedRating);
+                    return matchCategory && matchKeyword && matchRating;
+                });
+            }, [reviews, selectedCategory, searchKeyword, selectedRating]);
+
+            return (
+                <div className="max-w-6xl mx-auto px-4 py-8 space-y-6">
+                    <div className="text-center space-y-2">
+                        <h1 className="font-serif-title text-2xl sm:text-3xl font-bold text-[#567138]">探索適合你的美</h1>
+                        <p className="text-xs text-gray-500">瀏覽真實美容體驗心得與體驗評價</p>
+                    </div>
+
+                    {/* Filter controls */}
+                    <div className="bg-white p-4 rounded-2xl border border-[#EAD3CD] space-y-4">
+                        <div className="flex flex-col sm:flex-row gap-3">
+                            <input 
+                                type="text" 
+                                placeholder="搜尋關鍵字..." 
+                                className="flex-1 bg-[#F7F5EE] border border-gray-200 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-[#A8C382]"
+                                value={searchKeyword}
+                                onChange={(e) => setSearchKeyword(e.target.value)}
+                            />
+                            <select 
+                                value={selectedRating} 
+                                onChange={(e) => setSelectedRating(e.target.value)}
+                                className="bg-[#F7F5EE] border border-gray-200 rounded-xl px-3 py-2 text-xs text-[#686868]"
+                            >
+                                <option value="all">所有評價顆星</option>
+                                <option value="5">5 星優質反饋</option>
+                                <option value="4">4 星以上高評</option>
+                            </select>
+                        </div>
+                        <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100">
+                            <button 
+                                onClick={() => setSelectedCategory('all')} 
+                                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${selectedCategory === 'all' ? 'bg-[#567138] text-white' : 'bg-[#F7F5EE] text-[#686868] hover:bg-[#EAD3CD]/50'}`}
+                            >
+                                全部類別
+                            </button>
+                            {categories.map(cat => (
+                                <button 
+                                    key={cat.id}
+                                    onClick={() => setSelectedCategory(cat.name)} 
+                                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${selectedCategory === cat.name ? 'bg-[#567138] text-white' : 'bg-[#F7F5EE] text-[#686868] hover:bg-[#EAD3CD]/50'}`}
+                                >
+                                    {cat.name}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Results count */}
+                    <div className="text-xs text-gray-500">
+                        共找到 <span className="font-bold text-[#567138]">{filteredReviews.length}</span> 篇符合條件的心得
+                    </div>
+
+                    {/* Grid List */}
+                    {filteredReviews.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            {filteredReviews.map(rev => (
+                                <ReviewCard 
+                                    key={rev.id} 
+                                    review={rev} 
+                                    onNavigate={onNavigate}
+                                    onLike={onLike}
+                                    onFavorite={onFavorite}
+                                    isFav={userFavorites.includes(rev.id)}
+                                    isLiked={likedReviews.includes(rev.id)}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="bg-white p-12 text-center rounded-2xl border border-gray-100 space-y-3">
+                            <div className="text-3xl">🔍</div>
+                            <div className="text-sm font-medium text-gray-600">找不到相符的美容體驗心得</div>
+                            <p className="text-xs text-gray-400">請嘗試更換搜尋關鍵字或選擇其他分類項目</p>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // 3. REVIEW DETAIL PAGE
+        function ReviewDetailPage({ reviewId, reviews, onNavigate, onLike, onFavorite, userFavorites, likedReviews, onAddComment }) {
+            const review = reviews.find(r => r.id === reviewId) || reviews[0];
+            const [commentText, setCommentText] = useState('');
+
+            const isFav = userFavorites.includes(review.id);
+            const isLiked = likedReviews.includes(review.id);
+
+            const handleCommentSubmit = (e) => {
+                e.preventDefault();
+                onAddComment(review.id, commentText);
+                setCommentText('');
+            };
+
+            const handleShare = () => {
+                const dummyUrl = window.location.href;
+                navigator.clipboard?.writeText?.(dummyUrl);
+                alert(`已將心得分享連結複製至剪貼簿：\n${dummyUrl}`);
+            };
+
+            return (
+                <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
+                    <button onClick={() => onNavigate('explore')} className="text-xs text-[#567138] hover:underline flex items-center gap-1 font-medium">
+                        ← 返回探索列表
+                    </button>
+
+                    <article className="bg-white rounded-3xl p-6 sm:p-8 border border-[#EAD3CD] shadow-sm space-y-6">
+                        {/* Header metadata */}
+                        <div className="space-y-3">
+                            <div className="flex flex-wrap items-center gap-2">
+                                <span className="bg-[#A8C382]/20 text-[#567138] px-3 py-1 rounded-full text-xs font-semibold">
+                                    {review.category}
+                                </span>
+                                <span className="text-xs text-gray-400">📍 {review.location}</span>
+                                {review.isSponsored && (
+                                    <span className="bg-[#D4B89E]/30 text-[#686868] px-2.5 py-0.5 rounded text-[10px] font-medium">
+                                        合作體驗獎勵項目
+                                    </span>
+                                )}
+                            </div>
+                            <h1 className="font-serif-title text-2xl sm:text-3xl font-bold text-[#567138] leading-snug">
+                                {review.title}
+                            </h1>
+                            <div className="flex items-center justify-between pt-2 border-b border-gray-100 pb-4">
+                                <div className="flex items-center gap-3">
+                                    <img src={review.avatar} alt={review.author} className="w-10 h-10 rounded-full object-cover"/>
+                                    <div>
+                                        <div className="text-xs font-bold text-[#686868]">{review.author}</div>
+                                        <div className="text-[10px] text-gray-400">發布日期：{review.date} ｜ 店家：{review.providerName}</div>
+                                    </div>
+                                </div>
+                                <div className="flex text-amber-400 text-sm">
+                                    {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Image Gallery */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {review.images.map((img, idx) => (
+                                <img key={idx} src={img} alt={`體驗照片 ${idx+1}`} className="w-full h-64 object-cover rounded-2xl border border-gray-100 shadow-sm" />
+                            ))}
+                        </div>
+
+                        {/* Body Text */}
+                        <div className="text-sm text-[#686868] leading-relaxed whitespace-pre-line space-y-4 font-sans">
+                            <p>{review.content}</p>
+                        </div>
+
+                        {/* Social Interactions */}
+                        <div className="flex items-center justify-between py-4 border-y border-gray-100">
+                            <div className="flex items-center gap-4">
+                                <button 
+                                    onClick={() => onLike(review.id)}
+                                    className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium border transition-all ${isLiked ? 'bg-[#A8C382]/20 border-[#A8C382] text-[#567138]' : 'bg-gray-50 border-gray-200 text-gray-600'}`}
+                                >
+                                    <span>{isLiked ? '❤️' : '🤍'}</span>
+                                    <span>按讚 ({review.likes})</span>
+                                </button>
+                                <button 
+                                    onClick={() => onFavorite(review.id)}
+                                    className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium border transition-all ${isFav ? 'bg-[#D4B89E]/30 border-[#D4B89E] text-[#686868]' : 'bg-gray-50 border-gray-200 text-gray-600'}`}
+                                >
+                                    <span>{isFav ? '★' : '☆'}</span>
+                                    <span>{isFav ? '已收藏' : '收藏'}</span>
+                                </button>
+                            </div>
+                            <button onClick={handleShare} className="text-xs text-[#567138] border border-[#A8C382] px-3.5 py-2 rounded-full hover:bg-[#A8C382]/10 transition-colors">
+                                🔗 分享文章
+                            </button>
+                        </div>
+
+                        {/* Comments Section */}
+                        <div className="space-y-4 pt-2">
+                            <h3 className="font-bold text-sm text-[#567138]">社群留言區 ({review.comments.length})</h3>
+                            
+                            {/* Input Form */}
+                            <form onSubmit={handleCommentSubmit} className="flex gap-2">
+                                <input 
+                                    type="text" 
+                                    placeholder="發表您的溫馨留言與疑問..."
+                                    className="flex-1 bg-[#F7F5EE] border border-gray-200 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-[#A8C382]"
+                                    value={commentText}
+                                    onChange={(e) => setCommentText(e.target.value)}
+                                />
+                                <button type="submit" className="bg-[#567138] text-white px-4 py-2 rounded-xl text-xs font-medium hover:bg-[#43592a]">
+                                    留言 (+10pt)
+                                </button>
+                            </form>
+
+                            {/* Comment List */}
+                            <div className="space-y-3 pt-2">
+                                {review.comments.length > 0 ? (
+                                    review.comments.map(c => (
+                                        <div key={c.id} className="bg-[#F7F5EE]/60 p-3 rounded-xl space-y-1 text-xs">
+                                            <div className="flex justify-between items-center font-bold text-[#686868]">
+                                                <span>{c.user}</span>
+                                                <span className="text-[10px] text-gray-400">{c.date}</span>
+                                            </div>
+                                            <p className="text-gray-600">{c.text}</p>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="text-xs text-gray-400 py-2">目前尚無留言，成為第一個留下想法的人吧！</div>
+                                )}
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            );
+        }
+
+        // 4. WRITE REVIEW PAGE
+        function WriteReviewPage({ onSubmit, onCancel, categories }) {
+            const [formData, setFormData] = useState({
+                title: '',
+                category: categories[0]?.name || '臉部保養',
+                location: '台北市大安區',
+                providerName: '',
+                rating: 5,
+                content: '',
+                isSponsored: false,
+                agreeTerms: true,
+                image: ''
+            });
+
+            const [uploadMode, setUploadMode] = useState('file'); // 'file' or 'url'
+            const [previewUrl, setPreviewUrl] = useState('');
+
+            // Handle file upload selection (e.g. selfie / photo)
+            const handleFileChange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        setPreviewUrl(reader.result);
+                        setFormData(prev => ({ ...prev, image: reader.result }));
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (!formData.title || !formData.content) {
+                    alert('請填寫完整的心得標題與心得內文！');
+                    return;
+                }
+                onSubmit(formData);
+            };
+
+            return (
+                <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
+                    <div className="text-center space-y-1">
+                        <h1 className="font-serif-title text-2xl font-bold text-[#567138]">分享你的變美體驗</h1>
+                        <p className="text-xs text-gray-500">真實心得審核發布後可獲得 +50 積分點數</p>
+                    </div>
+
+                    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-3xl border border-[#EAD3CD] shadow-sm space-y-5">
+                        <div className="space-y-1">
+                            <label className="text-xs font-bold text-[#686868]">文章標題 *</label>
+                            <input 
+                                type="text" 
+                                placeholder="例：第一次做 SPA，原來放鬆也可以很有儀式感"
+                                className="w-full bg-[#F7F5EE] border border-gray-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-[#A8C382]"
+                                value={formData.title}
+                                onChange={(e) => setFormData({...formData, title: e.target.value})}
+                                required
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="space-y-1">
+                                <label className="text-xs font-bold text-[#686868]">體驗服務類別</label>
+                                <select 
+                                    className="w-full bg-[#F7F5EE] border border-gray-200 rounded-xl px-3 py-2.5 text-xs text-[#686868]"
+                                    value={formData.category}
+                                    onChange={(e) => setFormData({...formData, category: e.target.value})}
+                                >
+                                    {categories.map(c => (
+                                        <option key={c.id} value={c.name}>{c.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="space-y-1">
+                                <label className="text-xs font-bold text-[#686868]">體驗星級評價</label>
+                                <select 
+                                    className="w-full bg-[#F7F5EE] border border-gray-200 rounded-xl px-3 py-2.5 text-xs text-[#686868]"
+                                    value={formData.rating}
+                                    onChange={(e) => setFormData({...formData, rating: e.target.value})}
+                                >
+                                    <option value="5">★★★★★ (5星 滿意)</option>
+                                    <option value="4">★★★★☆ (4星 良好)</option>
+                                    <option value="3">★★★☆☆ (3星 普通)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="space-y-1">
+                                <label className="text-xs font-bold text-[#686868]">店家名稱 (選填)</label>
+                                <input 
+                                    type="text" 
+                                    placeholder="例：花漾美學診所"
+                                    className="w-full bg-[#F7F5EE] border border-gray-200 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-[#A8C382]"
+                                    value={formData.providerName}
+                                    onChange={(e) => setFormData({...formData, providerName: e.target.value})}
+                                />
+                            </div>
+                            <div className="space-y-1">
+                                <label className="text-xs font-bold text-[#686868]">體驗地區</label>
+                                <input 
+                                    type="text" 
+                                    placeholder="例：台北市大安區"
+                                    className="w-full bg-[#F7F5EE] border border-gray-200 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-[#A8C382]"
+                                    value={formData.location}
+                                    onChange={(e) => setFormData({...formData, location: e.target.value})}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-1">
+                            <label className="text-xs font-bold text-[#686868]">心得內容 *</label>
+                            <textarea 
+                                rows="5"
+                                placeholder="請分享過程感受、服務細節與實際體驗結果..."
+                                className="w-full bg-[#F7F5EE] border border-gray-200 rounded-xl p-4 text-xs focus:outline-none focus:border-[#A8C382]"
+                                value={formData.content}
+                                onChange={(e) => setFormData({...formData, content: e.target.value})}
+                                required
+                            />
+                        </div>
+
+                        {/* Upload Selfie / Photo Area */}
+                        <div className="space-y-2">
+                            <div className="flex justify-between items-center">
+                                <label className="text-xs font-bold text-[#686868]">上傳體驗照片／個人自拍照 *</label>
+                                <div className="flex gap-2 text-[11px]">
+                                    <button 
+                                        type="button"
+                                        onClick={() => setUploadMode('file')} 
+                                        className={`px-2.5 py-0.5 rounded-full ${uploadMode === 'file' ? 'bg-[#567138] text-white' : 'bg-gray-100 text-gray-500'}`}
+                                    >
+                                        📷 檔案上傳
+                                    </button>
+                                    <button 
+                                        type="button"
+                                        onClick={() => setUploadMode('url')} 
+                                        className={`px-2.5 py-0.5 rounded-full ${uploadMode === 'url' ? 'bg-[#567138] text-white' : 'bg-gray-100 text-gray-500'}`}
+                                    >
+                                        🔗 圖片網址
+                                    </button>
+                                </div>
+                            </div>
+
+                            {uploadMode === 'file' ? (
+                                <div className="border-2 border-dashed border-[#EAD3CD] bg-[#F7F5EE]/60 rounded-2xl p-4 text-center hover:border-[#A8C382] transition-colors relative">
+                                    <input 
+                                        type="file" 
+                                        accept="image/*"
+                                        onChange={handleFileChange}
+                                        className="absolute inset-0 opacity-0 w-full h-full cursor-pointer z-10"
+                                    />
+                                    {previewUrl ? (
+                                        <div className="space-y-2">
+                                            <img src={previewUrl} alt="自拍照預覽" className="max-h-48 mx-auto rounded-xl object-cover border border-[#A8C382]" />
+                                            <div className="text-[11px] text-[#567138] font-medium">✓ 已選擇照片 (點擊可重新更換)</div>
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-2 py-3">
+                                            <div className="w-12 h-12 rounded-full bg-[#A8C382]/20 text-[#567138] flex items-center justify-center mx-auto text-xl">
+                                                📸
+                                            </div>
+                                            <div className="text-xs font-bold text-[#567138]">點擊或將照片拖曳至此處</div>
+                                            <p className="text-[10px] text-gray-400">支援 JPG、PNG、WEBP 格式自拍照或保養體驗照 (最大 10MB)</p>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <input 
+                                    type="text" 
+                                    placeholder="https://images.unsplash.com/..."
+                                    className="w-full bg-[#F7F5EE] border border-gray-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-[#A8C382]"
+                                    value={formData.image}
+                                    onChange={(e) => {
+                                        setFormData({...formData, image: e.target.value});
+                                        setPreviewUrl(e.target.value);
+                                    }}
+                                />
+                            )}
+                        </div>
+
+                        <div className="space-y-2 pt-2 border-t border-gray-100 text-xs">
+                            <label className="flex items-center gap-2 cursor-pointer">
+                                <input 
+                                    type="checkbox" 
+                                    checked={formData.isSponsored}
+                                    onChange={(e) => setFormData({...formData, isSponsored: e.target.checked})}
+                                    className="rounded text-[#567138]"
+                                />
+                                <span className="text-gray-600">本篇為店家合作或受邀請體驗項目</span>
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer">
+                                <input 
+                                    type="checkbox" 
+                                    checked={formData.agreeTerms}
+                                    onChange={(e) => setFormData({...formData, agreeTerms: e.target.checked})}
+                                    className="rounded text-[#567138]"
+                                    required
+                                />
+                                <span className="text-gray-600">我同意公開此心得與相關體驗文字圖片</span>
+                            </label>
+                        </div>
+
+                        <div className="flex gap-3 pt-4">
+                            <button type="button" onClick={onCancel} className="flex-1 border border-gray-200 py-2.5 rounded-xl text-xs text-gray-500 hover:bg-gray-50">
+                                取消
+                            </button>
+                            <button type="submit" className="flex-1 bg-[#567138] text-white py-2.5 rounded-xl text-xs font-medium hover:bg-[#43592a] shadow-sm">
+                                發布心得 (+50pt)
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            );
+        }
+
+        // 5. COUPONS LIST PAGE
+        function CouponsPage({ coupons, userPoints, onRedeem, onNavigate }) {
+            return (
+                <div className="max-w-6xl mx-auto px-4 py-8 space-y-6">
+                    <div className="text-center space-y-2">
+                        <h1 className="font-serif-title text-2xl sm:text-3xl font-bold text-[#567138]">優惠體驗券專區</h1>
+                        <p className="text-xs text-gray-500">使用分享體驗累積的積分，兌換專屬優惠合作體驗</p>
+                    </div>
+
+                    <div className="bg-[#EAD3CD]/30 p-4 rounded-2xl flex items-center justify-between border border-[#EAD3CD]">
+                        <div className="text-xs text-[#686868]">
+                            目前可用點數：<span className="font-bold text-[#567138] text-sm">{userPoints} Pt</span>
+                        </div>
+                        <button onClick={() => onNavigate('points')} className="text-xs text-[#567138] font-medium underline">
+                            如何賺取更多積分？
+                        </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {coupons.map(cp => (
+                            <CouponCard key={cp.id} coupon={cp} onNavigate={onNavigate} onRedeem={onRedeem} userPoints={userPoints} showRedeemBtn />
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        // 6. COUPON DETAIL PAGE
+        function CouponDetailPage({ couponId, coupons, userPoints, onRedeem, onNavigate }) {
+            const coupon = coupons.find(c => c.id === couponId) || coupons[0];
+
+            return (
+                <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
+                    <button onClick={() => onNavigate('coupons')} className="text-xs text-[#567138] hover:underline flex items-center gap-1 font-medium">
+                        ← 返回優惠券專區
+                    </button>
+
+                    <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#EAD3CD] shadow-sm space-y-6">
+                        <div className="relative h-56 rounded-2xl overflow-hidden">
+                            <img src={coupon.image} alt={coupon.title} className="w-full h-full object-cover" />
+                            <div className="absolute top-4 right-4 bg-[#D4B89E] text-white px-3 py-1 rounded-full text-xs font-bold">
+                                {coupon.discountText}
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <div className="text-xs text-[#567138] font-bold">合作店家：{coupon.providerName}</div>
+                            <h1 className="font-serif-title text-2xl font-bold text-[#567138]">{coupon.title}</h1>
+                            <div className="text-xs text-gray-400">兌換所需積分：<span className="text-base font-bold text-[#D4B89E]">{coupon.pointsRequired} Pt</span></div>
+                        </div>
+
+                        <div className="space-y-4 pt-4 border-t border-gray-100 text-xs text-[#686868] leading-relaxed">
+                            <div>
+                                <h4 className="font-bold text-[#567138] mb-1">優惠說明</h4>
+                                <p>{coupon.description}</p>
+                            </div>
+                            <div>
+                                <h4 className="font-bold text-[#567138] mb-1">使用條款與說明</h4>
+                                <p className="whitespace-pre-line text-gray-500">{coupon.terms}</p>
+                            </div>
+                            <div>
+                                <h4 className="font-bold text-[#567138] mb-1">有效期限</h4>
+                                <p>{coupon.validUntil} 止</p>
+                            </div>
+                        </div>
+
+                        <div className="pt-4 flex gap-4">
+                            <button 
+                                onClick={() => onRedeem(coupon)}
+                                disabled={userPoints < coupon.pointsRequired}
+                                className={`w-full py-3 rounded-xl text-xs font-medium shadow-sm transition-all ${userPoints >= coupon.pointsRequired ? 'bg-[#567138] hover:bg-[#43592a] text-white' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
+                            >
+                                {userPoints >= coupon.pointsRequired ? `立即扣除 ${coupon.pointsRequired} 積分兌換` : '積分不足無法兌換'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // 7. PROVIDERS LIST PAGE
+        function ProvidersPage({ providers, onNavigate }) {
+            return (
+                <div className="max-w-6xl mx-auto px-4 py-8 space-y-6">
+                    <div className="text-center space-y-2">
+                        <h1 className="font-serif-title text-2xl sm:text-3xl font-bold text-[#567138]">合作店家與美學技師</h1>
+                        <p className="text-xs text-gray-500">嚴選品質保證的專業美容服務體驗點</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        {providers.map(pv => (
+                            <ProviderCard key={pv.id} provider={pv} onNavigate={onNavigate} />
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        // 8. PROVIDER DETAIL PAGE
+        function ProviderDetailPage({ providerId, providers, reviews, onNavigate }) {
+            const provider = providers.find(p => p.id === providerId) || providers[0];
+            const relatedReviews = reviews.filter(r => r.providerName === provider.name);
+
+            return (
+                <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
+                    <button onClick={() => onNavigate('providers')} className="text-xs text-[#567138] hover:underline font-medium">
+                        ← 返回店家列表
+                    </button>
+
+                    <div className="bg-white rounded-3xl p-6 border border-[#EAD3CD] shadow-sm space-y-6">
+                        <div className="h-64 rounded-2xl overflow-hidden">
+                            <img src={provider.image} alt={provider.name} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="space-y-2">
+                            <span className="bg-[#A8C382]/20 text-[#567138] px-3 py-1 rounded-full text-xs font-semibold">{provider.category}</span>
+                            <h1 className="font-serif-title text-2xl font-bold text-[#567138]">{provider.name}</h1>
+                            <p className="text-xs text-gray-400">📍 {provider.location} ｜ 📞 {provider.phone}</p>
+                            <p className="text-xs text-gray-600 pt-2">{provider.intro}</p>
+                        </div>
+                        <div className="border-t border-gray-100 pt-4 flex justify-between items-center text-xs">
+                            <span>營業時間：{provider.hours}</span>
+                            <button 
+                                onClick={() => alert(`DEMO模式：已發送預約諮詢通知至 ${provider.name} 客服服務中心`)}
+                                className="bg-[#567138] text-white px-5 py-2 rounded-xl hover:bg-[#43592a]"
+                            >
+                                條列預約
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Store Reviews */}
+                    <div className="space-y-4">
+                        <h3 className="font-serif-title text-lg font-bold text-[#567138]">此店家的社群體驗評價 ({relatedReviews.length})</h3>
+                        {relatedReviews.length > 0 ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {relatedReviews.map(r => (
+                                    <div key={r.id} onClick={() => onNavigate('review-detail', r.id)} className="bg-white p-4 rounded-2xl border border-gray-100 hover:border-[#A8C382] cursor-pointer space-y-2">
+                                        <div className="font-bold text-xs text-[#686868]">{r.title}</div>
+                                        <p className="text-[11px] text-gray-500 line-clamp-2">{r.content}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="bg-white p-6 rounded-2xl text-xs text-gray-400 text-center">目前尚無專屬心得發布</div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        // 9. MEMBER CENTER PAGE
+        function MemberCenterPage({ user, userCoupons, userFavorites, reviews, onNavigate, onUseCoupon }) {
+            const [activeTab, setActiveTab] = useState('coupons'); // coupons, favorites, my-reviews
+
+            const favoriteReviews = reviews.filter(r => userFavorites.includes(r.id));
+            const myReviews = reviews.filter(r => r.author === user.name);
+
+            return (
+                <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
+                    {/* User Profile Card */}
+                    <div className="bg-white p-6 rounded-3xl border border-[#EAD3CD] shadow-sm flex flex-col sm:flex-row items-center gap-6">
+                        <img src={user.avatar} alt={user.name} className="w-20 h-20 rounded-full object-cover border-2 border-[#A8C382]" />
+                        <div className="space-y-2 text-center sm:text-left flex-1">
+                            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                                <h1 className="font-serif-title text-xl font-bold text-[#567138]">{user.name}</h1>
+                                <span className="bg-[#D4B89E]/30 text-[#686868] text-[10px] px-2.5 py-0.5 rounded-full font-bold">
+                                    ✦ {user.badge}
+                                </span>
+                            </div>
+                            <p className="text-xs text-gray-400">加入日期：{user.joinedDate} ｜ 已分享心得：{user.reviewCount} 篇</p>
+                        </div>
+                        <div className="bg-[#F7F5EE] px-6 py-4 rounded-2xl text-center border border-[#EAD3CD]/60 space-y-1">
+                            <div className="text-xs text-gray-500">目前累積積分</div>
+                            <div className="text-2xl font-bold text-[#567138]">{user.points} <span className="text-xs font-normal">Pt</span></div>
+                            <button onClick={() => onNavigate('points')} className="text-[11px] text-[#567138] underline font-medium">查看積分紀錄</button>
+                        </div>
+                    </div>
+
+                    {/* Member Tabs */}
+                    <div className="flex border-b border-gray-200 text-xs font-medium space-x-6">
+                        <button 
+                            onClick={() => setActiveTab('coupons')}
+                            className={`pb-3 ${activeTab === 'coupons' ? 'text-[#567138] font-bold border-b-2 border-[#567138]' : 'text-gray-400 hover:text-gray-600'}`}
+                        >
+                            我的優惠券錢包 ({userCoupons.length})
+                        </button>
+                        <button 
+                            onClick={() => setActiveTab('favorites')}
+                            className={`pb-3 ${activeTab === 'favorites' ? 'text-[#567138] font-bold border-b-2 border-[#567138]' : 'text-gray-400 hover:text-gray-600'}`}
+                        >
+                            我的收藏心得 ({userFavorites.length})
+                        </button>
+                        <button 
+                            onClick={() => setActiveTab('my-reviews')}
+                            className={`pb-3 ${activeTab === 'my-reviews' ? 'text-[#567138] font-bold border-b-2 border-[#567138]' : 'text-gray-400 hover:text-gray-600'}`}
+                        >
+                            我的發表紀錄 ({myReviews.length})
+                        </button>
+                    </div>
+
+                    {/* Tab Content */}
+                    <div>
+                        {activeTab === 'coupons' && (
+                            <div className="space-y-4">
+                                {userCoupons.length > 0 ? (
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        {userCoupons.map(cp => (
+                                            <div key={cp.code} className="bg-white p-4 rounded-2xl border border-[#EAD3CD] space-y-3 shadow-sm">
+                                                <div className="flex justify-between items-start">
+                                                    <div>
+                                                        <div className="text-xs font-bold text-[#567138]">{cp.title}</div>
+                                                        <div className="text-[10px] text-gray-400">{cp.providerName}</div>
+                                                    </div>
+                                                    <span className={`text-[10px] px-2 py-0.5 rounded font-medium ${cp.status === 'unused' ? 'bg-[#A8C382]/20 text-[#567138]' : 'bg-gray-100 text-gray-400'}`}>
+                                                        {cp.status === 'unused' ? '未使用' : '已核銷使用'}
+                                                    </span>
+                                                </div>
+                                                <div className="bg-[#F7F5EE] p-2.5 rounded-xl text-center space-y-1">
+                                                    <div className="text-[10px] text-gray-400">專屬核銷代碼 (DEMO)</div>
+                                                    <div className="font-mono text-sm font-bold text-[#686868] tracking-wider">{cp.code}</div>
+                                                </div>
+                                                <div className="flex justify-between items-center text-[10px] text-gray-400 pt-1">
+                                                    <span>有效期限至：{cp.validUntil}</span>
+                                                    {cp.status === 'unused' && (
+                                                        <button 
+                                                            onClick={() => onUseCoupon(cp.code)}
+                                                            className="bg-[#D4B89E] hover:bg-[#c2a488] text-white px-3 py-1 rounded-lg font-medium transition-colors"
+                                                        >
+                                                            出示核銷
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="bg-white p-8 rounded-2xl text-center text-xs text-gray-400">目前尚無已兌換的優惠券</div>
+                                )}
+                            </div>
+                        )}
+
+                        {activeTab === 'favorites' && (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {favoriteReviews.map(r => (
+                                    <div key={r.id} onClick={() => onNavigate('review-detail', r.id)} className="bg-white p-4 rounded-2xl border border-gray-100 hover:border-[#A8C382] cursor-pointer space-y-2">
+                                        <div className="font-bold text-xs text-[#686868]">{r.title}</div>
+                                        <p className="text-[11px] text-gray-500 line-clamp-2">{r.content}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {activeTab === 'my-reviews' && (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {myReviews.map(r => (
+                                    <div key={r.id} onClick={() => onNavigate('review-detail', r.id)} className="bg-white p-4 rounded-2xl border border-gray-100 hover:border-[#A8C382] cursor-pointer space-y-2">
+                                        <div className="font-bold text-xs text-[#686868]">{r.title}</div>
+                                        <div className="text-[10px] text-[#567138]">已獲得點數：+50 Pt</div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        // 10. POINTS LOG PAGE
+        function PointsPage({ user, pointLogs, coupons, onRedeem, onNavigate }) {
+            return (
+                <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
+                    <div className="bg-[#567138] text-white p-6 rounded-3xl space-y-4 shadow-md">
+                        <div className="flex justify-between items-center">
+                            <div>
+                                <div className="text-xs text-white/80">微美地圖分享點數</div>
+                                <div className="text-3xl font-bold font-serif-title mt-1">{user.points} <span className="text-sm font-sans font-normal">Pt</span></div>
+                            </div>
+                            <button onClick={() => onNavigate('coupons')} className="bg-white text-[#567138] text-xs px-4 py-2 rounded-full font-medium hover:bg-gray-100">
+                                兌換專屬優惠券
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="bg-white p-6 rounded-3xl border border-[#EAD3CD] shadow-sm space-y-4">
+                        <h3 className="font-bold text-sm text-[#567138]">積分任務與獎勵規則 (DEMO)</h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                            <div className="bg-[#F7F5EE] p-3 rounded-xl flex justify-between">
+                                <span>首次完成登入體驗</span>
+                                <span className="font-bold text-[#567138]">+100 Pt</span>
+                            </div>
+                            <div className="bg-[#F7F5EE] p-3 rounded-xl flex justify-between">
+                                <span>完成心得文章發布</span>
+                                <span className="font-bold text-[#567138]">+50 Pt</span>
+                            </div>
+                            <div className="bg-[#F7F5EE] p-3 rounded-xl flex justify-between">
+                                <span>文章互動與優質留言</span>
+                                <span className="font-bold text-[#567138]">+10 Pt</span>
+                            </div>
+                            <div className="bg-[#F7F5EE] p-3 rounded-xl flex justify-between">
+                                <span>成功分享心得連結</span>
+                                <span className="font-bold text-[#567138]">+50 Pt</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-white p-6 rounded-3xl border border-[#EAD3CD] shadow-sm space-y-4">
+                        <h3 className="font-bold text-sm text-[#567138]">積分異動歷史紀錄</h3>
+                        <div className="divide-y divide-gray-100 text-xs">
+                            {pointLogs.map(log => (
+                                <div key={log.id} className="py-3 flex justify-between items-center">
+                                    <div>
+                                        <div className="font-medium text-[#686868]">{log.event}</div>
+                                        <div className="text-[10px] text-gray-400">{log.date}</div>
+                                    </div>
+                                    <div className={`font-bold ${log.points.startsWith('+') ? 'text-[#567138]' : 'text-amber-600'}`}>
+                                        {log.points}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // 11. ADMIN DASHBOARD PAGE
+        function AdminPage({ reviews, userCount, totalPointsIssued, userCoupons, onNavigate }) {
+            return (
+                <div className="max-w-6xl mx-auto px-4 py-8 space-y-6">
+                    <div className="flex justify-between items-center border-b border-gray-200 pb-4">
+                        <div>
+                            <h1 className="font-serif-title text-2xl font-bold text-[#567138]">平台營運管理後台</h1>
+                            <p className="text-xs text-gray-400">展示模式管理審核介面（全端與資料庫獨立整合預留）</p>
+                        </div>
+                        <span className="bg-[#D4B89E] text-white text-xs px-3 py-1 rounded-full font-semibold">
+                            DEMO Admin Mode
+                        </span>
+                    </div>
+
+                    {/* Stats Metrics */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div className="bg-white p-4 rounded-2xl border border-[#EAD3CD] space-y-1">
+                            <div className="text-xs text-gray-400">社群註冊會員數</div>
+                            <div className="text-xl font-bold text-[#567138]">{userCount}</div>
+                        </div>
+                        <div className="bg-white p-4 rounded-2xl border border-[#EAD3CD] space-y-1">
+                            <div className="text-xs text-gray-400">全站發布體驗文章</div>
+                            <div className="text-xl font-bold text-[#567138]">{reviews.length}</div>
+                        </div>
+                        <div className="bg-white p-4 rounded-2xl border border-[#EAD3CD] space-y-1">
+                            <div className="text-xs text-gray-400">累計發放積分點數</div>
+                            <div className="text-xl font-bold text-[#D4B89E]">{totalPointsIssued} Pt</div>
+                        </div>
+                        <div className="bg-white p-4 rounded-2xl border border-[#EAD3CD] space-y-1">
+                            <div className="text-xs text-gray-400">優惠券兌換總人次</div>
+                            <div className="text-xl font-bold text-[#567138]">{userCoupons.length + 18}</div>
+                        </div>
+                    </div>
+
+                    {/* Review Approval Queue */}
+                    <div className="bg-white p-6 rounded-3xl border border-[#EAD3CD] shadow-sm space-y-4">
+                        <h3 className="font-bold text-sm text-[#567138]">心得審核與內容管理</h3>
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left text-xs text-gray-600">
+                                <thead className="bg-[#F7F5EE] text-[#567138] font-bold">
+                                    <tr>
+                                        <th className="p-3">文章標題</th>
+                                        <th className="p-3">作者</th>
+                                        <th className="p-3">類別</th>
+                                        <th className="p-3">日期</th>
+                                        <th className="p-3">狀態</th>
+                                        <th className="p-3">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-100">
+                                    {reviews.map(r => (
+                                        <tr key={r.id}>
+                                            <td className="p-3 font-medium text-[#686868] max-w-xs truncate">{r.title}</td>
+                                            <td className="p-3">{r.author}</td>
+                                            <td className="p-3">{r.category}</td>
+                                            <td className="p-3">{r.date}</td>
+                                            <td className="p-3"><span className="bg-[#A8C382]/20 text-[#567138] px-2 py-0.5 rounded text-[10px]">已審核公開</span></td>
+                                            <td className="p-3">
+                                                <button onClick={() => onNavigate('review-detail', r.id)} className="text-[#567138] hover:underline mr-2">檢視</button>
+                                                <button onClick={() => alert('展示模式：已被標記退回修改')} className="text-gray-400 hover:text-red-500">下架</button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // ==========================================
+        // SECTION: REUSABLE UI CARDS
+        // ==========================================
+
+        function ReviewCard({ review, onNavigate, onLike, onFavorite, isFav, isLiked }) {
+            return (
+                <div className="bg-white rounded-2xl border border-[#EAD3CD]/70 overflow-hidden shadow-sm hover:shadow-md hover:border-[#A8C382] transition-all flex flex-col">
+                    <div className="relative h-48 overflow-hidden cursor-pointer" onClick={() => onNavigate('review-detail', review.id)}>
+                        <img src={review.coverImage} alt={review.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                        <span className="absolute top-3 left-3 bg-[#F7F5EE]/90 backdrop-blur text-[#567138] text-[10px] font-bold px-2.5 py-1 rounded-full border border-[#A8C382]">
+                            {review.category}
+                        </span>
+                        <button 
+                            onClick={(e) => { e.stopPropagation(); onFavorite(review.id); }}
+                            className="absolute top-3 right-3 w-7 h-7 rounded-full bg-white/80 flex items-center justify-center text-xs shadow hover:bg-white"
+                        >
+                            {isFav ? '★' : '☆'}
+                        </button>
+                    </div>
+
+                    <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
+                        <div className="space-y-1.5 cursor-pointer" onClick={() => onNavigate('review-detail', review.id)}>
+                            <div className="flex items-center gap-1 text-amber-400 text-xs">
+                                {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
+                            </div>
+                            <h3 className="font-serif-title text-sm font-bold text-[#686868] line-clamp-2 hover:text-[#567138] transition-colors">
+                                {review.title}
+                            </h3>
+                            <p className="text-xs text-gray-400 line-clamp-2">{review.content}</p>
+                        </div>
+
+                        <div className="pt-2 border-t border-gray-100 flex items-center justify-between text-xs">
+                            <div className="flex items-center gap-2">
+                                <img src={review.avatar} alt={review.author} className="w-5 h-5 rounded-full object-cover"/>
+                                <span className="text-gray-500 text-[11px] font-medium">{review.author}</span>
+                            </div>
+                            <div className="flex items-center gap-3 text-gray-400 text-[11px]">
+                                <button onClick={() => onLike(review.id)} className="hover:text-red-500 flex items-center gap-0.5">
+                                    <span>{isLiked ? '❤️' : '🤍'}</span>
+                                    <span>{review.likes}</span>
+                                </button>
+                                <span>💬 {review.commentsCount}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function CouponCard({ coupon, onNavigate, onRedeem, userPoints, showRedeemBtn }) {
+            return (
+                <div className="bg-white rounded-2xl border border-[#EAD3CD] overflow-hidden shadow-sm flex flex-col justify-between">
+                    <div className="relative h-40 overflow-hidden cursor-pointer" onClick={() => onNavigate('coupon-detail', coupon.id)}>
+                        <img 
+                            src={coupon.image} 
+                            alt={coupon.title} 
+                            className="w-full h-full object-cover" 
+                            onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = 'https://placehold.co/600x400/A8C382/FFFFFF?text=Micro+Beauty+Coupon';
+                            }}
+                        />
+                        <div className="absolute top-3 right-3 bg-[#D4B89E] text-white px-2.5 py-1 rounded-full text-[10px] font-bold">
+                            {coupon.discountText}
+                        </div>
+                    </div>
+                    <div className="p-4 space-y-3">
+                        <div>
+                            <div className="text-[10px] text-gray-400">{coupon.providerName}</div>
+                            <h3 className="font-bold text-xs text-[#567138]">{coupon.title}</h3>
+                        </div>
+                        <div className="flex justify-between items-center text-xs">
+                            <span className="text-gray-400">所需積分</span>
+                            <span className="font-bold text-[#D4B89E] text-sm">{coupon.pointsRequired} Pt</span>
+                        </div>
+                        {showRedeemBtn ? (
+                            <button 
+                                onClick={() => onRedeem(coupon)}
+                                className="w-full bg-[#567138] hover:bg-[#43592a] text-[#ffffff] py-2 rounded-xl text-xs font-medium transition-colors"
+                            >
+                                兌換體驗券
+                            </button>
+                        ) : (
+                            <button onClick={() => onNavigate('coupon-detail', coupon.id)} className="w-full border border-[#D4B89E] text-[#686868] py-2 rounded-xl text-xs font-medium hover:bg-[#F7F5EE]">
+                                查看詳情
+                            </button>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        function ProviderCard({ provider, onNavigate }) {
+            return (
+                <div className="bg-white rounded-2xl border border-[#EAD3CD] p-4 flex gap-4 items-center hover:border-[#A8C382] shadow-sm transition-all cursor-pointer" onClick={() => onNavigate('provider-detail', provider.id)}>
+                    <img src={provider.image} alt={provider.name} className="w-24 h-24 rounded-xl object-cover flex-shrink-0" />
+                    <div className="space-y-1.5 flex-1 min-w-0">
+                        <span className="bg-[#A8C382]/20 text-[#567138] text-[10px] font-semibold px-2 py-0.5 rounded">
+                            {provider.category}
+                        </span>
+                        <h3 className="font-serif-title font-bold text-sm text-[#567138] truncate">{provider.name}</h3>
+                        <p className="text-[11px] text-gray-400 truncate">📍 {provider.location}</p>
+                        <div className="text-[11px] text-[#686868] line-clamp-1">{provider.intro}</div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Render React Application
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

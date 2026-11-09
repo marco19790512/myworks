@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>極簡倒數計時器</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'ui-monospace', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* 隱藏滾動條但保持功能 */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* 超大數字響應式字級調整 */
+        .giant-timer {
+            font-size: clamp(3.5rem, 18vw, 18rem);
+            line-height: 0.9;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* 小狗動畫 */
+        @keyframes dog-bounce {
+            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+            50% { transform: translateY(-10px) rotate(2deg) scale(1.02); }
+        }
+        @keyframes dog-tail {
+            0%, 100% { transform: rotate(-15deg); }
+            50% { transform: rotate(20deg); }
+        }
+        @keyframes dog-ear-left {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(-12deg); }
+        }
+        @keyframes dog-ear-right {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(12deg); }
+        }
+
+        .dog-body {
+            animation: dog-bounce var(--anim-speed, 1.2s) ease-in-out infinite;
+            transform-origin: bottom center;
+        }
+        .dog-tail {
+            animation: dog-tail calc(var(--anim-speed, 1.2s) * 0.5) ease-in-out infinite;
+            transform-origin: bottom left;
+        }
+        .dog-ear-left {
+            animation: dog-ear-left calc(var(--anim-speed, 1.2s) * 0.8) ease-in-out infinite;
+            transform-origin: top right;
+        }
+        .dog-ear-right {
+            animation: dog-ear-right calc(var(--anim-speed, 1.2s) * 0.8) ease-in-out infinite;
+            transform-origin: top left;
+        }
+
+        /* 火花與導火線動畫 */
+        @keyframes spark-flicker {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+            25% { transform: scale(1.3) rotate(15deg); opacity: 0.8; }
+            50% { transform: scale(0.9) rotate(-10deg); opacity: 1; }
+            75% { transform: scale(1.4) rotate(5deg); opacity: 0.9; }
+        }
+        .animate-spark {
+            animation: spark-flicker 0.15s infinite alternate;
+        }
+
+        @keyframes fuse-glow {
+            0%, 100% { filter: drop-shadow(0 0 6px rgba(255,100,0,0.8)) drop-shadow(0 0 12px rgba(255,200,0,0.6)); }
+            50% { filter: drop-shadow(0 0 10px rgba(255,50,0,0.9)) drop-shadow(0 0 20px rgba(255,150,0,0.8)); }
+        }
+        .fuse-spark-head {
+            animation: fuse-glow 0.3s infinite alternate;
+        }
+
+        /* 脈動動畫 */
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(0.99); }
+        }
+        .animate-pulse-subtle {
+            animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        /* 閃爍動畫 (倒數結束) */
+        @keyframes flash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+        .animate-flash {
+            animation: flash 0.8s infinite;
+        }
+
+        /* 漸變色平滑過渡 */
+        .color-transition {
+            transition: background-color 1s ease, color 1s ease, border-color 1s ease;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 h-full flex flex-col justify-between select-none overflow-hidden transition-colors duration-1000 font-sans color-transition">
+
+    <!-- 頂部導覽 / 控制列 -->
+    <header class="w-full p-4 md:p-6 flex justify-between items-center z-10 opacity-70 hover:opacity-100 transition-opacity duration-300">
+        <div class="flex items-center gap-2 font-medium tracking-wide text-xs md:text-sm opacity-80">
+            <i data-lucide="rabbit" class="w-4 h-4"></i>
+            <span>RABBIT TIMER</span>
+        </div>
+        <div class="flex items-center gap-2 md:gap-4">
+            <!-- 全螢幕切換 -->
+            <button id="fullscreenToggle" class="p-2.5 rounded-full hover:bg-white/10 transition-all" title="全螢幕">
+                <i data-lucide="maximize" id="fullscreenIcon" class="w-5 h-5"></i>
+            </button>
+            <!-- 齒輪設定按鈕 -->
+            <button id="settingsBtn" onclick="openSettingsModal()" class="p-2.5 rounded-full hover:bg-white/10 transition-all" title="設定與風格">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- 中央主要區域：兔子 + 超大計時器顯示 -->
+    <main class="flex-1 flex flex-col items-center justify-center relative w-full px-4 gap-2 md:gap-4">
+        
+        <!-- 可愛的兔子 SVG 動畫 -->
+        <div class="w-28 h-28 md:w-36 md:h-36 z-10 flex items-center justify-center cursor-pointer" onclick="toggleStartPause()">
+            <svg id="rabbitAnim" class="w-full h-full dog-body" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- 兔子長耳朵 - 左 -->
+                <g class="dog-ear-left">
+                    <ellipse cx="75" cy="45" rx="12" ry="38" fill="#F4F4F5" />
+                    <ellipse cx="75" cy="45" rx="6" ry="28" fill="#F472B6" opacity="0.6" />
+                </g>
+                <!-- 兔子長耳朵 - 右 -->
+                <g class="dog-ear-right">
+                    <ellipse cx="125" cy="45" rx="12" ry="38" fill="#F4F4F5" />
+                    <ellipse cx="125" cy="45" rx="6" ry="28" fill="#F472B6" opacity="0.6" />
+                </g>
+                
+                <!-- 圓滾滾尾巴 -->
+                <circle class="dog-tail" cx="50" cy="145" r="12" fill="#FFFFFF"/>
+                
+                <!-- 身體 -->
+                <ellipse cx="100" cy="138" rx="46" ry="38" fill="#F4F4F5" />
+                <ellipse cx="100" cy="142" rx="30" ry="24" fill="#FFFFFF" />
+                
+                <!-- 頭部 -->
+                <circle cx="100" cy="98" r="38" fill="#F4F4F5" />
+                
+                <!-- 腮紅 - 左 -->
+                <ellipse cx="72" cy="106" rx="7" ry="4" fill="#FB7185" opacity="0.5"/>
+                <!-- 腮紅 - 右 -->
+                <ellipse cx="128" cy="106" rx="7" ry="4" fill="#FB7185" opacity="0.5"/>
+                
+                <!-- 眼睛 - 左 -->
+                <circle cx="78" cy="94" r="4.5" fill="#18181B"/>
+                <!-- 眼睛 - 右 -->
+                <circle cx="122" cy="94" r="4.5" fill="#18181B"/>
+                <!-- 眼神高光 -->
+                <circle cx="76.5" cy="92.5" r="1.5" fill="white"/>
+                <circle cx="120.5" cy="92.5" r="1.5" fill="white"/>
+                
+                <!-- 倒三角形鼻子 -->
+                <polygon points="97,100 103,100 100,104" fill="#F472B6"/>
+                
+                <!-- 兔子 Y 字型嘴巴 -->
+                <path d="M 100 104 L 100 108 M 100 108 Q 95 112 92 108 M 100 108 Q 105 112 108 108" stroke="#18181B" stroke-width="2" stroke-linecap="round" fill="none"/>
+
+                <!-- 前小腳 -->
+                <ellipse cx="82" cy="166" rx="9" ry="7" fill="#FFFFFF" stroke="#E4E4E7" stroke-width="2"/>
+                <ellipse cx="118" cy="166" rx="9" ry="7" fill="#FFFFFF" stroke="#E4E4E7" stroke-width="2"/>
+            </svg>
+        </div>
+
+        <!-- 倒數數字顯示 -->
+        <div id="timerContainer" class="cursor-pointer group flex flex-col items-center justify-center z-10" onclick="toggleStartPause()">
+            <div id="timerDisplay" class="giant-timer font-bold tracking-tight font-mono transition-all duration-300 drop-shadow-2xl">
+                25:00
+            </div>
+            
+            <!-- 狀態提示語 -->
+            <div id="statusText" class="mt-1 md:mt-2 text-xs md:text-sm font-medium tracking-widest uppercase opacity-70 group-hover:opacity-100 transition-opacity flex items-center gap-2">
+                <span>點擊開始倒數 (兔子準備中)</span>
+            </div>
+        </div>
+
+        <!-- 快速選擇按鈕 -->
+        <div class="flex gap-2 my-2 z-10">
+            <button onclick="setTimer(5)" class="px-3.5 py-1.5 rounded-full text-xs font-medium border border-white/10 bg-white/5 hover:bg-white/15 transition-all">5 分鐘</button>
+            <button onclick="setTimer(10)" class="px-3.5 py-1.5 rounded-full text-xs font-medium border border-white/10 bg-white/5 hover:bg-white/15 transition-all">10 分鐘</button>
+            <button onclick="setTimer(25)" class="px-3.5 py-1.5 rounded-full text-xs font-medium border border-white/10 bg-white/5 hover:bg-white/15 transition-all">25 分鐘</button>
+            <button onclick="openSettingsModal()" class="px-3.5 py-1.5 rounded-full text-xs font-medium border border-white/10 bg-white/5 hover:bg-white/15 transition-all flex items-center gap-1">
+                <i data-lucide="sliders" class="w-3 h-3"></i> 自訂
+            </button>
+        </div>
+
+        <!-- 導火線進度條容器 -->
+        <div class="w-full max-w-3xl relative py-2">
+            <!-- 導火線標籤提示 -->
+            <div class="flex justify-between text-[11px] font-mono opacity-60 mb-1 px-1">
+                <span id="speedLabel">兔子速度: 1.0x</span>
+                <span id="colorLabel">當前風格: 賽博霓虹</span>
+            </div>
+
+            <!-- 導火線本體軌道 -->
+            <div class="w-full h-3 bg-black/40 border border-white/10 rounded-full overflow-visible relative shadow-inner">
+                <!-- 殘留/未燃燒導火線繩索紋理 -->
+                <div class="absolute inset-0 rounded-full opacity-30 bg-[repeating-linear-gradient(45deg,#888,#888_5px,#111_5px,#111_10px)]"></div>
+                
+                <!-- 燃燒剩餘的導火線 (漸變填充) -->
+                <div id="fuseProgress" class="h-full rounded-full transition-all duration-300 relative color-transition" style="width: 100%;">
+                    <!-- 導火線頭部的火花燃燒點 -->
+                    <div id="sparkHead" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-20 fuse-spark-head flex items-center justify-center">
+                        <!-- 火花核心 -->
+                        <div class="w-6 h-6 rounded-full bg-amber-300 animate-spark flex items-center justify-center shadow-[0_0_15px_#ff9900]">
+                            <div class="w-3 h-3 rounded-full bg-red-600"></div>
+                        </div>
+                        <!-- 火星閃爍 SVG -->
+                        <svg class="absolute -top-3 -right-3 w-10 h-10 animate-spin" style="animation-duration: 0.8s;" viewBox="0 0 40 40">
+                            <circle cx="20" cy="5" r="1.5" fill="#FFD700"/>
+                            <circle cx="35" cy="20" r="2" fill="#FF4500"/>
+                            <circle cx="20" cy="35" r="1" fill="#FF8C00"/>
+                            <circle cx="5" cy="20" r="1.8" fill="#FFD700"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 按鈕控制區 -->
+        <div class="flex items-center gap-4 mt-2">
+            <button id="startBtn" onclick="toggleStartPause()" class="flex items-center gap-2 px-8 py-3.5 rounded-full font-medium shadow-lg active:scale-95 transition-all color-transition">
+                <i data-lucide="play" id="startIcon" class="w-5 h-5 fill-current"></i>
+                <span id="startText">開始倒數</span>
+            </button>
+            <button id="resetBtn" onclick="resetTimer()" class="p-3.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 active:scale-95 transition-all" title="重置">
+                <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </main>
+
+    <!-- 綜合設定與時間面板 Modal -->
+    <div id="settingsModal" class="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-slate-900 border border-slate-800 text-slate-100 rounded-3xl p-6 md:p-8 w-[90%] max-w-md shadow-2xl transform scale-95 transition-transform duration-300" id="settingsContent">
+            <div class="flex justify-between items-center mb-6 border-b border-slate-800 pb-4">
+                <h3 class="text-lg font-semibold flex items-center gap-2">
+                    <i data-lucide="settings" class="w-5 h-5 text-pink-500"></i> 計時器設定
+                </h3>
+                <button onclick="closeSettingsModal()" class="text-slate-500 hover:text-slate-300">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <!-- 視覺風格切換 -->
+            <div class="mb-6">
+                <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">視覺風格與配色主題</label>
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="setThemeStyle('neon')" id="styleBtn-neon" class="flex flex-col items-center justify-center p-3 rounded-2xl border-2 transition-all bg-slate-950 border-pink-500">
+                        <span class="text-xs font-bold text-pink-400">賽博霓虹</span>
+                        <span class="text-[10px] text-slate-500 mt-1">酷炫發光</span>
+                    </button>
+                    <button onclick="setThemeStyle('minimal')" id="styleBtn-minimal" class="flex flex-col items-center justify-center p-3 rounded-2xl border-2 transition-all bg-zinc-950 border-zinc-800">
+                        <span class="text-xs font-bold text-zinc-200">極簡極致</span>
+                        <span class="text-[10px] text-slate-500 mt-1">黑白沉浸</span>
+                    </button>
+                    <button onclick="setThemeStyle('pastel')" id="styleBtn-pastel" class="flex flex-col items-center justify-center p-3 rounded-2xl border-2 transition-all bg-amber-50 border-pink-200">
+                        <span class="text-xs font-bold text-amber-900">柔和馬卡龍</span>
+                        <span class="text-[10px] text-amber-700 mt-1">溫暖療癒</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 時間設定 -->
+            <div class="mb-6">
+                <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">自訂倒數時間</label>
+                <div class="grid grid-cols-3 gap-3 text-center">
+                    <div>
+                        <label class="block text-xs text-slate-500 mb-1">小時</label>
+                        <input type="number" id="inputHours" min="0" max="99" value="0" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-center text-lg font-mono text-white focus:outline-none focus:border-pink-500 transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-500 mb-1">分鐘</label>
+                        <input type="number" id="inputMinutes" min="0" max="59" value="25" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-center text-lg font-mono text-white focus:outline-none focus:border-pink-500 transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-500 mb-1">秒數</label>
+                        <input type="number" id="inputSeconds" min="0" max="59" value="0" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-center text-lg font-mono text-white focus:outline-none focus:border-pink-500 transition-colors">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 開關與參數 -->
+            <div class="mb-6 flex items-center justify-between bg-slate-950/60 p-3.5 rounded-xl border border-slate-800">
+                <div class="flex items-center gap-2 text-sm font-medium">
+                    <i data-lucide="volume-2" id="modalSoundIcon" class="w-4 h-4 text-slate-400"></i>
+                    <span>倒數音效提醒</span>
+                </div>
+                <input type="checkbox" id="soundCheckbox" checked class="w-5 h-5 accent-pink-600 rounded cursor-pointer" onchange="toggleSound(this.checked)">
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="closeSettingsModal()" class="flex-1 py-3 rounded-xl border border-slate-800 text-slate-400 font-medium hover:bg-slate-800 transition-colors">取消</button>
+                <button onclick="applySettings()" class="flex-1 py-3 rounded-xl bg-pink-600 hover:bg-pink-500 text-white font-medium transition-colors">儲存並套用</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 邏輯控制腳本 -->
+    <script>
+        // 狀態變數
+        let totalSeconds = 25 * 60;
+        let remainingSeconds = 25 * 60;
+        let timerInterval = null;
+        let isRunning = false;
+        let soundEnabled = true;
+        let currentStyle = 'neon'; // neon, minimal, pastel
+
+        // 三種風格的主題色彩庫
+        const stylePalettes = {
+            neon: [
+                { name: "霓虹桃紅", bg: "bg-slate-950 text-slate-100", accent: "bg-pink-600 text-white", fuse: "bg-gradient-to-r from-purple-500 to-pink-500" },
+                { name: "極光翡翠", bg: "bg-slate-950 text-slate-100", accent: "bg-emerald-600 text-white", fuse: "bg-gradient-to-r from-teal-400 to-emerald-500" },
+                { name: "星海電藍", bg: "bg-slate-950 text-slate-100", accent: "bg-blue-600 text-white", fuse: "bg-gradient-to-r from-cyan-500 to-blue-600" },
+                { name: "紫羅蘭光", bg: "bg-slate-950 text-slate-100", accent: "bg-violet-600 text-white", fuse: "bg-gradient-to-r from-fuchsia-500 to-violet-600" }
+            ],
+            minimal: [
+                { name: "極簡純黑", bg: "bg-zinc-950 text-zinc-100", accent: "bg-zinc-100 text-zinc-900", fuse: "bg-gradient-to-r from-zinc-600 to-zinc-200" },
+                { name: "深灰石墨", bg: "bg-stone-950 text-stone-100", accent: "bg-stone-200 text-stone-900", fuse: "bg-gradient-to-r from-stone-500 to-stone-200" },
+                { name: "沉穩夜空", bg: "bg-slate-900 text-slate-100", accent: "bg-slate-200 text-slate-900", fuse: "bg-gradient-to-r from-slate-500 to-slate-200" }
+            ],
+            pastel: [
+                { name: "暖陽蜜桃", bg: "bg-orange-50 text-orange-950", accent: "bg-orange-500 text-white", fuse: "bg-gradient-to-r from-amber-400 to-orange-400" },
+                { name: "柔粉草莓", bg: "bg-rose-50 text-rose-950", accent: "bg-rose-500 text-white", fuse: "bg-gradient-to-r from-pink-300 to-rose-400" },
+                { name: "薄荷清新", bg: "bg-emerald-50 text-emerald-950", accent: "bg-emerald-500 text-white", fuse: "bg-gradient-to-r from-teal-300 to-emerald-400" },
+                { name: "薰衣草紫", bg: "bg-purple-50 text-purple-950", accent: "bg-purple-500 text-white", fuse: "bg-gradient-to-r from-violet-300 to-purple-400" }
+            ]
+        };
+        let colorIndex = 0;
+
+        // DOM 元素
+        const timerDisplay = document.getElementById('timerDisplay');
+        const statusText = document.getElementById('statusText');
+        const startBtn = document.getElementById('startBtn');
+        const startIcon = document.getElementById('startIcon');
+        const startText = document.getElementById('startText');
+        const fullscreenToggle = document.getElementById('fullscreenToggle');
+        const fullscreenIcon = document.getElementById('fullscreenIcon');
+        const settingsModal = document.getElementById('settingsModal');
+        const settingsContent = document.getElementById('settingsContent');
+        const rabbitAnim = document.getElementById('rabbitAnim');
+        const fuseProgress = document.getElementById('fuseProgress');
+        const speedLabel = document.getElementById('speedLabel');
+        const colorLabel = document.getElementById('colorLabel');
+
+        // 音效設置 (Web Audio API)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playBeep(freq = 800, type = 'sine', duration = 0.15) {
+            if (!soundEnabled) return;
+            try {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.log('Audio error:', e);
+            }
+        }
+
+        function playFinishSound() {
+            if (!soundEnabled) return;
+            let count = 0;
+            const interval = setInterval(() => {
+                playBeep(880, 'triangle', 0.25);
+                count++;
+                if (count >= 5) clearInterval(interval);
+            }, 250);
+        }
+
+        // 初始化
+        window.onload = () => {
+            lucide.createIcons();
+            applyTheme();
+            updateDisplay();
+            
+            // 鍵盤快捷鍵支援
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'Space') {
+                    e.preventDefault();
+                    toggleStartPause();
+                } else if (e.code === 'KeyR') {
+                    resetTimer();
+                } else if (e.code === 'KeyF') {
+                    toggleFullscreen();
+                }
+            });
+        };
+
+        // 切換風格風格 (賽博霓虹 / 極簡極致 / 柔和馬卡龍)
+        function setThemeStyle(styleName) {
+            currentStyle = styleName;
+            colorIndex = 0;
+            
+            // 更新 Modal 內的選取按鈕高亮狀態
+            ['neon', 'minimal', 'pastel'].forEach(s => {
+                const btn = document.getElementById(`styleBtn-${s}`);
+                if (s === styleName) {
+                    btn.classList.add('border-pink-500', 'scale-105');
+                    btn.classList.remove('border-transparent', 'border-zinc-800', 'border-pink-200');
+                } else {
+                    btn.classList.remove('border-pink-500', 'scale-105');
+                    btn.classList.add('border-transparent');
+                }
+            });
+            
+            applyTheme();
+        }
+
+        // 套用配色主題
+        function applyTheme() {
+            const palette = stylePalettes[currentStyle];
+            const theme = palette[colorIndex % palette.length];
+            
+            // 動態更換背景色與元素配色
+            document.body.className = `${theme.bg} h-full flex flex-col justify-between select-none overflow-hidden transition-colors duration-1000 font-sans color-transition`;
+            fuseProgress.className = `h-full rounded-full transition-all duration-300 relative ${theme.fuse}`;
+            startBtn.className = `flex items-center gap-2 px-8 py-3.5 rounded-full font-medium shadow-lg active:scale-95 transition-all color-transition ${theme.accent}`;
+            colorLabel.textContent = `當前風格: ${theme.name}`;
+        }
+
+        // 時間格式化 (HH:MM:SS 或 MM:SS)
+        function formatTime(seconds) {
+            const hrs = Math.floor(seconds / 3600);
+            const mins = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+
+            const pad = (num) => String(num).padStart(2, '0');
+
+            if (hrs > 0) {
+                return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+            }
+            return `${pad(mins)}:${pad(secs)}`;
+        }
+
+        // 更新畫面顯示 (計算兔子速度、顏色變換、導火線進度)
+        function updateDisplay() {
+            const formatted = formatTime(remainingSeconds);
+            timerDisplay.textContent = formatted;
+            document.title = `${formatted} - 兔子倒數計時器`;
+
+            // 1. 計算導火線剩餘百分比
+            const progressPercent = totalSeconds > 0 ? (remainingSeconds / totalSeconds) * 100 : 0;
+            fuseProgress.style.width = `${progressPercent}%`;
+
+            // 2. 每 5 分鐘加速兔子動畫
+            const elapsedTime = totalSeconds - remainingSeconds;
+            const fiveMinBlocks = Math.floor(elapsedTime / 300); // 每 300 秒 (5 分鐘) 算一個階段
+            const speedMultiplier = 1 + (fiveMinBlocks * 0.4); // 每 5 分鐘速度增加 0.4x
+            const animDuration = Math.max(0.2, 1.2 / speedMultiplier); // 限制最快 0.2s 週期
+
+            rabbitAnim.style.setProperty('--anim-speed', `${animDuration}s`);
+            speedLabel.textContent = `兔子速度: ${speedMultiplier.toFixed(1)}x`;
+
+            // 3. 每一分鐘 (60 秒) 自動變更一次介面主題顏色
+            const minuteBlock = Math.floor(elapsedTime / 60);
+            if (minuteBlock !== colorIndex && isRunning) {
+                colorIndex = minuteBlock;
+                applyTheme();
+            }
+        }
+
+        // 開始 / 暫停
+        function toggleStartPause() {
+            if (remainingSeconds <= 0) resetTimer();
+
+            if (isRunning) {
+                // 暫停
+                clearInterval(timerInterval);
+                isRunning = false;
+                startText.textContent = '繼續倒數';
+                startIcon.setAttribute('data-lucide', 'play');
+                statusText.children[0].textContent = '已暫停 - 點擊畫面繼續';
+                timerDisplay.classList.remove('animate-pulse-subtle');
+                rabbitAnim.style.animationPlayState = 'paused';
+            } else {
+                // 開始
+                playBeep(600, 'sine', 0.1);
+                isRunning = true;
+                startText.textContent = '暫停';
+                startIcon.setAttribute('data-lucide', 'pause');
+                statusText.children[0].textContent = '兔子奔跑倒數中...';
+                timerDisplay.classList.add('animate-pulse-subtle');
+                timerDisplay.classList.remove('animate-flash');
+                rabbitAnim.style.animationPlayState = 'running';
+
+                timerInterval = setInterval(() => {
+                    if (remainingSeconds > 0) {
+                        remainingSeconds--;
+                        updateDisplay();
+                    } else {
+                        // 時間到！
+                        clearInterval(timerInterval);
+                        isRunning = false;
+                        startText.textContent = '重新開始';
+                        startIcon.setAttribute('data-lucide', 'rotate-ccw');
+                        statusText.children[0].textContent = '⏰ 時間到！兔子抵達終點囉！';
+                        timerDisplay.classList.remove('animate-pulse-subtle');
+                        timerDisplay.classList.add('animate-flash');
+                        playFinishSound();
+                    }
+                }, 1000);
+            }
+            lucide.createIcons();
+        }
+
+        // 重置
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            remainingSeconds = totalSeconds;
+            colorIndex = 0;
+            startText.textContent = '開始倒數';
+            startIcon.setAttribute('data-lucide', 'play');
+            statusText.children[0].textContent = '點擊畫面開始倒數';
+            timerDisplay.classList.remove('animate-pulse-subtle', 'animate-flash');
+            rabbitAnim.style.animationPlayState = 'running';
+            applyTheme();
+            updateDisplay();
+            lucide.createIcons();
+        }
+
+        // 設定快速時間（分鐘）
+        function setTimer(minutes) {
+            totalSeconds = minutes * 60;
+            resetTimer();
+        }
+
+        // 切換音效開關
+        function toggleSound(enabled) {
+            soundEnabled = enabled;
+            const modalSoundIcon = document.getElementById('modalSoundIcon');
+            modalSoundIcon.setAttribute('data-lucide', soundEnabled ? 'volume-2' : 'volume-x');
+            lucide.createIcons();
+        }
+
+        // 全螢幕切換
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => console.log(err));
+                fullscreenIcon.setAttribute('data-lucide', 'minimize');
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                    fullscreenIcon.setAttribute('data-lucide', 'maximize');
+                }
+            }
+            lucide.createIcons();
+        }
+        fullscreenToggle.addEventListener('click', toggleFullscreen);
+
+        // 設定 Modal 控制
+        function openSettingsModal() {
+            if (isRunning) toggleStartPause();
+            settingsModal.classList.remove('hidden');
+            setTimeout(() => {
+                settingsModal.classList.remove('opacity-0');
+                settingsContent.classList.remove('scale-95');
+                settingsContent.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeSettingsModal() {
+            settingsModal.classList.add('opacity-0');
+            settingsContent.classList.remove('scale-100');
+            settingsContent.classList.add('scale-95');
+            setTimeout(() => {
+                settingsModal.classList.add('hidden');
+            }, 300);
+        }
+
+        function applySettings() {
+            const h = parseInt(document.getElementById('inputHours').value) || 0;
+            const m = parseInt(document.getElementById('inputMinutes').value) || 0;
+            const s = parseInt(document.getElementById('inputSeconds').value) || 0;
+
+            const calculatedTotal = (h * 3600) + (m * 60) + s;
+            if (calculatedTotal > 0) {
+                totalSeconds = calculatedTotal;
+                closeSettingsModal();
+                resetTimer();
+            } else {
+                closeSettingsModal();
+            }
+        }
+    </script>
+</body>
+</html>

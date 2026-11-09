@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大前研一 - 智慧名言與寫真藝廊</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome 圖標 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #0b0f19;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        .font-mono-clock {
+            font-family: 'Share Tech Mono', monospace;
+        }
+        /* 倒數計時進度條動畫 */
+        @keyframes progress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+        .progress-running {
+            animation: progress 30s linear infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen relative flex flex-col justify-between selection:bg-amber-600 selection:text-white">
+
+    <!-- 背景圖片層（雙層實現平滑淡入淡出） -->
+    <div id="bg-layer-1" class="fixed inset-0 bg-cover bg-center transition-all duration-1000 transform scale-100 z-0"></div>
+    <div id="bg-layer-2" class="fixed inset-0 bg-cover bg-center transition-all duration-1000 transform scale-100 z-0 opacity-0"></div>
+
+    <!-- 暗色遮罩層（提高文字可讀性） -->
+    <div class="fixed inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/70 z-10 pointer-events-none"></div>
+
+    <!-- 頂部欄：左上角數字時鐘 -->
+    <header class="relative z-20 p-4 md:p-6 flex justify-between items-center">
+        <!-- 左上角數字時鐘組件 -->
+        <div class="flex items-center space-x-3 bg-black/50 backdrop-blur-md border border-white/10 px-4 py-2 rounded-2xl shadow-lg hover:border-amber-500/50 transition">
+            <i class="fa-regular fa-clock text-amber-400 text-lg animate-pulse"></i>
+            <div class="flex flex-col">
+                <span id="digital-clock" class="font-mono-clock text-xl md:text-2xl font-bold tracking-wider text-amber-300">
+                    00:00:00
+                </span>
+                <span id="digital-date" class="text-xs text-gray-400 font-mono-clock">
+                    2026-10-28 WED
+                </span>
+            </div>
+        </div>
+
+        <!-- 右上角個人標籤 -->
+        <div class="hidden sm:flex items-center gap-2 bg-amber-600/20 border border-amber-500/30 px-3 py-1.5 rounded-full text-xs font-semibold text-amber-200 backdrop-blur-sm">
+            <i class="fa-solid fa-lightbulb text-amber-400"></i>
+            <span>全球戰略家 / 策略大師 大前研一</span>
+        </div>
+    </header>
+
+    <!-- 中央核心內容區：大前研一名言卡片 -->
+    <main class="relative z-20 flex-1 flex flex-col justify-center items-center px-4 py-8 text-center max-w-4xl mx-auto w-full">
+        
+        <div class="relative w-full bg-black/45 backdrop-blur-xl border border-white/15 p-6 md:p-12 rounded-3xl shadow-2xl">
+            <!-- 裝飾用引號圖標 -->
+            <div class="absolute -top-6 left-8 w-12 h-12 bg-amber-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-amber-600/30">
+                <i class="fa-solid fa-quote-left text-xl"></i>
+            </div>
+
+            <!-- 名言內容與日文原句 -->
+            <div class="mt-4 min-h-[180px] flex flex-col justify-center items-center">
+                <p id="quote-zh" class="text-xl md:text-3xl font-bold leading-relaxed tracking-wide text-white mb-4 drop-shadow-md">
+                    <!-- 中文名言 -->
+                </p>
+                <p id="quote-jp" class="text-sm md:text-base text-amber-200/80 font-light italic mb-2">
+                    <!-- 原名言 / 英文/日文 -->
+                </p>
+                <p id="quote-context" class="text-xs text-gray-400 tracking-wider uppercase mt-2">
+                    <!-- 出處或背景 -->
+                </p>
+            </div>
+
+            <!-- 30秒自動切換進度條 -->
+            <div class="w-full bg-white/10 h-1 rounded-full mt-6 overflow-hidden">
+                <div id="progress-bar" class="bg-gradient-to-r from-amber-500 to-orange-400 h-full rounded-full"></div>
+            </div>
+
+            <!-- 控制按鈕列 -->
+            <div class="flex justify-between items-center mt-6 text-sm text-gray-400">
+                <span id="counter-indicator" class="font-mono-clock text-xs">01 / 06</span>
+                
+                <div class="flex items-center space-x-3">
+                    <button id="prev-btn" class="w-10 h-10 rounded-full bg-white/5 hover:bg-white/20 active:scale-95 border border-white/10 flex items-center justify-center text-white transition" title="上一張">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <button id="pause-btn" class="w-10 h-10 rounded-full bg-white/5 hover:bg-white/20 active:scale-95 border border-white/10 flex items-center justify-center text-white transition" title="暫停/繼續">
+                        <i id="pause-icon" class="fa-solid fa-pause"></i>
+                    </button>
+                    <button id="next-btn" class="w-10 h-10 rounded-full bg-white/5 hover:bg-white/20 active:scale-95 border border-white/10 flex items-center justify-center text-white transition" title="下一張">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 頁尾宣告 -->
+    <footer class="relative z-20 p-4 text-center text-xs text-gray-500">
+        <p>Kenichi Ohmae Wisdom & Gallery &copy; 2026</p>
+    </footer>
+
+    <!-- JavaScript 邏輯控制 -->
+    <script>
+        // 大前研一名言與意象寫真數據
+        const ohmaeData = [
+            {
+                quoteZh: "人類要改變人生只有三件事：第一是改變時間分配，第二是改變居住環境，第三是改變交往的人。最沒有意義的就是『下定決心』。",
+                quoteJp: "人間が変わる方法は3つしかない。時間配分を変える、住む場所を変える、付き合う人を変える。最も無意味なのは「決意を新たにする」ことだ。",
+                context: "選自《時間與競爭力》/《思考技術》",
+                image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1920&auto=format&fit=crop"
+            },
+            {
+                quoteZh: "在沒有答案的時代，最重要的能力不是找出正確答案，而是具備『思考的技術』與提出問題的能力。",
+                quoteJp: "正解のない時代に最も重要なのは、正解を覚えることではなく、問いを立てて自ら思考する技術である。",
+                context: "選自《思考的技术》",
+                image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1920&auto=format&fit=crop"
+            },
+            {
+                quoteZh: "不要當專業領域的奴隸。具備廣闊視野與跨領域整合能力的『T型人才』，才是無國界經濟時代的真正贏家。",
+                quoteJp: "専門分野の奴隷になるな。広い視野と統合力を備えた人材こそが、境界なき経済の勝者となる。",
+                context: "選自《無國界世界》與《專業：個人競爭力》",
+                image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1920&auto=format&fit=crop"
+            },
+            {
+                quoteZh: "未來的競爭，不再是規模大小的競爭，而是速度快慢的競爭。",
+                quoteJp: "これからの競争は、規模の大小ではなく、スピードの速い者が遅い者に勝つ時代である。",
+                context: "選自《企業戰略家》",
+                image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1920&auto=format&fit=crop"
+            },
+            {
+                quoteZh: "如果你只在別人畫好的跑道上跑步，你永遠不可能成為第一名。你必須自己創造跑道。",
+                quoteJp: "他人が作ったレールの上を走っている限り、絶対に一番にはなれない。自分のレールは自分で作れ。",
+                context: "選自《即戰力》",
+                image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=1920&auto=format&fit=crop"
+            },
+            {
+                quoteZh: "面對不確定的未來，唯一的安全感來自於你不斷學習與重塑自我的能力。",
+                quoteJp: "不確実な未来において、最大の安定とは自分自身を学び直し、変革し続ける能力である。",
+                context: "選自《低欲望社會》與《OFF學》",
+                image: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=1920&auto=format&fit=crop"
+            }
+        ];
+
+        let currentIndex = 0;
+        let isPaused = false;
+        let activeLayer = 1;
+        let timer = null;
+        const INTERVAL_TIME = 30000; // 30秒
+
+        // DOM 元素引用
+        const digitalClock = document.getElementById('digital-clock');
+        const digitalDate = document.getElementById('digital-date');
+        const quoteZh = document.getElementById('quote-zh');
+        const quoteJp = document.getElementById('quote-jp');
+        const quoteContext = document.getElementById('quote-context');
+        const bgLayer1 = document.getElementById('bg-layer-1');
+        const bgLayer2 = document.getElementById('bg-layer-2');
+        const progressBar = document.getElementById('progress-bar');
+        const counterIndicator = document.getElementById('counter-indicator');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const pauseBtn = document.getElementById('pause-btn');
+        const pauseIcon = document.getElementById('pause-icon');
+
+        // 1. 左上角數字時鐘即時更新
+        function updateClock() {
+            const now = new Date();
+            
+            // 時間格式 HH:MM:SS
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            digitalClock.textContent = `${hours}:${minutes}:${seconds}`;
+
+            // 日期格式 YYYY-MM-DD DAY
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const date = String(now.getDate()).padStart(2, '0');
+            const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+            const dayName = days[now.getDay()];
+            
+            digitalDate.textContent = `${year}-${month}-${date} ${dayName}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // 2. 更新內容與背景圖片 (平滑淡入淡出)
+        function renderSlide(index) {
+            const data = ohmaeData[index];
+            
+            // 更新計數器
+            counterIndicator.textContent = `${String(index + 1).padStart(2, '0')} / ${String(ohmaeData.length).padStart(2, '0')}`;
+
+            // 文字淡出效果後更新
+            quoteZh.classList.add('opacity-0');
+            quoteJp.classList.add('opacity-0');
+            quoteContext.classList.add('opacity-0');
+
+            setTimeout(() => {
+                quoteZh.textContent = `“ ${data.quoteZh} ”`;
+                quoteJp.textContent = data.quoteJp;
+                quoteContext.textContent = `—— ${data.context}`;
+
+                quoteZh.classList.remove('opacity-0');
+                quoteJp.classList.remove('opacity-0');
+                quoteContext.classList.remove('opacity-0');
+                
+                quoteZh.classList.add('transition-opacity', 'duration-500');
+                quoteJp.classList.add('transition-opacity', 'duration-500');
+                quoteContext.classList.add('transition-opacity', 'duration-500');
+            }, 300);
+
+            // 背景圖雙層淡入淡出輪播
+            if (activeLayer === 1) {
+                bgLayer2.style.backgroundImage = `url('${data.image}')`;
+                bgLayer2.classList.remove('opacity-0');
+                bgLayer1.classList.add('opacity-0');
+                activeLayer = 2;
+            } else {
+                bgLayer1.style.backgroundImage = `url('${data.image}')`;
+                bgLayer1.classList.remove('opacity-0');
+                bgLayer2.classList.add('opacity-0');
+                activeLayer = 1;
+            }
+
+            // 重置進度條動畫
+            resetProgressBar();
+        }
+
+        // 3. 重置進度條動畫
+        function resetProgressBar() {
+            progressBar.classList.remove('progress-running');
+            void progressBar.offsetWidth; // 觸發 reflow
+            if (!isPaused) {
+                progressBar.classList.add('progress-running');
+            }
+        }
+
+        // 4. 自動播放計時器控制
+        function startTimer() {
+            stopTimer();
+            timer = setInterval(() => {
+                if (!isPaused) {
+                    nextSlide();
+                }
+            }, INTERVAL_TIME);
+            resetProgressBar();
+        }
+
+        function stopTimer() {
+            if (timer) clearInterval(timer);
+        }
+
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % ohmaeData.length;
+            renderSlide(currentIndex);
+        }
+
+        function prevSlide() {
+            currentIndex = (currentIndex - 1 + ohmaeData.length) % ohmaeData.length;
+            renderSlide(currentIndex);
+        }
+
+        // 5. 事件監聽 (手動切換與暫停)
+        nextBtn.addEventListener('click', () => {
+            nextSlide();
+            startTimer();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            prevSlide();
+            startTimer();
+        });
+
+        pauseBtn.addEventListener('click', () => {
+            isPaused = !isPaused;
+            if (isPaused) {
+                pauseIcon.classList.remove('fa-pause');
+                pauseIcon.classList.add('fa-play');
+                progressBar.style.animationPlayState = 'paused';
+            } else {
+                pauseIcon.classList.remove('fa-play');
+                pauseIcon.classList.add('fa-pause');
+                progressBar.style.animationPlayState = 'running';
+            }
+        });
+
+        // 鍵盤左右鍵與空白鍵控制
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                nextSlide();
+                startTimer();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+                startTimer();
+            } else if (e.key === ' ') {
+                pauseBtn.click();
+            }
+        });
+
+        // 6. 初始化載入
+        window.onload = () => {
+            bgLayer1.style.backgroundImage = `url('${ohmaeData[0].image}')`;
+            renderSlide(0);
+            startTimer();
+        };
+    </script>
+</body>
+</html>

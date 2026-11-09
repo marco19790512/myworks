@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的網頁作品集 | My Web Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', '"Noto Sans TC"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 45%),
+                        radial-gradient(circle at 85% 20%, rgba(236, 72, 153, 0.1) 0%, transparent 40%),
+                        radial-gradient(circle at 50% 85%, rgba(14, 165, 233, 0.1) 0%, transparent 50%),
+                        #f8fafc;
+        }
+        .filter-btn.active {
+            background-color: #4f46e5;
+            color: #ffffff;
+            box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.35);
+        }
+        /* Custom avatar crop targeting Marco in diorama */
+        .avatar-marco {
+            object-fit: cover;
+            object-position: 53% 33%;
+            transform: scale(1.55);
+            transform-origin: 53% 33%;
+        }
+    </style>
+</head>
+<body class="hero-gradient text-slate-800 min-h-screen flex flex-col font-sans selection:bg-brand-500 selection:text-white">
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/80 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <!-- Mini Avatar in Header -->
+                <div class="relative w-10 h-10 rounded-full overflow-hidden ring-2 ring-brand-500/30 shadow-md bg-slate-100 flex-shrink-0 cursor-pointer" onclick="openMediaPreview('溫馨療癒的創意工作桌 Diorama', 'about/cozy-creative-desk-diorama.png', 'image')">
+                    <img src="about/cozy-creative-desk-diorama.png" alt="Marco Avatar" class="w-full h-full avatar-marco">
+                    <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white"></span>
+                </div>
+                <div>
+                    <span class="font-extrabold text-xl tracking-tight text-slate-900">Portfolio</span>
+                    <span class="hidden sm:inline-block text-xs font-semibold px-2 py-0.5 rounded-full bg-brand-50 text-brand-600 ml-2 border border-brand-100">Marco's Works</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <div class="text-xs text-slate-500 hidden md:flex items-center gap-2">
+                    <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>共收錄 42 件數位創作與專案</span>
+                </div>
+                <a href="#projects" class="text-xs font-semibold px-4 py-2 rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition">
+                    瀏覽作品 <i class="fa-solid fa-arrow-down ml-1"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative pt-10 pb-10 sm:pt-14 sm:pb-14 px-4 sm:px-6 lg:px-8 text-center max-w-4xl mx-auto">
+        
+        <!-- Personal Avatar Showcase -->
+        <div class="flex flex-col items-center justify-center mb-6">
+            <div class="relative group cursor-pointer" onclick="openMediaPreview('溫馨療癒的創意工作桌 Diorama', 'about/cozy-creative-desk-diorama.png', 'image')" title="點擊檢視完整高畫質桌景插畫">
+                <!-- Outer Gradient Glow Ring -->
+                <div class="absolute -inset-1.5 bg-gradient-to-tr from-brand-600 via-indigo-400 to-pink-500 rounded-full blur-md opacity-50 group-hover:opacity-85 transition duration-500"></div>
+                <!-- Main Avatar Circle -->
+                <div class="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden ring-4 ring-white shadow-2xl bg-amber-50">
+                    <img src="about/cozy-creative-desk-diorama.png" alt="Marco 個人頭像" class="w-full h-full avatar-marco group-hover:scale-[1.68] transition-transform duration-500 ease-out">
+                </div>
+                <!-- Active Status Dot -->
+                <div class="absolute bottom-1 right-1 w-7 h-7 rounded-full bg-emerald-500 ring-4 ring-white flex items-center justify-center text-white text-[11px] shadow-md" title="在線 · 創作中">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+            </div>
+            <!-- Identity Title Pill -->
+            <div class="mt-4 flex items-center gap-2">
+                <span class="text-sm font-extrabold text-slate-800 tracking-wide">Marco 曾</span>
+                <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100 flex items-center gap-1">
+                    <i class="fa-solid fa-sparkles text-[10px] text-indigo-500"></i> 組織系統顧問 · 數位創作者
+                </span>
+            </div>
+        </div>
+
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-tight mb-4">
+            我的網頁作品集
+        </h1>
+        <p class="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed mb-8">
+            匯集 AI 應用研發、互動小遊戲、合規實用工具、商業管理儀表板與視覺創作。點擊下方卡片即可直接開啟對應作品或檢視完整預覽。
+        </p>
+
+        <!-- Search Bar -->
+        <div class="relative max-w-xl mx-auto mb-10">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-base"></i>
+            <input type="text" id="searchInput" placeholder="搜尋作品名稱、技術標籤或功能關鍵字..."
+                class="w-full pl-11 pr-10 py-3.5 rounded-2xl glass-card text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 shadow-sm transition">
+            <button id="clearSearch" class="hidden absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-sm p-1">
+                <i class="fa-solid fa-circle-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Quick Stats Banner -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl mx-auto text-left">
+            <div class="glass-card p-3.5 rounded-xl flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-base">
+                    <i class="fa-solid fa-laptop-code"></i>
+                </div>
+                <div>
+                    <div class="text-lg font-bold text-slate-800 leading-tight">11</div>
+                    <div class="text-xs text-slate-500">應用系統 (Apps)</div>
+                </div>
+            </div>
+            <div class="glass-card p-3.5 rounded-xl flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-base">
+                    <i class="fa-solid fa-gamepad"></i>
+                </div>
+                <div>
+                    <div class="text-lg font-bold text-slate-800 leading-tight">6</div>
+                    <div class="text-xs text-slate-500">互動遊戲 (Games)</div>
+                </div>
+            </div>
+            <div class="glass-card p-3.5 rounded-xl flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-base">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                </div>
+                <div>
+                    <div class="text-lg font-bold text-slate-800 leading-tight">7</div>
+                    <div class="text-xs text-slate-500">實用工具 (Tools)</div>
+                </div>
+            </div>
+            <div class="glass-card p-3.5 rounded-xl flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center font-bold text-base">
+                    <i class="fa-solid fa-palette"></i>
+                </div>
+                <div>
+                    <div class="text-lg font-bold text-slate-800 leading-tight">18</div>
+                    <div class="text-xs text-slate-500">簡介、創作與多媒體</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content & Filters -->
+    <main id="projects" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 w-full">
+        <!-- Category Filter Tabs -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-8 no-scrollbar scroll-smooth">
+            <button class="filter-btn active px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-white text-slate-600 border border-slate-200 hover:border-slate-300" data-category="all">
+                全部作品 <span class="ml-1 opacity-75 font-normal" id="count-all">(42)</span>
+            </button>
+            <button class="filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-white text-slate-600 border border-slate-200 hover:border-slate-300" data-category="apps">
+                <i class="fa-solid fa-laptop-code mr-1.5 text-blue-500"></i>應用系統 <span class="ml-1 opacity-75 font-normal">(11)</span>
+            </button>
+            <button class="filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-white text-slate-600 border border-slate-200 hover:border-slate-300" data-category="games">
+                <i class="fa-solid fa-gamepad mr-1.5 text-emerald-500"></i>互動遊戲 <span class="ml-1 opacity-75 font-normal">(6)</span>
+            </button>
+            <button class="filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-white text-slate-600 border border-slate-200 hover:border-slate-300" data-category="tools">
+                <i class="fa-solid fa-screwdriver-wrench mr-1.5 text-amber-500"></i>實用工具 <span class="ml-1 opacity-75 font-normal">(7)</span>
+            </button>
+            <button class="filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-white text-slate-600 border border-slate-200 hover:border-slate-300" data-category="about">
+                <i class="fa-solid fa-user-tie mr-1.5 text-rose-500"></i>個人簡介 <span class="ml-1 opacity-75 font-normal">(6)</span>
+            </button>
+            <button class="filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-white text-slate-600 border border-slate-200 hover:border-slate-300" data-category="art">
+                <i class="fa-solid fa-paintbrush mr-1.5 text-purple-500"></i>藝術創作 <span class="ml-1 opacity-75 font-normal">(4)</span>
+            </button>
+            <button class="filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-white text-slate-600 border border-slate-200 hover:border-slate-300" data-category="idea">
+                <i class="fa-solid fa-lightbulb mr-1.5 text-cyan-500"></i>商業構想 <span class="ml-1 opacity-75 font-normal">(5)</span>
+            </button>
+            <button class="filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-white text-slate-600 border border-slate-200 hover:border-slate-300" data-category="assets">
+                <i class="fa-solid fa-shapes mr-1.5 text-pink-500"></i>設計規範 <span class="ml-1 opacity-75 font-normal">(1)</span>
+            </button>
+            <button class="filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-white text-slate-600 border border-slate-200 hover:border-slate-300" data-category="media">
+                <i class="fa-solid fa-photo-film mr-1.5 text-violet-500"></i>多媒體影音 <span class="ml-1 opacity-75 font-normal">(2)</span>
+            </button>
+        </div>
+
+        <!-- Empty Results Alert -->
+        <div id="noResults" class="hidden text-center py-16">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 text-2xl">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+            <h3 class="text-base font-bold text-slate-700">查無相符作品</h3>
+            <p class="text-xs text-slate-500 mt-1">請嘗試其他關鍵字或切換分類標籤</p>
+        </div>
+
+        <!-- Project Cards Grid -->
+        <div id="projectGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <!-- Dynamically populated via JS -->
+        </div>
+    </main>
+
+    <!-- Lightbox / Media Modal for Images & Audio/Video -->
+    <div id="mediaModal" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="relative bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl animate-in fade-in zoom-in duration-200">
+            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                <h3 id="modalTitle" class="font-bold text-slate-800 text-base truncate pr-4">作品預覽</h3>
+                <button id="closeModal" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div id="modalBody" class="p-6 overflow-y-auto flex items-center justify-center bg-slate-50 min-h-[300px]">
+                <!-- Injected content -->
+            </div>
+            <div class="px-6 py-3.5 border-t border-slate-100 flex items-center justify-between bg-white text-xs text-slate-500">
+                <span id="modalMeta">檔案路徑</span>
+                <a id="modalDirectLink" href="#" target="_blank" class="font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1">
+                    在獨立分頁開啟 <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200/80 py-8 text-center text-xs text-slate-500 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3 font-medium text-slate-700">
+                <div class="w-6 h-6 rounded-full overflow-hidden ring-1 ring-slate-300">
+                    <img src="about/cozy-creative-desk-diorama.png" alt="Marco" class="w-full h-full avatar-marco">
+                </div>
+                <span>我的網頁作品集</span>
+                <span class="text-slate-300">•</span>
+                <span>My Web Portfolio</span>
+            </div>
+            <div class="text-slate-400">
+                &copy; 2026 Marco. All rights reserved. 依據類型與語意系統化分類管理
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts: Data & Interactivity -->
+    <script>
+        const projects = [
+            // --- APPS (11) ---
+            {
+                title: "2026 全球 AI Agent 產業研究儀表板",
+                category: "apps",
+                categoryLabel: "應用系統",
+                categoryColor: "blue",
+                icon: "fa-solid fa-robot",
+                path: "apps/ai-agent-market-research-dashboard.html",
+                desc: "2026 全球 AI Agent 商業模式與 15 大跨產業地圖深度研究，涵蓋典型案例與美業專題。",
+                tags: ["AI Agent", "產業地圖", "商業模式", "數據儀表板"],
+                type: "web"
+            },
+            {
+                title: "微美地圖 Micro Beauty Map",
+                category: "apps",
+                categoryLabel: "應用系統",
+                categoryColor: "blue",
+                icon: "fa-solid fa-map-location-dot",
+                path: "apps/micro-beauty-map-web-app.html",
+                desc: "皮膚保養體驗社群與地區美容探索平台 Web App，讓每個人輕鬆找到適合自己的美。",
+                tags: ["美容社群", "地區探索", "店家地圖", "Web App"],
+                type: "web"
+            },
+            {
+                title: "Skinora Beauty Studio 沙龍官網",
+                category: "apps",
+                categoryLabel: "應用系統",
+                categoryColor: "blue",
+                icon: "fa-solid fa-spa",
+                path: "apps/skinora-beauty-studio-portal.html",
+                desc: "高質感生活美容沙龍官方展示網站，包含熱門服務介紹、價目清單與預約指引。",
+                tags: ["沙龍官網", "服務價目", "形象首頁", "TailwindCSS"],
+                type: "web"
+            },
+            {
+                title: "聰明美業與醫美自我選擇指南",
+                category: "apps",
+                categoryLabel: "應用系統",
+                categoryColor: "blue",
+                icon: "fa-solid fa-clipboard-check",
+                path: "apps/smart-beauty-aesthetic-selector.html",
+                desc: "不盲目跟風！從個人預算、肌膚需求與效益出發，客觀挑選最合適之生活美容或醫美療程。",
+                tags: ["決策指南", "醫美分析", "互動問答", "效益評估"],
+                type: "web"
+            },
+            {
+                title: "神秘星啟塔羅 - AI 占卜與解牌",
+                category: "apps",
+                categoryLabel: "應用系統",
+                categoryColor: "blue",
+                icon: "fa-solid fa-wand-magic-sparkles",
+                path: "apps/ai-tarot-reading-web-app.html",
+                desc: "提供單牌指引、時間軸三牌陣與抉擇牌陣，結合經典牌義與 AI 深度解牌互動系統。",
+                tags: ["AI 靈魂解牌", "線上塔羅", "互動占卜", "牌陣解析"],
+                type: "web"
+            },
+            {
+                title: "萌萌星願 Weekly Horoscope",
+                category: "apps",
+                categoryLabel: "應用系統",
+                categoryColor: "blue",
+                icon: "fa-solid fa-star",
+                path: "apps/cute-weekly-horoscope-app.html",
+                desc: "溫暖療癒手繪風格每週星座運勢查詢系統，給予每週工作、戀愛與心靈正面指引。",
+                tags: ["每週運勢", "星座解析", "萌系插畫", "互動式卡片"],
+                type: "web"
+            },
+            {
+                title: "台灣美業與醫美儀器價格差異分析",
+                category: "apps",
+                categoryLabel: "應用系統",
+                categoryColor: "blue",
+                icon: "fa-solid fa-chart-line",
+                path: "apps/taiwan-beauty-medical-pricing-analysis.html",
+                desc: "醫美設備買斷資本(CapEx)、加密耗材(OpEx)與終端定價之產業經濟學分析儀表板。",
+                tags: ["價格矩陣", "耗材攤提", "經濟學分析", "產業研究"],
+                type: "web"
+            },
+            {
+                title: "木鱉果（天堂果）營養之王百科",
+                category: "apps",
+                categoryLabel: "應用系統",
+                categoryColor: "blue",
+                icon: "fa-solid fa-seedling",
+                path: "apps/gac-fruit-superfood-guide.html",
+                desc: "東南亞超級水果木鱉果（Gac Fruit）豐富茄紅素與胡蘿蔔素介紹與料理指南展示頁。",
+                tags: ["超級水果", "營養百科", "食用指南", "產品展示"],
+                type: "web"
+            },
+            {
+                title: "異國零食嚴選團購填單系統",
+                category: "apps",
+                categoryLabel: "應用系統",
+                categoryColor: "blue",
+                icon: "fa-solid fa-basket-shopping",
+                path: "apps/global-snack-group-buying-order-form.html",
+                desc: "環球零食特快車開團訂單表單，支援日韓歐美爆款零食選購與即時滿額免運計算。",
+                tags: ["團購表單", "結帳計算", "倒數計時", "電商前台"],
+                type: "web"
+            },
+            {
+                title: "環球零食特快車 - 團購管理後台",
+                category: "apps",
+                categoryLabel: "應用系統",
+                categoryColor: "blue",
+                icon: "fa-solid fa-boxes-stacked",
+                path: "apps/global-snack-group-buying-system.html",
+                desc: "團長後台訂單管理、統計報表與庫存即時掌握的整合管理系統。",
+                tags: ["後台管理", "訂單統計", "團購營運", "管理系統"],
+                type: "web"
+            },
+            {
+                title: "大前研一 - 智慧名言與寫真藝廊",
+                category: "apps",
+                categoryLabel: "應用系統",
+                categoryColor: "blue",
+                icon: "fa-solid fa-quote-left",
+                path: "apps/kenichi-ohmae-wisdom-gallery.html",
+                desc: "全球戰略大師大前研一經典名言輪播展示，結合高質感人物寫真與沈浸式視覺背景。",
+                tags: ["大前研一", "策略智慧", "名言輪播", "寫真藝廊"],
+                type: "web"
+            },
+
+            // --- GAMES (6) ---
+            {
+                title: "太鼓達人：和太鼓大作戰",
+                category: "games",
+                categoryLabel: "互動遊戲",
+                categoryColor: "emerald",
+                icon: "fa-solid fa-drum",
+                path: "games/taiko-master-web-game.html",
+                desc: "支援鍵盤 D/F/J/K 鍵位打擊判定、夏日祭典熱門曲目與連擊 Combo 音效判定機制。",
+                tags: ["音樂節奏", "打擊判定", "Combo系統", "HTML5 遊戲"],
+                type: "web"
+            },
+            {
+                title: "木鱉果大豐收 - 接球大作戰",
+                category: "games",
+                categoryLabel: "互動遊戲",
+                categoryColor: "emerald",
+                icon: "fa-solid fa-apple-whole",
+                path: "games/gac-fruit-catch-game.html",
+                desc: "滑動竹籃接取落下的天堂果實，避開害蟲與障礙，累積最高分數解鎖專屬優惠！",
+                tags: ["接物遊戲", "Canvas 動畫", "分數排行", "護眼主題"],
+                type: "web"
+            },
+            {
+                title: "GAM266 門薩邏輯特訓網",
+                category: "games",
+                categoryLabel: "互動遊戲",
+                categoryColor: "emerald",
+                icon: "fa-solid fa-brain",
+                path: "games/mensa-logic-brain-challenge.html",
+                desc: "門薩邏輯思維挑戰題庫，包含空間規律、數列推導與圖形辨識之燒腦答題系統。",
+                tags: ["門薩題庫", "空間邏輯", "腦力特訓", "益智答題"],
+                type: "web"
+            },
+            {
+                title: "文字版復古電子雞 (Tamagotchi)",
+                category: "games",
+                categoryLabel: "互動遊戲",
+                categoryColor: "emerald",
+                icon: "fa-solid fa-egg",
+                path: "games/tamagotchi-virtual-pet.html",
+                desc: "完整重現經典電子雞養成樂趣：餵食、玩耍、清潔打掃與生病治療，支援難度與自動時鐘。",
+                tags: ["虛擬寵物", "狀態模擬", "經典重現", "養成機制"],
+                type: "web"
+            },
+            {
+                title: "眼睛疲勞度測試遊戲 & 護眼指南",
+                category: "games",
+                categoryLabel: "互動遊戲",
+                categoryColor: "emerald",
+                icon: "fa-solid fa-eye",
+                path: "games/eye-fatigue-test-game.html",
+                desc: "色塊辨識敏銳度與眨眼頻率自我檢測小遊戲，並附贈日常螢幕用眼保健建議。",
+                tags: ["色彩辨識", "疲勞檢測", "護眼保健", "互動檢測"],
+                type: "web"
+            },
+            {
+                title: "豪華幸運轉盤抽獎程式",
+                category: "games",
+                categoryLabel: "互動遊戲",
+                categoryColor: "emerald",
+                icon: "fa-solid fa-dharmachakra",
+                path: "games/lucky-wheel-raffle-game.html",
+                desc: "支援 Google 試算表 CSV 串接禮品名單、動態扇區生成、平滑減速與中獎紀錄匯出。",
+                tags: ["動態轉盤", "抽獎活動", "機率運算", "中獎紀錄"],
+                type: "web"
+            },
+
+            // --- TOOLS (7) ---
+            {
+                title: "企業資料去識別化與合規工具",
+                category: "tools",
+                categoryLabel: "實用工具",
+                categoryColor: "amber",
+                icon: "fa-solid fa-user-shield",
+                path: "tools/enterprise-data-deidentification-tool.html",
+                desc: "100% 本地瀏覽器運算！支援 Excel/CSV 多分頁敏感欄位自動偵測、遮罩與合規處理。",
+                tags: ["個資合規", "100% 離線", "多分頁 Excel", "機密防護"],
+                type: "web"
+            },
+            {
+                title: "企業資料去識別化工具 (楊老師版)",
+                category: "tools",
+                categoryLabel: "實用工具",
+                categoryColor: "amber",
+                icon: "fa-solid fa-file-shield",
+                path: "tools/enterprise-data-deidentification-teacher-edition.html",
+                desc: "專為教學示範打造的離線安全去識別化工具，支援安全分享與獨立對照表存檔還原。",
+                tags: ["對照表存檔", "安全分享", "本機運算", "教學示範"],
+                type: "web"
+            },
+            {
+                title: "本地端個資假名化與去識別化工具",
+                category: "tools",
+                categoryLabel: "實用工具",
+                categoryColor: "amber",
+                icon: "fa-solid fa-mask",
+                path: "tools/pii-pseudonymization-tool.html",
+                desc: "支援自訂鹽值雜湊加密與關聯保留，並提供反向還原 (Revert) 映射機制。",
+                tags: ["假名化", "逆向還原", "關聯保留", "純前端"],
+                type: "web"
+            },
+            {
+                title: "本地端個資匿名化遮罩工具",
+                category: "tools",
+                categoryLabel: "實用工具",
+                categoryColor: "amber",
+                icon: "fa-solid fa-user-secret",
+                path: "tools/pii-anonymization-tool.html",
+                desc: "針對姓名、身分證、電話、地址與 Email 進行局部星號遮罩，資料完全不上傳網路。",
+                tags: ["隱私遮罩", "資料淨化", "離線資安", "即時預覽"],
+                type: "web"
+            },
+            {
+                title: "極簡兔子風格倒數計時器",
+                category: "tools",
+                categoryLabel: "實用工具",
+                categoryColor: "amber",
+                icon: "fa-solid fa-stopwatch",
+                path: "tools/minimal-countdown-timer.html",
+                desc: "支援賽博霓虹、極簡黑白、柔和馬卡龍等風格主題切換，配備療癒兔子動畫與提示音。",
+                tags: ["番茄鐘", "生產力工具", "多主題風格", "自訂計時"],
+                type: "web"
+            },
+            {
+                title: "台灣夜市鄉鎮超大數字時鐘",
+                category: "tools",
+                categoryLabel: "實用工具",
+                categoryColor: "amber",
+                icon: "fa-solid fa-clock",
+                path: "tools/taiwan-nightmarket-digital-clock.html",
+                desc: "自動輪播全台灣各鄉鎮特色夜市美食與風土采風的超大沈浸式全螢幕數字時鐘。",
+                tags: ["全螢幕時鐘", "夜市采風", "鄉鎮輪播", "大字體"],
+                type: "web"
+            },
+            {
+                title: "台灣即時氣象觀測站",
+                category: "tools",
+                categoryLabel: "實用工具",
+                categoryColor: "amber",
+                icon: "fa-solid fa-cloud-sun",
+                path: "tools/taiwan-live-weather-station.html",
+                desc: "串接 Open-Meteo 免費氣象 API，提供台灣各大縣市即時溫濕度、體感溫度與穿衣建議。",
+                tags: ["Open-Meteo API", "即時氣候", "溫度體感", "生活穿著建議"],
+                type: "web"
+            },
+
+            // --- ABOUT (6) ---
+            {
+                title: "溫馨療癒的創意工作桌 Diorama",
+                category: "about",
+                categoryLabel: "個人簡介",
+                categoryColor: "rose",
+                icon: "fa-solid fa-user-astronaut",
+                path: "about/cozy-creative-desk-diorama.png",
+                desc: "首頁個人頭像原圖！精美 3D 微縮模型風格，筆電、貓咪、咖啡杯、待辦筆記與溫馨標語共築的療癒桌景。",
+                tags: ["個人頭像原圖", "3D 微縮場景", "Diorama", "工作桌景"],
+                type: "image"
+            },
+            {
+                title: "Marco 早安咖啡 Q版角色頭貼",
+                category: "about",
+                categoryLabel: "個人簡介",
+                categoryColor: "rose",
+                icon: "fa-solid fa-face-smile",
+                path: "about/marco-good-morning-cartoon-avatar.jpg",
+                desc: "活力滿滿的早安貼圖插圖：條紋襯衫、冰咖啡、點贊大拇指與風鈴點綴的元氣形象。",
+                tags: ["Q版角色", "早安貼圖", "人物設定", "向量插圖"],
+                type: "image"
+            },
+            {
+                title: "Marco 曾｜顧問個人簡介與專業領域",
+                category: "about",
+                categoryLabel: "個人簡介",
+                categoryColor: "rose",
+                icon: "fa-solid fa-id-card",
+                path: "about/marco-tseng-consultant-profile.html",
+                desc: "組織發展與系統顧問，專長為獎金制度設計、模組化培訓 SOP 與美業/醫美風控管理。",
+                tags: ["個人履歷", "顧問諮詢", "組織倍增", "系統設計"],
+                type: "web"
+            },
+            {
+                title: "Marco 曾｜組織發展與系統設計顧問 Landing Page",
+                category: "about",
+                categoryLabel: "個人簡介",
+                categoryColor: "rose",
+                icon: "fa-solid fa-briefcase",
+                path: "about/marco-tseng-consulting-landing.html",
+                desc: "20 年實戰經驗，帶領千人團隊與新事業體營收成長 200 倍。提供預約諮詢與制度落地服務。",
+                tags: ["商業諮詢", "服務介紹", "營收成長", "Landing Page"],
+                type: "web"
+            },
+            {
+                title: "曾茂榮實戰職涯歷程與三大核心專長",
+                category: "about",
+                categoryLabel: "個人簡介",
+                categoryColor: "rose",
+                icon: "fa-solid fa-image",
+                path: "about/marco-tseng-career-expertise-infographic.png",
+                desc: "從零建立千人組織、營收倍增 200 倍歷程，並剖析獎金制度、培訓 SOP 與系統風險三大核心專長。",
+                tags: ["資訊圖表", "職涯歷程", "核心專長", "高清圖檔"],
+                type: "image"
+            },
+            {
+                title: "曾茂榮：AI時代的PM實作與組織實戰",
+                category: "about",
+                categoryLabel: "個人簡介",
+                categoryColor: "rose",
+                icon: "fa-solid fa-image",
+                path: "about/marco-tseng-ai-pm-practice.png",
+                desc: "AI 時代中如何發揮 PM 敏捷協作與組織倍增價值，結合系統顧問化風控與商業異業結盟。",
+                tags: ["AI PM 實作", "組織倍增", "跨界整合", "高清圖檔"],
+                type: "image"
+            },
+
+            // --- ART (4) ---
+            {
+                title: "蠟筆小新與小白「秋之夢」",
+                category: "art",
+                categoryLabel: "藝術創作",
+                categoryColor: "purple",
+                icon: "fa-solid fa-paintbrush",
+                path: "art/shinchan-autumn-dream-illustration.jpg",
+                desc: "「行萬里路，探索無垠。」蠟筆小新與小白在日式深秋山村石磚道上的靜謐愜意午睡插圖。",
+                tags: ["日式秋景", "蠟筆小新", "秋之夢", "精緻插畫"],
+                type: "image"
+            },
+            {
+                title: "機場登機櫃檯排隊水彩撕紙畫",
+                category: "art",
+                categoryLabel: "藝術創作",
+                categoryColor: "purple",
+                icon: "fa-solid fa-paperclip",
+                path: "art/airport-queue-torn-paper-watercolor.jpg",
+                desc: "透過古樸撕紙破口透視熱鬧機場報到大廳的水彩手繪效果，展現旅人出發啟程的意境。",
+                tags: ["水彩手繪", "撕紙邊框", "旅行氛圍", "藝術合成"],
+                type: "image"
+            },
+            {
+                title: "AI 學習勵志金句 - 咖啡館篇",
+                category: "art",
+                categoryLabel: "藝術創作",
+                categoryColor: "purple",
+                icon: "fa-solid fa-mug-saucer",
+                path: "art/ai-learning-inspiration-cafe-quote.jpg",
+                desc: "「與時俱進，擁抱未來；學習AI，是通往無限可能的第一步。」夕陽街景咖啡館窗邊寫真。",
+                tags: ["勵志名言", "學習寫真", "咖啡館場景", "視覺海報"],
+                type: "image"
+            },
+            {
+                title: "AI 學習勵志金句 - 書房篇",
+                category: "art",
+                categoryLabel: "藝術創作",
+                categoryColor: "purple",
+                icon: "fa-solid fa-book-open-reader",
+                path: "art/ai-learning-inspiration-desk-quote.jpg",
+                desc: "溫暖書房燈光下研讀 AI in Practice 與 Python 專著，專注學習通往無限未來的典雅寫真。",
+                tags: ["書房學習", "自我提升", "暖光意境", "視覺海報"],
+                type: "image"
+            },
+
+            // --- IDEA (5) ---
+            {
+                title: "美業賦能與 AI 輕資產變現平台架構",
+                category: "idea",
+                categoryLabel: "商業構想",
+                categoryColor: "cyan",
+                icon: "fa-solid fa-sitemap",
+                path: "idea/beautybiz-ai-ecosystem-platform-concept.png",
+                desc: "打造美容老師與消費者的雙向智慧生態：社群積分、核銷預約、雙向 AI Agent 與供應鏈採購。",
+                tags: ["AI 商業生態", "美業賦能", "平台架構", "輕資產變現"],
+                type: "image"
+            },
+            {
+                title: "AI 給我的三個錦囊妙計 - 職涯路線圖",
+                category: "idea",
+                categoryLabel: "商業構想",
+                categoryColor: "cyan",
+                icon: "fa-solid fa-route",
+                path: "idea/ai-three-tips-career-roadmap.png",
+                desc: "清晰 S 型成長路徑：考取 AI 證照做 POC ➡️ 設計人機協作獎金 ➡️ 疊加 BD 美容與 AI 躍升高階幕僚。",
+                tags: ["職涯路線圖", "POC 驗證", "人機協作", "高階幕僚"],
+                type: "image"
+            },
+            {
+                title: "SKINORA 專案管理與 MVP 開發追蹤指南",
+                category: "idea",
+                categoryLabel: "商業構想",
+                categoryColor: "cyan",
+                icon: "fa-solid fa-list-check",
+                path: "idea/skinora-project-management-guide.png",
+                desc: "基於 Notion 資料庫之工作包分類、優先級篩選、週次分組與任務看板的管理結構指南。",
+                tags: ["Notion 資料庫", "MVP 追蹤", "工作包劃分", "專案方法論"],
+                type: "image"
+            },
+            {
+                title: "SKINORA 美妝社群專案管理儀表板 V1",
+                category: "idea",
+                categoryLabel: "商業構想",
+                categoryColor: "cyan",
+                icon: "fa-solid fa-chart-pie",
+                path: "idea/skinora-pm-dashboard-v1.png",
+                desc: "Notion Glow Community 專案任務總覽看板、執行進度百分比、甘特週次進度設計稿 (V1)。",
+                tags: ["專案看板", "進度甘特圖", "UI Mockup", "Notion 設計"],
+                type: "image"
+            },
+            {
+                title: "微美地圖專案管理儀表板 V2",
+                category: "idea",
+                categoryLabel: "商業構想",
+                categoryColor: "cyan",
+                icon: "fa-solid fa-chart-donut",
+                path: "idea/skinora-pm-dashboard-v2.png",
+                desc: "任務狀態圓餅分佈圖、前後端工作包分類柱狀圖、本週重點事項與時程清單設計稿 (V2)。",
+                tags: ["狀態環形圖", "工作包分類", "時程排期", "管理儀表板"],
+                type: "image"
+            },
+
+            // --- ASSETS (1) ---
+            {
+                title: "微美地圖完整品牌風格視覺規範 (VI/CI)",
+                category: "assets",
+                categoryLabel: "設計規範",
+                categoryColor: "pink",
+                icon: "fa-solid fa-swatchbook",
+                path: "assets/micro-beauty-map-brand-style-guide.png",
+                desc: "品牌理念、識別 Logo 向量衍生、色票設定、中英文字體排版、App UI Mockup 與包裝應用規範。",
+                tags: ["品牌風格指南", "色票調色盤", "字體設定", "應用情境"],
+                type: "image"
+            },
+
+            // --- MEDIA (2) ---
+            {
+                title: "Champagne Gold Afternoon (香檳金午後) 配樂",
+                category: "media",
+                categoryLabel: "多媒體影音",
+                categoryColor: "violet",
+                icon: "fa-solid fa-music",
+                path: "music/champagne-gold-afternoon.mp3",
+                desc: "優雅細膩的午後休閒音樂，為空間與網頁專案帶來愉悅舒適的聽覺體驗。",
+                tags: ["爵士輕音樂", "原創配樂", "MP3 音訊", "背景音樂"],
+                type: "audio"
+            },
+            {
+                title: "Champagne Gold Afternoon (香檳金午後) 短片",
+                category: "media",
+                categoryLabel: "多媒體影音",
+                categoryColor: "violet",
+                icon: "fa-solid fa-video",
+                path: "videos/champagne-gold-afternoon.mp4",
+                desc: "搭配香檳金午後旋律的動態視覺影片，生動呈現午後時光的精緻美感。",
+                tags: ["短影音", "動態視覺", "MP4 影片", "影音創作"],
+                type: "video"
+            }
+        ];
+
+        // Color badge styling dictionary
+        const colorStyles = {
+            blue: "bg-blue-50 text-blue-600 border-blue-200",
+            emerald: "bg-emerald-50 text-emerald-600 border-emerald-200",
+            amber: "bg-amber-50 text-amber-600 border-amber-200",
+            rose: "bg-rose-50 text-rose-600 border-rose-200",
+            purple: "bg-purple-50 text-purple-600 border-purple-200",
+            cyan: "bg-cyan-50 text-cyan-600 border-cyan-200",
+            pink: "bg-pink-50 text-pink-600 border-pink-200",
+            violet: "bg-violet-50 text-violet-600 border-violet-200"
+        };
+
+        const iconBgStyles = {
+            blue: "bg-blue-100/70 text-blue-600",
+            emerald: "bg-emerald-100/70 text-emerald-600",
+            amber: "bg-amber-100/70 text-amber-600",
+            rose: "bg-rose-100/70 text-rose-600",
+            purple: "bg-purple-100/70 text-purple-600",
+            cyan: "bg-cyan-100/70 text-cyan-600",
+            pink: "bg-pink-100/70 text-pink-600",
+            violet: "bg-violet-100/70 text-violet-600"
+        };
+
+        let currentCategory = "all";
+        let currentSearch = "";
+
+        const projectGrid = document.getElementById("projectGrid");
+        const noResults = document.getElementById("noResults");
+        const searchInput = document.getElementById("searchInput");
+        const clearSearch = document.getElementById("clearSearch");
+        const filterBtns = document.querySelectorAll(".filter-btn");
+
+        // Modal Elements
+        const mediaModal = document.getElementById("mediaModal");
+        const modalTitle = document.getElementById("modalTitle");
+        const modalBody = document.getElementById("modalBody");
+        const modalMeta = document.getElementById("modalMeta");
+        const modalDirectLink = document.getElementById("modalDirectLink");
+        const closeModal = document.getElementById("closeModal");
+
+        function renderProjects() {
+            const query = currentSearch.toLowerCase().trim();
+            const filtered = projects.filter(p => {
+                const matchCategory = (currentCategory === "all") || (p.category === currentCategory);
+                const matchSearch = !query || 
+                    p.title.toLowerCase().includes(query) || 
+                    p.desc.toLowerCase().includes(query) || 
+                    p.tags.some(t => t.toLowerCase().includes(query));
+                return matchCategory && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                projectGrid.innerHTML = "";
+                noResults.classList.remove("hidden");
+                return;
+            }
+
+            noResults.classList.add("hidden");
+            projectGrid.innerHTML = filtered.map(p => {
+                const badgeStyle = colorStyles[p.categoryColor] || "bg-slate-100 text-slate-600 border-slate-200";
+                const iconBg = iconBgStyles[p.categoryColor] || "bg-slate-100 text-slate-600";
+                
+                let actionBtn = "";
+                if (p.type === "web") {
+                    actionBtn = `
+                        <a href="${p.path}" target="_blank" class="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-brand-600 text-white text-xs font-semibold transition shadow-sm group">
+                            <span>開啟專案網頁</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[11px] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+                        </a>
+                    `;
+                } else if (p.type === "image") {
+                    actionBtn = `
+                        <button onclick="openMediaPreview('${p.title}', '${p.path}', 'image')" class="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-semibold transition border border-purple-200">
+                            <i class="fa-solid fa-eye text-xs"></i>
+                            <span>預覽高畫質圖表</span>
+                        </button>
+                    `;
+                } else if (p.type === "audio") {
+                    actionBtn = `
+                        <button onclick="openMediaPreview('${p.title}', '${p.path}', 'audio')" class="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-violet-50 hover:bg-violet-100 text-violet-700 text-xs font-semibold transition border border-violet-200">
+                            <i class="fa-solid fa-circle-play text-xs"></i>
+                            <span>播放音樂音訊</span>
+                        </button>
+                    `;
+                } else if (p.type === "video") {
+                    actionBtn = `
+                        <button onclick="openMediaPreview('${p.title}', '${p.path}', 'video')" class="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-violet-50 hover:bg-violet-100 text-violet-700 text-xs font-semibold transition border border-violet-200">
+                            <i class="fa-solid fa-circle-play text-xs"></i>
+                            <span>播放影片檔案</span>
+                        </button>
+                    `;
+                }
+
+                return `
+                    <div class="glass-card rounded-2xl p-5 flex flex-col justify-between hover:shadow-xl hover:border-brand-200 transition-all duration-300 group">
+                        <div>
+                            <!-- Header with Category & Icon -->
+                            <div class="flex items-start justify-between gap-3 mb-3.5">
+                                <span class="text-[11px] font-bold px-2.5 py-1 rounded-full border ${badgeStyle}">
+                                    ${p.categoryLabel}
+                                </span>
+                                <div class="w-10 h-10 rounded-xl ${iconBg} flex items-center justify-center text-sm shadow-sm group-hover:scale-110 transition-transform">
+                                    <i class="${p.icon}"></i>
+                                </div>
+                            </div>
+
+                            <!-- Title -->
+                            <h3 class="font-bold text-slate-900 text-base mb-2 group-hover:text-brand-600 transition leading-snug">
+                                ${p.title}
+                            </h3>
+
+                            <!-- Description -->
+                            <p class="text-xs text-slate-600 leading-relaxed line-clamp-3 mb-4">
+                                ${p.desc}
+                            </p>
+                        </div>
+
+                        <div>
+                            <!-- Tags -->
+                            <div class="flex flex-wrap gap-1.5 mb-4">
+                                ${p.tags.map(tag => `
+                                    <span class="text-[10px] font-medium px-2 py-0.5 rounded-md bg-slate-100/90 text-slate-600">
+                                        #${tag}
+                                    </span>
+                                `).join('')}
+                            </div>
+
+                            <!-- Action Button -->
+                            ${actionBtn}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Modal Functionality
+        window.openMediaPreview = function(title, path, type) {
+            modalTitle.textContent = title;
+            modalMeta.textContent = path;
+            modalDirectLink.href = path;
+
+            if (type === "image") {
+                modalBody.innerHTML = `
+                    <img src="${path}" alt="${title}" class="max-h-[70vh] w-auto mx-auto rounded-lg shadow-md object-contain">
+                `;
+            } else if (type === "audio") {
+                modalBody.innerHTML = `
+                    <div class="w-full max-w-md bg-white p-6 rounded-2xl shadow-sm border border-slate-200 text-center">
+                        <div class="w-16 h-16 rounded-full bg-violet-100 text-violet-600 mx-auto flex items-center justify-center text-2xl mb-4">
+                            <i class="fa-solid fa-music"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-800 text-base mb-4">${title}</h4>
+                        <audio controls autoplay class="w-full">
+                            <source src="${path}" type="audio/mpeg">
+                            您的瀏覽器不支援音樂播放。
+                        </audio>
+                    </div>
+                `;
+            } else if (type === "video") {
+                modalBody.innerHTML = `
+                    <div class="w-full max-w-2xl bg-black rounded-xl overflow-hidden shadow-lg">
+                        <video controls autoplay class="w-full max-h-[65vh]">
+                            <source src="${path}" type="video/mp4">
+                            您的瀏覽器不支援影片播放。
+                        </video>
+                    </div>
+                `;
+            }
+
+            mediaModal.classList.remove("hidden");
+            document.body.style.overflow = "hidden";
+        };
+
+        function closeMediaModal() {
+            mediaModal.classList.add("hidden");
+            modalBody.innerHTML = "";
+            document.body.style.overflow = "auto";
+        }
+
+        closeModal.addEventListener("click", closeMediaModal);
+        mediaModal.addEventListener("click", (e) => {
+            if (e.target === mediaModal) closeMediaModal();
+        });
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && !mediaModal.classList.contains("hidden")) {
+                closeMediaModal();
+            }
+        });
+
+        // Filter Button Clicks
+        filterBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+                filterBtns.forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                currentCategory = btn.getAttribute("data-category");
+                renderProjects();
+            });
+        });
+
+        // Search Input Events
+        searchInput.addEventListener("input", (e) => {
+            currentSearch = e.target.value;
+            clearSearch.classList.toggle("hidden", !currentSearch);
+            renderProjects();
+        });
+
+        clearSearch.addEventListener("click", () => {
+            searchInput.value = "";
+            currentSearch = "";
+            clearSearch.classList.add("hidden");
+            renderProjects();
+            searchInput.focus();
+        });
+
+        // Initial render
+        renderProjects();
+    </script>
+</body>
+</html>

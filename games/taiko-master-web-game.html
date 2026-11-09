@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>太鼓達人：和太鼓大作戰 - Taiko Master</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Zen Maru Gothic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+            font-family: 'Zen Maru Gothic', sans-serif;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #1a0006;
+            color: #fff;
+        }
+        /* Glassmorphism modal background */
+        .glass-panel {
+            background: rgba(26, 0, 10, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+        }
+        /* Custom glowing button effects */
+        .btn-taiko {
+            background: linear-gradient(135deg, #e60033 0%, #a00020 100%);
+            box-shadow: 0 4px 15px rgba(230, 0, 51, 0.4), inset 0 2px 2px rgba(255, 255, 255, 0.3);
+            border: 2px solid #ffd700;
+            transition: all 0.15s ease;
+        }
+        .btn-taiko:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 8px rgba(230, 0, 51, 0.6);
+        }
+        .btn-blue {
+            background: linear-gradient(135deg, #0088ff 0%, #0044aa 100%);
+            box-shadow: 0 4px 15px rgba(0, 136, 255, 0.4), inset 0 2px 2px rgba(255, 255, 255, 0.3);
+            border: 2px solid #88ffff;
+        }
+        /* Custom Soul Gauge animation */
+        .soul-bar-fill {
+            transition: width 0.1s ease-out;
+        }
+        .soul-fire {
+            animation: pulse-glow 1s infinite alternate;
+        }
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 10px #ff3300, 0 0 20px #ffcc00; }
+            100% { box-shadow: 0 0 20px #ff0055, 0 0 35px #ffff00; }
+        }
+    </style>
+</head>
+<body class="relative flex flex-col justify-between h-screen w-screen">
+
+    <!-- Game Canvas -->
+    <canvas id="gameCanvas" class="absolute top-0 left-0 w-full h-full z-0"></canvas>
+
+    <!-- Top Minimalist HUD Banner (Non-Obstructive) -->
+    <header class="fixed top-3 left-0 right-0 z-20 flex justify-center px-4 pointer-events-none">
+        <div class="glass-panel rounded-full px-6 py-2 flex items-center justify-between gap-4 md:gap-8 max-w-5xl w-full text-xs md:text-sm font-bold text-amber-200 pointer-events-auto">
+            <!-- Song Title -->
+            <div class="flex items-center gap-2 min-w-max">
+                <span class="text-red-400">🏮</span>
+                <span id="hudSongTitle" class="truncate max-w-[100px] md:max-w-[180px] text-white">曲目: 未選擇</span>
+            </div>
+
+            <!-- Stats Group -->
+            <div class="flex items-center gap-4 md:gap-6">
+                <div>得分: <span id="hudScore" class="text-yellow-300 text-sm md:text-lg">0</span></div>
+                <div class="hidden sm:block">最高分: <span id="hudHighScore" class="text-amber-400">0</span></div>
+                <div>Combo: <span id="hudCombo" class="text-orange-400 text-sm md:text-lg">0</span></div>
+            </div>
+
+            <!-- Soul Gauge Bar -->
+            <div class="flex items-center gap-2 w-28 md:w-48">
+                <span class="text-xs text-red-300 hidden sm:inline">魂</span>
+                <div class="w-full bg-gray-900 border border-amber-500/50 rounded-full h-3 md:h-4 overflow-hidden relative">
+                    <div id="hudSoulFill" class="soul-bar-fill h-full bg-gradient-to-r from-orange-500 via-red-500 to-yellow-400 w-0"></div>
+                </div>
+            </div>
+
+            <!-- Quick Controls -->
+            <div class="flex items-center gap-2">
+                <button id="btnToggleBGM" class="p-1 md:p-2 bg-slate-800/80 hover:bg-slate-700 rounded-full border border-amber-400/40 text-xs">🎵 ON</button>
+                <button id="btnToggleSFX" class="p-1 md:p-2 bg-slate-800/80 hover:bg-slate-700 rounded-full border border-amber-400/40 text-xs">🔊 ON</button>
+                <button id="btnPause" class="p-1 md:p-2 bg-amber-600 hover:bg-amber-500 text-white rounded-full text-xs">⏸️</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- On-screen Virtual Drum Controller (Touchscreen UI) -->
+    <div id="touchController" class="fixed bottom-2 left-0 right-0 z-20 h-44 sm:h-52 px-4 flex justify-between gap-3 pointer-events-auto max-w-4xl mx-auto">
+        <!-- Left Drum Controls -->
+        <div class="flex-1 flex gap-2 h-full">
+            <!-- Left KA (Rim) -->
+            <button id="btnTouchLeftKa" class="flex-1 bg-gradient-to-b from-sky-600 to-blue-800 rounded-2xl border-2 border-cyan-300 active:scale-95 transition-transform flex flex-col items-center justify-center shadow-lg active:brightness-125">
+                <span class="text-2xl font-black text-cyan-200">KA</span>
+                <span class="text-xs text-sky-100 opacity-75">左邊 [D]</span>
+            </button>
+            <!-- Left DON (Center) -->
+            <button id="btnTouchLeftDon" class="flex-1 bg-gradient-to-b from-red-500 to-rose-800 rounded-2xl border-2 border-yellow-300 active:scale-95 transition-transform flex flex-col items-center justify-center shadow-lg active:brightness-125">
+                <span class="text-3xl font-black text-yellow-200">DON</span>
+                <span class="text-xs text-red-100 opacity-75">左面 [F]</span>
+            </button>
+        </div>
+
+        <!-- Right Drum Controls -->
+        <div class="flex-1 flex gap-2 h-full">
+            <!-- Right DON (Center) -->
+            <button id="btnTouchRightDon" class="flex-1 bg-gradient-to-b from-red-500 to-rose-800 rounded-2xl border-2 border-yellow-300 active:scale-95 transition-transform flex flex-col items-center justify-center shadow-lg active:brightness-125">
+                <span class="text-3xl font-black text-yellow-200">DON</span>
+                <span class="text-xs text-red-100 opacity-75">右面 [J]</span>
+            </button>
+            <!-- Right KA (Rim) -->
+            <button id="btnTouchRightKa" class="flex-1 bg-gradient-to-b from-sky-600 to-blue-800 rounded-2xl border-2 border-cyan-300 active:scale-95 transition-transform flex flex-col items-center justify-center shadow-lg active:brightness-125">
+                <span class="text-2xl font-black text-cyan-200">KA</span>
+                <span class="text-xs text-sky-100 opacity-75">右邊 [K]</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN MENU MODAL -->
+    <div id="modalMenu" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70">
+        <div class="glass-panel w-full max-w-lg rounded-3xl p-6 md:p-8 text-center flex flex-col gap-6 relative border-amber-400">
+            <div class="space-y-1">
+                <h1 class="text-3xl md:text-5xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-red-500 to-amber-200 drop-shadow-md">
+                    太鼓達人
+                </h1>
+                <p class="text-sm md:text-base text-amber-200 font-bold tracking-wider">《和太鼓大作戰》</p>
+            </div>
+
+            <!-- Track Selection List -->
+            <div class="flex flex-col gap-3 text-left">
+                <label class="text-xs text-amber-300 font-bold tracking-wider uppercase">請選擇演奏曲目：</label>
+                
+                <button data-song="0" class="song-card p-4 rounded-xl border border-red-500/40 bg-red-950/40 hover:bg-red-800/50 transition flex justify-between items-center group cursor-pointer">
+                    <div>
+                        <div class="text-lg font-bold text-red-200 group-hover:text-yellow-300">1. 夏日祭典 (Summer Festival)</div>
+                        <div class="text-xs text-red-300/80">難度: 簡單 (Easy) | BPM: 120</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-xs text-amber-400">最高得分</div>
+                        <div id="highScore0" class="text-sm font-bold text-white">0</div>
+                    </div>
+                </button>
+
+                <button data-song="1" class="song-card p-4 rounded-xl border border-amber-500/40 bg-amber-950/40 hover:bg-amber-800/50 transition flex justify-between items-center group cursor-pointer">
+                    <div>
+                        <div class="text-lg font-bold text-amber-200 group-hover:text-yellow-300">2. 疾風太鼓 (Wind Tempest)</div>
+                        <div class="text-xs text-amber-300/80">難度: 普通 (Normal) | BPM: 150</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-xs text-amber-400">最高得分</div>
+                        <div id="highScore1" class="text-sm font-bold text-white">0</div>
+                    </div>
+                </button>
+
+                <button data-song="2" class="song-card p-4 rounded-xl border border-purple-500/40 bg-purple-950/40 hover:bg-purple-800/50 transition flex justify-between items-center group cursor-pointer">
+                    <div>
+                        <div class="text-lg font-bold text-purple-200 group-hover:text-yellow-300">3. 櫻花狂想曲 (Sakura Rhapsody)</div>
+                        <div class="text-xs text-purple-300/80">難度: 困難 (Hard) | BPM: 185</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-xs text-amber-400">最高得分</div>
+                        <div id="highScore2" class="text-sm font-bold text-white">0</div>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Keys Cheat Sheet -->
+            <div class="bg-black/40 rounded-xl p-3 text-xs text-amber-200/80 flex justify-around">
+                <div><span class="px-1.5 py-0.5 bg-sky-900 border border-sky-400 rounded">D</span> <span class="px-1.5 py-0.5 bg-sky-900 border border-sky-400 rounded">K</span> : 鼓邊 (KA)</div>
+                <div><span class="px-1.5 py-0.5 bg-red-900 border border-red-400 rounded">F</span> <span class="px-1.5 py-0.5 bg-red-900 border border-red-400 rounded">J</span> : 鼓面 (DON)</div>
+            </div>
+
+            <button id="btnStartGame" class="btn-taiko py-3 text-xl font-black rounded-2xl text-yellow-100 tracking-widest cursor-pointer">
+                🥁 開始演奏 (START)
+            </button>
+        </div>
+    </div>
+
+    <!-- PAUSE MODAL -->
+    <div id="modalPause" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/70">
+        <div class="glass-panel w-full max-w-sm rounded-3xl p-6 text-center flex flex-col gap-5 border-amber-400">
+            <h2 class="text-3xl font-black text-amber-300 tracking-widest">演奏暫停</h2>
+            <div class="flex flex-col gap-3">
+                <button id="btnResume" class="btn-taiko py-3 text-lg font-bold rounded-xl text-white">繼續演奏</button>
+                <button id="btnRestart" class="py-3 text-lg font-bold rounded-xl bg-slate-700 hover:bg-slate-600 border border-amber-400/40 text-amber-200">重新開始</button>
+                <button id="btnQuit" class="py-3 text-lg font-bold rounded-xl bg-red-900/60 hover:bg-red-800 border border-red-400/40 text-red-200">返回主選單</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GAME OVER / RESULTS MODAL -->
+    <div id="modalResult" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80">
+        <div class="glass-panel w-full max-w-md rounded-3xl p-6 md:p-8 text-center flex flex-col gap-5 border-yellow-400 relative overflow-hidden">
+            <div class="space-y-1">
+                <span id="resultClearBadge" class="inline-block px-4 py-1 rounded-full text-xs font-black tracking-widest bg-yellow-500 text-black uppercase">STAGE CLEARED</span>
+                <h2 id="resultRank" class="text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-b from-yellow-200 to-amber-500 drop-shadow-lg">S</h2>
+            </div>
+
+            <!-- Detailed Score Table -->
+            <div class="bg-black/50 rounded-2xl p-4 border border-amber-500/30 flex flex-col gap-2 text-sm">
+                <div class="flex justify-between items-center text-amber-200">
+                    <span>最終總分</span>
+                    <span id="resScore" class="text-xl font-black text-yellow-300">0</span>
+                </div>
+                <div class="flex justify-between items-center text-slate-300">
+                    <span>最大連擊 (Max Combo)</span>
+                    <span id="resMaxCombo" class="font-bold text-orange-400">0</span>
+                </div>
+                <hr class="border-slate-800 my-1">
+                <div class="grid grid-cols-3 text-center gap-1">
+                    <div class="bg-red-950/40 p-2 rounded-lg border border-red-500/30">
+                        <div class="text-xs text-red-300">良 (Perfect)</div>
+                        <div id="resPerfect" class="text-lg font-black text-red-400">0</div>
+                    </div>
+                    <div class="bg-blue-950/40 p-2 rounded-lg border border-blue-500/30">
+                        <div class="text-xs text-blue-300">可 (Good)</div>
+                        <div id="resGood" class="text-lg font-black text-blue-400">0</div>
+                    </div>
+                    <div class="bg-gray-900/60 p-2 rounded-lg border border-gray-700">
+                        <div class="text-xs text-gray-400">不可 (Miss)</div>
+                        <div id="resMiss" class="text-lg font-black text-gray-400">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button id="btnResultRetry" class="flex-1 btn-taiko py-3 text-base font-bold rounded-xl text-white">再試一次</button>
+                <button id="btnResultMenu" class="flex-1 py-3 text-base font-bold rounded-xl bg-slate-800 hover:bg-slate-700 border border-amber-400/40 text-amber-200">選單</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT GAME LOGIC -->
+    <script>
+        /* ===================================================================
+         * 1. WEB AUDIO API SYNTHESIZER ENGINE (ZERO-LATENCY / PROCEDURAL)
+         * =================================================================== */
+        class TaikoAudioEngine {
+            constructor() {
+                this.ctx = null;
+                this.bgmGain = null;
+                this.sfxGain = null;
+                this.isBgmOn = localStorage.getItem('taiko_bgm') !== 'off';
+                this.isSfxOn = localStorage.getItem('taiko_sfx') !== 'off';
+                
+                this.currentSongIndex = 0;
+                this.isPlayingBgm = false;
+                this.bgmTimer = null;
+                this.nextNoteTime = 0;
+                this.currentBeat = 0;
+            }
+
+            init() {
+                if (this.ctx) return;
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                this.ctx = new AudioCtx();
+
+                this.bgmGain = this.ctx.createGain();
+                this.sfxGain = this.ctx.createGain();
+
+                this.bgmGain.gain.value = this.isBgmOn ? 0.4 : 0;
+                this.sfxGain.gain.value = this.isSfxOn ? 0.8 : 0;
+
+                this.bgmGain.connect(this.ctx.destination);
+                this.sfxGain.connect(this.ctx.destination);
+            }
+
+            resume() {
+                this.init();
+                if (this.ctx && this.ctx.state === 'suspended') {
+                    this.ctx.resume();
+                }
+            }
+
+            setBgm(enable) {
+                this.isBgmOn = enable;
+                localStorage.setItem('taiko_bgm', enable ? 'on' : 'off');
+                if (this.bgmGain) {
+                    this.bgmGain.gain.value = enable ? 0.4 : 0;
+                }
+            }
+
+            setSfx(enable) {
+                this.isSfxOn = enable;
+                localStorage.setItem('taiko_sfx', enable ? 'on' : 'off');
+                if (this.sfxGain) {
+                    this.sfxGain.gain.value = enable ? 0.8 : 0;
+                }
+            }
+
+            /* --- Procedural Drum Hits SFX --- */
+            playDon(isBig = false) {
+                if (!this.ctx || !this.isSfxOn) return;
+                const now = this.ctx.currentTime;
+                
+                // Low Pitch Sine for Deep Resonance
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc.type = 'sine';
+                const freq = isBig ? 80 : 110;
+                osc.frequency.setValueAtTime(freq, now);
+                osc.frequency.exponentialRampToValueAtTime(30, now + (isBig ? 0.35 : 0.25));
+
+                gain.gain.setValueAtTime(isBig ? 1.0 : 0.8, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + (isBig ? 0.35 : 0.25));
+
+                osc.connect(gain);
+                gain.connect(this.sfxGain);
+
+                osc.start(now);
+                osc.stop(now + (isBig ? 0.35 : 0.25));
+
+                // Add transient noise click
+                this.playClickNoise(now, isBig ? 0.15 : 0.08);
+            }
+
+            playKa(isBig = false) {
+                if (!this.ctx || !this.isSfxOn) return;
+                const now = this.ctx.currentTime;
+
+                // High pitch wooden rim click
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc.type = 'triangle';
+                const freq = isBig ? 600 : 850;
+                osc.frequency.setValueAtTime(freq, now);
+                osc.frequency.exponentialRampToValueAtTime(200, now + 0.12);
+
+                gain.gain.setValueAtTime(isBig ? 0.9 : 0.6, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+                osc.connect(gain);
+                gain.connect(this.sfxGain);
+
+                osc.start(now);
+                osc.stop(now + 0.12);
+
+                this.playClickNoise(now, 0.05);
+            }
+
+            playClickNoise(now, duration) {
+                const bufferSize = this.ctx.sampleRate * duration;
+                const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+
+                const noise = this.ctx.createBufferSource();
+                noise.buffer = buffer;
+
+                const filter = this.ctx.createBiquadFilter();
+                filter.type = 'highpass';
+                filter.frequency.value = 1000;
+
+                const gain = this.ctx.createGain();
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+
+                noise.connect(filter);
+                filter.connect(gain);
+                gain.connect(this.sfxGain);
+
+                noise.start(now);
+            }
+
+            playJudgementSFX(type) {
+                if (!this.ctx || !this.isSfxOn) return;
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc.connect(gain);
+                gain.connect(this.sfxGain);
+
+                if (type === 'perfect') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.06); // E5
+                    osc.frequency.setValueAtTime(783.99, now + 0.12); // G5
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                } else if (type === 'good') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(440, now); // A4
+                    osc.frequency.setValueAtTime(554.37, now + 0.08); // C#5
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
+                    osc.start(now);
+                    osc.stop(now + 0.18);
+                } else if (type === 'miss') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(180, now);
+                    osc.frequency.linearRampToValueAtTime(100, now + 0.15);
+                    gain.gain.setValueAtTime(0.25, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                    osc.start(now);
+                    osc.stop(now + 0.15);
+                }
+            }
+
+            /* --- Synthwave Procedural BGM Generator --- */
+            startBgm(songIndex) {
+                this.resume();
+                this.stopBgm();
+                this.currentSongIndex = songIndex;
+                this.isPlayingBgm = true;
+                this.currentBeat = 0;
+                this.nextNoteTime = this.ctx.currentTime + 0.1;
+
+                const bpm = SONGS[songIndex].bpm;
+                const beatInterval = 60 / bpm / 4; // 16th notes
+
+                const scheduler = () => {
+                    if (!this.isPlayingBgm) return;
+                    while (this.nextNoteTime < this.ctx.currentTime + 0.2) {
+                        this.scheduleBeat(this.currentBeat, this.nextNoteTime);
+                        this.nextNoteTime += beatInterval;
+                        this.currentBeat = (this.currentBeat + 1) % 64;
+                    }
+                    this.bgmTimer = setTimeout(scheduler, 25);
+                };
+                scheduler();
+            }
+
+            stopBgm() {
+                this.isPlayingBgm = false;
+                if (this.bgmTimer) clearTimeout(this.bgmTimer);
+            }
+
+            scheduleBeat(beat, time) {
+                if (!this.isBgmOn) return;
+
+                // Pentatonic Japanese scales notes
+                const scale = [220, 246.94, 277.18, 329.63, 369.99, 440, 493.88];
+                const bassScale = [55, 61.74, 69.30, 82.41];
+
+                // Bass synth line on quarter beats
+                if (beat % 4 === 0) {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sawtooth';
+                    const note = bassScale[(beat / 4) % bassScale.length];
+                    osc.frequency.setValueAtTime(note, time);
+
+                    gain.gain.setValueAtTime(0.15, time);
+                    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.2);
+
+                    osc.connect(gain);
+                    gain.connect(this.bgmGain);
+                    osc.start(time);
+                    osc.stop(time + 0.2);
+                }
+
+                // Melody melody line
+                if (beat % 2 === 0 && Math.random() > 0.25) {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'triangle';
+                    const noteIndex = (beat * 3 + this.currentSongIndex * 2) % scale.length;
+                    osc.frequency.setValueAtTime(scale[noteIndex], time);
+
+                    gain.gain.setValueAtTime(0.08, time);
+                    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.15);
+
+                    osc.connect(gain);
+                    gain.connect(this.bgmGain);
+                    osc.start(time);
+                    osc.stop(time + 0.15);
+                }
+            }
+        }
+
+        /* ===================================================================
+         * 2. SONGS CONFIG & CHART DATA DEFINITION
+         * =================================================================== */
+        const NOTE_TYPES = {
+            DON: 1,      // Red Small
+            KA: 2,       // Blue Small
+            BIG_DON: 3,  // Red Large
+            BIG_KA: 4,   // Blue Large
+            ROLL: 5      // Yellow Continuous
+        };
+
+        const SONGS = [
+            {
+                id: 0,
+                name: "夏日祭典 (Summer Festival)",
+                bpm: 120,
+                difficulty: "Easy",
+                lengthSec: 45
+            },
+            {
+                id: 1,
+                name: "疾風太鼓 (Wind Tempest)",
+                bpm: 150,
+                difficulty: "Normal",
+                lengthSec: 55
+            },
+            {
+                id: 2,
+                name: "櫻花狂想曲 (Sakura Rhapsody)",
+                bpm: 185,
+                difficulty: "Hard",
+                lengthSec: 65
+            }
+        ];
+
+        // Procedural Beatmap Generator for deterministic rhythmic note streams
+        function generateChart(songIndex) {
+            const song = SONGS[songIndex];
+            const bpm = song.bpm;
+            const secPerBeat = 60 / bpm;
+            const totalBeats = Math.floor(song.lengthSec / secPerBeat);
+            const notes = [];
+
+            let t = 2.0; // Start delay 2 seconds
+            for (let b = 0; b < totalBeats; b++) {
+                const rand = Math.random();
+                let type = NOTE_TYPES.DON;
+
+                if (songIndex === 0) { // Easy
+                    if (b % 2 === 0) {
+                        type = (rand > 0.3) ? NOTE_TYPES.DON : NOTE_TYPES.KA;
+                        notes.push({ time: t, type: type, duration: 0, hit: false, rollHits: 0 });
+                    }
+                } else if (songIndex === 1) { // Normal
+                    if (rand < 0.6) {
+                        type = (rand < 0.35) ? NOTE_TYPES.DON : NOTE_TYPES.KA;
+                        notes.push({ time: t, type: type, duration: 0, hit: false, rollHits: 0 });
+                    } else if (rand < 0.75) {
+                        type = (rand < 0.68) ? NOTE_TYPES.BIG_DON : NOTE_TYPES.BIG_KA;
+                        notes.push({ time: t, type: type, duration: 0, hit: false, rollHits: 0 });
+                    } else if (rand > 0.9 && b % 8 === 0) {
+                        notes.push({ time: t, type: NOTE_TYPES.ROLL, duration: secPerBeat * 2, hit: false, rollHits: 0 });
+                    }
+                } else { // Hard
+                    type = (rand < 0.4) ? NOTE_TYPES.DON : (rand < 0.7) ? NOTE_TYPES.KA : (rand < 0.85) ? NOTE_TYPES.BIG_DON : NOTE_TYPES.BIG_KA;
+                    notes.push({ time: t, type: type, duration: 0, hit: false, rollHits: 0 });
+                    if (rand > 0.5) {
+                        notes.push({ time: t + (secPerBeat / 2), type: NOTE_TYPES.DON, duration: 0, hit: false, rollHits: 0 });
+                    }
+                }
+                t += secPerBeat;
+            }
+            return notes;
+        }
+
+        /* ===================================================================
+         * 3. GAME ENGINE & RENDERER (RETINA CANVAS / PARTICLES)
+         * =================================================================== */
+        class TaikoGameEngine {
+            constructor() {
+                this.canvas = document.getElementById('gameCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.audio = new TaikoAudioEngine();
+
+                this.dpr = window.devicePixelRatio || 1;
+                this.width = 0;
+                this.height = 0;
+
+                this.gameState = 'MENU'; // 'MENU', 'PLAYING', 'PAUSED', 'RESULT'
+                this.selectedSongIndex = 0;
+                this.chart = [];
+
+                // Gameplay Timing & Stats
+                this.startTime = 0;
+                this.elapsedTime = 0;
+                this.score = 0;
+                this.combo = 0;
+                this.maxCombo = 0;
+                this.soulGauge = 0; // 0 to 100
+                this.countPerfect = 0;
+                this.countGood = 0;
+                this.countMiss = 0;
+
+                // Visual Layout Specs
+                this.hitZoneX = 180;
+                this.laneY = 0;
+                this.laneHeight = 120;
+                this.noteSpeed = 450; // Pixels per second
+
+                // Animations & FX Arrays
+                this.particles = [];
+                this.feedbackTexts = [];
+                this.drumRipples = [];
+                this.petals = [];
+                this.lanterns = [];
+
+                this.initPetalsAndLanterns();
+                this.resizeCanvas();
+                window.addEventListener('resize', () => this.resizeCanvas());
+
+                this.bindEvents();
+                this.updateHighScoresUI();
+
+                // Animation Frame
+                this.lastFrameTime = performance.now();
+                requestAnimationFrame((t) => this.loop(t));
+            }
+
+            resizeCanvas() {
+                this.width = window.innerWidth;
+                this.height = window.innerHeight;
+
+                this.canvas.width = this.width * this.dpr;
+                this.canvas.height = this.height * this.dpr;
+                this.ctx.scale(this.dpr, this.dpr);
+
+                // Responsive Hit Zone & Track Height Alignment
+                this.hitZoneX = Math.max(120, Math.min(220, this.width * 0.18));
+                this.laneY = this.height * 0.35;
+            }
+
+            initPetalsAndLanterns() {
+                // Background Sakura Petals
+                this.petals = [];
+                for (let i = 0; i < 35; i++) {
+                    this.petals.push({
+                        x: Math.random() * window.innerWidth,
+                        y: Math.random() * window.innerHeight,
+                        size: Math.random() * 6 + 4,
+                        speedY: Math.random() * 1.5 + 0.8,
+                        speedX: Math.random() * 1 - 0.5,
+                        rotation: Math.random() * Math.PI * 2,
+                        rotSpeed: Math.random() * 0.02 - 0.01
+                    });
+                }
+                // Hanging Festival Lanterns
+                this.lanterns = [];
+                const count = Math.ceil(window.innerWidth / 120);
+                for (let i = 0; i < count; i++) {
+                    this.lanterns.push({
+                        x: i * 130 + 40,
+                        swingOffset: Math.random() * Math.PI * 2
+                    });
+                }
+            }
+
+            updateHighScoresUI() {
+                SONGS.forEach(s => {
+                    const saved = localStorage.getItem(`taiko_score_${s.id}`) || 0;
+                    const el = document.getElementById(`highScore${s.id}`);
+                    if (el) el.textContent = Number(saved).toLocaleString();
+                });
+            }
+
+            startTrack(songIndex) {
+                this.selectedSongIndex = songIndex;
+                this.chart = generateChart(songIndex);
+                this.score = 0;
+                this.combo = 0;
+                this.maxCombo = 0;
+                this.soulGauge = 0;
+                this.countPerfect = 0;
+                this.countGood = 0;
+                this.countMiss = 0;
+
+                this.startTime = performance.now() / 1000;
+                this.elapsedTime = 0;
+                this.gameState = 'PLAYING';
+
+                document.getElementById('hudSongTitle').textContent = SONGS[songIndex].name;
+                const hs = localStorage.getItem(`taiko_score_${songIndex}`) || 0;
+                document.getElementById('hudHighScore').textContent = Number(hs).toLocaleString();
+
+                this.updateHUD();
+                this.hideModals();
+
+                this.audio.startBgm(songIndex);
+            }
+
+            pauseGame() {
+                if (this.gameState !== 'PLAYING') return;
+                this.gameState = 'PAUSED';
+                this.audio.stopBgm();
+                document.getElementById('modalPause').classList.remove('hidden');
+            }
+
+            resumeGame() {
+                if (this.gameState !== 'PAUSED') return;
+                this.gameState = 'PLAYING';
+                this.hideModals();
+                this.audio.startBgm(this.selectedSongIndex);
+            }
+
+            finishGame() {
+                this.gameState = 'RESULT';
+                this.audio.stopBgm();
+
+                // Save High Score
+                const currentHS = Number(localStorage.getItem(`taiko_score_${this.selectedSongIndex}`) || 0);
+                if (this.score > currentHS) {
+                    localStorage.setItem(`taiko_score_${this.selectedSongIndex}`, this.score);
+                    this.updateHighScoresUI();
+                }
+
+                // Compute Rank
+                const totalNotes = this.countPerfect + this.countGood + this.countMiss;
+                const ratio = totalNotes > 0 ? (this.countPerfect + this.countGood * 0.5) / totalNotes : 0;
+                let rank = 'C';
+                if (ratio >= 0.95) rank = 'S';
+                else if (ratio >= 0.85) rank = 'A';
+                else if (ratio >= 0.70) rank = 'B';
+
+                const clearBadge = document.getElementById('resultClearBadge');
+                if (this.soulGauge >= 60) {
+                    clearBadge.textContent = "STAGE CLEARED!";
+                    clearBadge.className = "inline-block px-4 py-1 rounded-full text-xs font-black tracking-widest bg-yellow-400 text-black uppercase";
+                } else {
+                    clearBadge.textContent = "STAGE FAILED";
+                    clearBadge.className = "inline-block px-4 py-1 rounded-full text-xs font-black tracking-widest bg-red-800 text-white uppercase";
+                }
+
+                document.getElementById('resultRank').textContent = rank;
+                document.getElementById('resScore').textContent = this.score.toLocaleString();
+                document.getElementById('resMaxCombo').textContent = this.maxCombo;
+                document.getElementById('resPerfect').textContent = this.countPerfect;
+                document.getElementById('resGood').textContent = this.countGood;
+                document.getElementById('resMiss').textContent = this.countMiss;
+
+                document.getElementById('modalResult').classList.remove('hidden');
+            }
+
+            hideModals() {
+                document.getElementById('modalMenu').classList.add('hidden');
+                document.getElementById('modalPause').classList.add('hidden');
+                document.getElementById('modalResult').classList.add('hidden');
+            }
+
+            updateHUD() {
+                document.getElementById('hudScore').textContent = this.score.toLocaleString();
+                document.getElementById('hudCombo').textContent = this.combo;
+                const fill = document.getElementById('hudSoulFill');
+                fill.style.width = `${Math.min(100, this.soulGauge)}%`;
+
+                if (this.soulGauge >= 80) {
+                    fill.parentNode.classList.add('soul-fire');
+                } else {
+                    fill.parentNode.classList.remove('soul-fire');
+                }
+            }
+
+            /* ===================================================================
+             * 4. HIT JUDGMENT & INPUT PROCESSING
+             * =================================================================== */
+            handleDrumHit(hitType, isBigAttempt = false) {
+                if (this.gameState !== 'PLAYING') return;
+
+                // Visual Drum Ripple
+                this.drumRipples.push({
+                    x: this.hitZoneX,
+                    y: this.laneY,
+                    radius: hitType === 'DON' ? 45 : 55,
+                    color: hitType === 'DON' ? 'rgba(230,0,51,0.8)' : 'rgba(0,136,255,0.8)',
+                    alpha: 1.0
+                });
+
+                // Play Audio
+                if (hitType === 'DON') this.audio.playDon(isBigAttempt);
+                else this.audio.playKa(isBigAttempt);
+
+                const now = this.elapsedTime;
+                let processed = false;
+
+                // Find candidate note
+                for (let note of this.chart) {
+                    if (note.hit) continue;
+
+                    const diffMs = (note.time - now) * 1000;
+
+                    // Continuous Yellow Drum Roll Note
+                    if (note.type === NOTE_TYPES.ROLL) {
+                        const rollEndMs = (note.time + note.duration - now) * 1000;
+                        if (diffMs <= 100 && rollEndMs >= -100) {
+                            note.rollHits++;
+                            this.score += 150;
+                            this.combo++;
+                            if (this.combo > this.maxCombo) this.maxCombo = this.combo;
+                            this.spawnParticles(this.hitZoneX, this.laneY, '#ffcc00', 4);
+                            this.audio.playJudgementSFX('good');
+                            this.updateHUD();
+                            processed = true;
+                            break;
+                        }
+                    } else {
+                        // Standard Discrete Notes
+                        if (Math.abs(diffMs) <= 120) {
+                            const isNoteDon = (note.type === NOTE_TYPES.DON || note.type === NOTE_TYPES.BIG_DON);
+                            const isNoteKa = (note.type === NOTE_TYPES.KA || note.type === NOTE_TYPES.BIG_KA);
+
+                            if ((hitType === 'DON' && isNoteDon) || (hitType === 'KA' && isNoteKa)) {
+                                const absDiff = Math.abs(diffMs);
+                                let judge = 'PERFECT';
+
+                                if (absDiff <= 35) {
+                                    judge = 'PERFECT';
+                                    this.countPerfect++;
+                                    let addScore = (note.type === NOTE_TYPES.BIG_DON || note.type === NOTE_TYPES.BIG_KA) ? 2000 : 1000;
+                                    this.score += addScore + Math.min(this.combo * 10, 500);
+                                    this.combo++;
+                                    this.soulGauge = Math.min(100, this.soulGauge + 3);
+                                    this.spawnParticles(this.hitZoneX, this.laneY, '#ff0055', 18);
+                                    this.addFeedbackText('良', '#ffea00');
+                                    this.audio.playJudgementSFX('perfect');
+                                } else if (absDiff <= 85) {
+                                    judge = 'GOOD';
+                                    this.countGood++;
+                                    let addScore = (note.type === NOTE_TYPES.BIG_DON || note.type === NOTE_TYPES.BIG_KA) ? 1000 : 500;
+                                    this.score += addScore;
+                                    this.combo++;
+                                    this.soulGauge = Math.min(100, this.soulGauge + 1.5);
+                                    this.spawnParticles(this.hitZoneX, this.laneY, '#00ccff', 10);
+                                    this.addFeedbackText('可', '#ffffff');
+                                    this.audio.playJudgementSFX('good');
+                                } else {
+                                    this.triggerMiss(note);
+                                    processed = true;
+                                    break;
+                                }
+
+                                note.hit = true;
+                                if (this.combo > this.maxCombo) this.maxCombo = this.combo;
+                                this.updateHUD();
+                                processed = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            triggerMiss(note) {
+                note.hit = true;
+                this.countMiss++;
+                this.combo = 0;
+                this.soulGauge = Math.max(0, this.soulGauge - 6);
+                this.addFeedbackText('不可', '#888888');
+                this.audio.playJudgementSFX('miss');
+                this.updateHUD();
+            }
+
+            addFeedbackText(text, color) {
+                this.feedbackTexts.push({
+                    text,
+                    color,
+                    x: this.hitZoneX,
+                    y: this.laneY - 60,
+                    alpha: 1.0,
+                    scale: 1.4
+                });
+            }
+
+            spawnParticles(x, y, color, count) {
+                for (let i = 0; i < count; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = Math.random() * 6 + 2;
+                    this.particles.push({
+                        x, y,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed,
+                        color,
+                        radius: Math.random() * 4 + 2,
+                        alpha: 1.0
+                    });
+                }
+            }
+
+            /* ===================================================================
+             * 5. GAME LOOP & RENDERING
+             * =================================================================== */
+            loop(timestamp) {
+                const dt = (timestamp - this.lastFrameTime) / 1000;
+                this.lastFrameTime = timestamp;
+
+                if (this.gameState === 'PLAYING') {
+                    this.elapsedTime = (performance.now() / 1000) - this.startTime;
+
+                    // Check miss for unhit passed notes
+                    for (let note of this.chart) {
+                        if (!note.hit) {
+                            if (note.type === NOTE_TYPES.ROLL) {
+                                if (this.elapsedTime > note.time + note.duration + 0.1) {
+                                    note.hit = true;
+                                }
+                            } else if (this.elapsedTime > note.time + 0.12) {
+                                this.triggerMiss(note);
+                            }
+                        }
+                    }
+
+                    // Check Song Completion
+                    const song = SONGS[this.selectedSongIndex];
+                    if (this.elapsedTime > song.lengthSec + 2) {
+                        this.finishGame();
+                    }
+                }
+
+                // Render Scene
+                this.render();
+
+                requestAnimationFrame((t) => this.loop(t));
+            }
+
+            render() {
+                // Clear Canvas
+                this.ctx.fillStyle = '#1a0006';
+                this.ctx.fillRect(0, 0, this.width, this.height);
+
+                // Background FX: Floating Lanterns & Petals
+                this.drawBackground();
+
+                // Draw Note Lane Rail & Taiko Target Zone
+                this.drawLane();
+
+                // Draw Scrolling Chart Notes
+                if (this.gameState === 'PLAYING' || this.gameState === 'PAUSED') {
+                    this.drawNotes();
+                }
+
+                // Draw Visual Effects (Ripples, Particles, Floating Text)
+                this.drawFX();
+            }
+
+            drawBackground() {
+                const now = performance.now() * 0.001;
+
+                // Lanterns
+                this.ctx.fillStyle = '#ff3300';
+                this.ctx.shadowBlur = 15;
+                this.ctx.shadowColor = '#ffaa00';
+                this.lanterns.forEach(l => {
+                    const swing = Math.sin(now * 2 + l.swingOffset) * 6;
+                    this.ctx.beginPath();
+                    this.ctx.arc(l.x + swing, 35, 12, 0, Math.PI * 2);
+                    this.ctx.fill();
+                    // Rope
+                    this.ctx.strokeStyle = '#552200';
+                    this.ctx.lineWidth = 1;
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(l.x + swing, 0);
+                    this.ctx.lineTo(l.x + swing, 23);
+                    this.ctx.stroke();
+                });
+                this.ctx.shadowBlur = 0;
+
+                // Petals
+                this.ctx.fillStyle = '#ffb7c5';
+                this.petals.forEach(p => {
+                    p.y += p.speedY;
+                    p.x += p.speedX;
+                    p.rotation += p.rotSpeed;
+
+                    if (p.y > this.height) p.y = -10;
+                    if (p.x > this.width) p.x = 0;
+                    if (p.x < 0) p.x = this.width;
+
+                    this.ctx.save();
+                    this.ctx.translate(p.x, p.y);
+                    this.ctx.rotate(p.rotation);
+                    this.ctx.beginPath();
+                    this.ctx.ellipse(0, 0, p.size, p.size / 2, 0, 0, Math.PI * 2);
+                    this.ctx.fill();
+                    this.ctx.restore();
+                });
+            }
+
+            drawLane() {
+                const y = this.laneY;
+                const h = this.laneHeight;
+
+                // Main Lane Track Background
+                const laneGrad = this.ctx.createLinearGradient(0, y - h / 2, 0, y + h / 2);
+                laneGrad.addColorStop(0, 'rgba(30, 10, 20, 0.95)');
+                laneGrad.addColorStop(0.5, 'rgba(60, 20, 35, 0.95)');
+                laneGrad.addColorStop(1, 'rgba(30, 10, 20, 0.95)');
+
+                this.ctx.fillStyle = laneGrad;
+                this.ctx.fillRect(0, y - h / 2, this.width, h);
+
+                // Gold Borders
+                this.ctx.strokeStyle = '#ffd700';
+                this.ctx.lineWidth = 3;
+                this.ctx.strokeRect(0, y - h / 2, this.width, h);
+
+                // Fixed Target Hit Zone (Wadaiko Drum Head Target)
+                const x = this.hitZoneX;
+
+                // Outer Rim (Blue KA Zone)
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 46, 0, Math.PI * 2);
+                this.ctx.fillStyle = '#0088ff';
+                this.ctx.fill();
+                this.ctx.strokeStyle = '#ffffff';
+                this.ctx.lineWidth = 3;
+                this.ctx.stroke();
+
+                // Inner Face (Red DON Zone)
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 32, 0, Math.PI * 2);
+                this.ctx.fillStyle = '#e60033';
+                this.ctx.fill();
+                this.ctx.strokeStyle = '#ffd700';
+                this.ctx.lineWidth = 2.5;
+                this.ctx.stroke();
+            }
+
+            drawNotes() {
+                const y = this.laneY;
+
+                this.chart.forEach(note => {
+                    if (note.hit && note.type !== NOTE_TYPES.ROLL) return;
+
+                    const timeDiff = note.time - this.elapsedTime;
+                    const x = this.hitZoneX + timeDiff * this.noteSpeed;
+
+                    // Render Notes on Screen
+                    if (x > -100 && x < this.width + 200) {
+                        if (note.type === NOTE_TYPES.DON) {
+                            this.drawCircleNote(x, y, 26, '#e60033', '#ffffff', '面');
+                        } else if (note.type === NOTE_TYPES.KA) {
+                            this.drawCircleNote(x, y, 26, '#0088ff', '#ffffff', '邊');
+                        } else if (note.type === NOTE_TYPES.BIG_DON) {
+                            this.drawCircleNote(x, y, 38, '#e60033', '#ffd700', 'DON');
+                        } else if (note.type === NOTE_TYPES.BIG_KA) {
+                            this.drawCircleNote(x, y, 38, '#0088ff', '#88ffff', 'KA');
+                        } else if (note.type === NOTE_TYPES.ROLL) {
+                            const rollWidth = note.duration * this.noteSpeed;
+                            // Long Yellow Roll Bar
+                            this.ctx.fillStyle = '#ffcc00';
+                            this.ctx.fillRect(x, y - 22, rollWidth, 44);
+                            this.ctx.strokeStyle = '#ffffff';
+                            this.ctx.lineWidth = 3;
+                            this.ctx.strokeRect(x, y - 22, rollWidth, 44);
+
+                            // Left Cap
+                            this.drawCircleNote(x, y, 26, '#ff9900', '#ffffff', '連打');
+                        }
+                    }
+                });
+            }
+
+            drawCircleNote(x, y, radius, fillColor, strokeColor, label) {
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, radius, 0, Math.PI * 2);
+                this.ctx.fillStyle = fillColor;
+                this.ctx.fill();
+                this.ctx.strokeStyle = strokeColor;
+                this.ctx.lineWidth = 3;
+                this.ctx.stroke();
+
+                // Inner text label
+                this.ctx.fillStyle = '#ffffff';
+                this.ctx.font = `900 ${radius * 0.75}px 'Zen Maru Gothic'`;
+                this.ctx.textAlign = 'center';
+                this.ctx.textBaseline = 'middle';
+                this.ctx.fillText(label, x, y);
+            }
+
+            drawFX() {
+                // Drum Ripples
+                for (let i = this.drumRipples.length - 1; i >= 0; i--) {
+                    const r = this.drumRipples[i];
+                    this.ctx.beginPath();
+                    this.ctx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
+                    this.ctx.strokeStyle = r.color;
+                    this.ctx.lineWidth = 4;
+                    this.ctx.globalAlpha = r.alpha;
+                    this.ctx.stroke();
+                    this.ctx.globalAlpha = 1.0;
+
+                    r.radius += 2.5;
+                    r.alpha -= 0.05;
+                    if (r.alpha <= 0) this.drumRipples.splice(i, 1);
+                }
+
+                // Particles
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    const p = this.particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.alpha -= 0.03;
+
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    this.ctx.fillStyle = p.color;
+                    this.ctx.globalAlpha = Math.max(0, p.alpha);
+                    this.ctx.fill();
+                    this.ctx.globalAlpha = 1.0;
+
+                    if (p.alpha <= 0) this.particles.splice(i, 1);
+                }
+
+                // Floating Text Feedback
+                for (let i = this.feedbackTexts.length - 1; i >= 0; i--) {
+                    const ft = this.feedbackTexts[i];
+                    this.ctx.save();
+                    this.ctx.fillStyle = ft.color;
+                    this.ctx.shadowColor = '#000000';
+                    this.ctx.shadowBlur = 6;
+                    this.ctx.font = `900 ${28 * ft.scale}px 'Zen Maru Gothic'`;
+                    this.ctx.textAlign = 'center';
+                    this.ctx.globalAlpha = Math.max(0, ft.alpha);
+                    this.ctx.fillText(ft.text, ft.x, ft.y);
+                    this.ctx.restore();
+
+                    ft.y -= 1.2;
+                    ft.scale = Math.max(1.0, ft.scale - 0.03);
+                    ft.alpha -= 0.03;
+                    if (ft.alpha <= 0) this.feedbackTexts.splice(i, 1);
+                }
+            }
+
+            /* ===================================================================
+             * 6. CONTROLS & BINDINGS (KEYBOARD + TOUCH)
+             * =================================================================== */
+            bindEvents() {
+                // Key state trackers for BIG DON/KA simultaneous detection
+                const keys = {};
+
+                window.addEventListener('keydown', (e) => {
+                    if (e.repeat) return;
+                    const code = e.code;
+                    keys[code] = true;
+
+                    this.audio.resume();
+
+                    if (this.gameState === 'PLAYING') {
+                        // Simultaneous Big Don Detection (F + J)
+                        if ((code === 'KeyF' && keys['KeyJ']) || (code === 'KeyJ' && keys['KeyF'])) {
+                            this.handleDrumHit('DON', true);
+                        } else if (code === 'KeyF' || code === 'KeyJ') {
+                            this.handleDrumHit('DON', false);
+                        }
+
+                        // Simultaneous Big Ka Detection (D + K)
+                        if ((code === 'KeyD' && keys['KeyK']) || (code === 'KeyK' && keys['KeyD'])) {
+                            this.handleDrumHit('KA', true);
+                        } else if (code === 'KeyD' || code === 'KeyK') {
+                            this.handleDrumHit('KA', false);
+                        }
+
+                        if (code === 'Escape') this.pauseGame();
+                    }
+                });
+
+                window.addEventListener('keyup', (e) => {
+                    keys[e.code] = false;
+                });
+
+                // Touch Controls Bindings
+                const bindTouchBtn = (id, hitType) => {
+                    const btn = document.getElementById(id);
+                    if (!btn) return;
+
+                    const triggerHit = (e) => {
+                        e.preventDefault();
+                        this.audio.resume();
+                        if (this.gameState === 'PLAYING') {
+                            this.handleDrumHit(hitType, false);
+                        }
+                    };
+
+                    btn.addEventListener('touchstart', triggerHit, { passive: false });
+                    btn.addEventListener('mousedown', triggerHit);
+                };
+
+                bindTouchBtn('btnTouchLeftKa', 'KA');
+                bindTouchBtn('btnTouchRightKa', 'KA');
+                bindTouchBtn('btnTouchLeftDon', 'DON');
+                bindTouchBtn('btnTouchRightDon', 'DON');
+
+                // UI Buttons
+                document.querySelectorAll('.song-card').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.song-card').forEach(c => c.classList.remove('ring-4', 'ring-yellow-400'));
+                        btn.classList.add('ring-4', 'ring-yellow-400');
+                        this.selectedSongIndex = Number(btn.getAttribute('data-song'));
+                    });
+                });
+                // Default select first song
+                document.querySelector('.song-card')?.classList.add('ring-4', 'ring-yellow-400');
+
+                document.getElementById('btnStartGame').addEventListener('click', () => {
+                    this.startTrack(this.selectedSongIndex);
+                });
+
+                document.getElementById('btnPause').addEventListener('click', () => this.pauseGame());
+                document.getElementById('btnResume').addEventListener('click', () => this.resumeGame());
+                document.getElementById('btnRestart').addEventListener('click', () => this.startTrack(this.selectedSongIndex));
+                document.getElementById('btnQuit').addEventListener('click', () => {
+                    this.gameState = 'MENU';
+                    this.audio.stopBgm();
+                    this.hideModals();
+                    document.getElementById('modalMenu').classList.remove('hidden');
+                });
+
+                document.getElementById('btnResultRetry').addEventListener('click', () => this.startTrack(this.selectedSongIndex));
+                document.getElementById('btnResultMenu').addEventListener('click', () => {
+                    this.gameState = 'MENU';
+                    this.hideModals();
+                    document.getElementById('modalMenu').classList.remove('hidden');
+                });
+
+                // BGM / SFX Toggle Buttons
+                const btnBgm = document.getElementById('btnToggleBGM');
+                const btnSfx = document.getElementById('btnToggleSFX');
+
+                btnBgm.textContent = this.audio.isBgmOn ? '🎵 ON' : '🎵 OFF';
+                btnSfx.textContent = this.audio.isSfxOn ? '🔊 ON' : '🔊 OFF';
+
+                btnBgm.addEventListener('click', () => {
+                    const state = !this.audio.isBgmOn;
+                    this.audio.setBgm(state);
+                    btnBgm.textContent = state ? '🎵 ON' : '🎵 OFF';
+                });
+
+                btnSfx.addEventListener('click', () => {
+                    const state = !this.audio.isSfxOn;
+                    this.audio.setSfx(state);
+                    btnSfx.textContent = state ? '🔊 ON' : '🔊 OFF';
+                });
+            }
+        }
+
+        // Initialize Game Engine on Window Load
+        window.addEventListener('load', () => {
+            window.gameInstance = new TaikoGameEngine();
+        });
+    </script>
+</body>
+</html>

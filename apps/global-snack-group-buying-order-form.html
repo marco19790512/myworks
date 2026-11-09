@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>異國零食嚴選 - 團購表單</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SheetJS (xlsx) for Excel Export -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f8fafc;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header / Banner -->
+    <header class="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white shadow-lg sticky top-0 z-30">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="bg-white text-orange-600 p-2.5 rounded-2xl shadow-md text-2xl font-bold">
+                    <i class="fa-solid font-black fa-cookie-bite"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold tracking-wide">環球零食特快車 🍿</h1>
+                    <p class="text-xs md:text-sm text-orange-100">本期開團：日韓歐美爆款零食限定優惠（滿 $999 免運）</p>
+                </div>
+            </div>
+            
+            <!-- Navigation / Mode Switch -->
+            <div class="flex items-center space-x-2 bg-orange-600/40 backdrop-blur-md p-1.5 rounded-xl border border-orange-400/30">
+                <button id="tab-form-btn" onclick="switchTab('form')" class="px-4 py-2 rounded-lg text-sm font-medium transition-all bg-white text-orange-600 shadow-sm">
+                    <i class="fa-solid fa-cart-shopping mr-1.5"></i>我要填單
+                </button>
+                <button id="tab-admin-btn" onclick="switchTab('admin')" class="px-4 py-2 rounded-lg text-sm font-medium transition-all text-white hover:bg-orange-600/50">
+                    <i class="fa-solid fa-list-check mr-1.5"></i>團長後台 <span id="order-badge" class="ml-1 bg-rose-500 text-white text-xs px-2 py-0.5 rounded-full hidden">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full">
+
+        <!-- VIEW 1: SHOPPING FORM -->
+        <div id="view-form" class="space-y-8">
+            
+            <!-- Announcement & Countdown Banner -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="md:col-span-2 bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl shadow-sm flex items-start space-x-3">
+                    <i class="fa-solid fa-bullhorn text-amber-500 text-xl mt-0.5"></i>
+                    <div class="text-sm text-amber-800">
+                        <span class="font-bold">團購須知：</span>
+                        <span id="copy-notice-text">本期滿 $999 即享免運！請於團購截止前確認資料並送出訂單。</span>
+                    </div>
+                </div>
+                <!-- Countdown Box -->
+                <div id="countdown-box" class="bg-slate-900 text-white p-4 rounded-xl shadow-sm flex flex-col justify-center items-center text-center">
+                    <div id="group-name-tag" class="text-xs font-semibold text-amber-300 truncate max-w-full px-2 mb-0.5">【本期團名】</div>
+                    <div id="group-status-tag" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-500 text-white mb-1">團購進行中</div>
+                    <div class="text-xs text-slate-400">⏱️ 距離結單倒數</div>
+                    <div id="countdown-timer" class="font-mono text-lg font-bold text-amber-400 tracking-wider">00 天 00:00:00</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Left 2 Cols: Product List -->
+                <div class="lg:col-span-2 space-y-6">
+                    
+                    <!-- Category Filter & Search -->
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-3">
+                        <div class="flex flex-wrap gap-1.5 w-full sm:w-auto" id="category-filters">
+                            <button onclick="filterCategory('all')" class="cat-btn active px-3.5 py-1.5 rounded-xl text-sm font-medium bg-orange-500 text-white shadow-sm transition-all">全部商品</button>
+                            <button onclick="filterCategory('japan')" class="cat-btn px-3.5 py-1.5 rounded-xl text-sm font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">🇯🇵 日本限定</button>
+                            <button onclick="filterCategory('korea')" class="cat-btn px-3.5 py-1.5 rounded-xl text-sm font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">🇰🇷 韓國熱銷</button>
+                            <button onclick="filterCategory('western')" class="cat-btn px-3.5 py-1.5 rounded-xl text-sm font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">🇺🇸 歐美經典</button>
+                        </div>
+                        <div class="relative w-full sm:w-48">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                            <input type="text" id="search-input" oninput="renderProducts()" placeholder="搜尋零食..." class="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/50">
+                        </div>
+                    </div>
+
+                    <!-- Products Grid -->
+                    <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Products will be dynamically rendered here -->
+                    </div>
+                </div>
+
+                <!-- Right 1 Col: Cart & Order Form -->
+                <div class="space-y-6">
+                    
+                    <!-- Order Summary Sticky Card -->
+                    <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-100 sticky top-24 space-y-5">
+                        <div class="border-b border-slate-100 pb-3 flex justify-between items-center">
+                            <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-basket-shopping text-orange-500"></i> 已選購清單
+                            </h2>
+                            <span id="cart-count-badge" class="bg-orange-100 text-orange-600 text-xs font-bold px-2.5 py-1 rounded-full">0 件項目</span>
+                        </div>
+
+                        <!-- Selected Items List -->
+                        <div id="cart-items" class="max-h-60 overflow-y-auto space-y-3 pr-1 text-sm">
+                            <div class="text-center py-8 text-slate-400">
+                                <i class="fa-solid fa-cookie text-3xl mb-2 opacity-50"></i>
+                                <p>購物車空空如也，快去挑選零食吧！</p>
+                            </div>
+                        </div>
+
+                        <!-- Price Breakdown -->
+                        <div class="border-t border-slate-100 pt-3 space-y-2 text-sm">
+                            <div class="flex justify-between text-slate-600">
+                                <span>商品小計</span>
+                                <span id="subtotal-price">NT$ 0</span>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span>運費 <span class="text-xs text-slate-400">(滿 $999 免運)</span></span>
+                                <span id="shipping-fee">NT$ 60</span>
+                            </div>
+                            <div id="free-shipping-progress" class="bg-orange-50 p-2 rounded-xl text-xs text-orange-700 space-y-1">
+                                <div class="flex justify-between">
+                                    <span>免運門檻差額：</span>
+                                    <span id="shipping-gap" class="font-bold">NT$ 999</span>
+                                </div>
+                                <div class="w-full bg-orange-200 h-1.5 rounded-full overflow-hidden">
+                                    <div id="shipping-bar" class="bg-orange-500 h-full w-0 transition-all duration-300"></div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between text-lg font-bold text-slate-800 pt-2 border-t border-slate-100">
+                                <span>應付總金額</span>
+                                <span id="total-price" class="text-orange-600">NT$ 0</span>
+                            </div>
+                        </div>
+
+                        <!-- Customer Info Form -->
+                        <form id="order-form" onsubmit="handleFormSubmit(event)" class="space-y-4 pt-2">
+                            <h3 class="font-bold text-sm text-slate-700 border-b border-slate-100 pb-2">📦 訂購人資訊</h3>
+                            
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 mb-1">訂購人姓名 <span class="text-rose-500">*</span></label>
+                                <input type="text" id="cust-name" required placeholder="請輸入姓名" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-orange-500/50 focus:outline-none">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 mb-1">聯絡電話 <span class="text-rose-500">*</span></label>
+                                <input type="tel" id="cust-phone" required placeholder="0912345678" pattern="[0-9]{9,11}" title="請輸入有效的電話號碼" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-orange-500/50 focus:outline-none">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 mb-1">付款帳號末五碼 <span class="text-rose-500">*</span></label>
+                                <input type="text" id="cust-pay5" required maxlength="5" pattern="[0-9]{5}" title="請輸入 5 位數字" placeholder="請輸入匯款帳號後 5 碼 (例如: 12345)" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-orange-500/50 focus:outline-none font-mono">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 mb-1">取貨方式 <span class="text-rose-500">*</span></label>
+                                <select id="cust-shipping" onchange="toggleShippingFields()" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-orange-500/50 focus:outline-none bg-white">
+                                    <option value="7-11">7-11 超商取貨 (運費 $60)</option>
+                                    <option value="FamilyMart">全家 超商取貨 (運費 $60)</option>
+                                    <option value="Home">宅配到府 (運費 $60)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 mb-1" id="address-label">門市名稱 / 送貨地址 <span class="text-rose-500">*</span></label>
+                                <input type="text" id="cust-address" required placeholder="例如：7-11 鑫泰門市 或 地址" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-orange-500/50 focus:outline-none">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-medium text-slate-600 mb-1">備註事項 (選填)</label>
+                                <textarea id="cust-note" rows="2" placeholder="特殊需求或素食備註..." class="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-orange-500/50 focus:outline-none"></textarea>
+                            </div>
+
+                            <button type="submit" id="submit-btn" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all flex justify-center items-center gap-2">
+                                <i class="fa-solid fa-paper-plane"></i> 確認送出訂單
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- VIEW 2: ADMIN / ORDER MANAGEMENT -->
+        <div id="view-admin" class="hidden space-y-6">
+            
+            <!-- ADMIN LOGIN BOX (When not authenticated) -->
+            <div id="admin-login-card" class="max-w-md mx-auto bg-white p-6 rounded-2xl shadow-md border border-slate-100 text-center space-y-4 my-12">
+                <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center mx-auto text-xl">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <h2 class="text-lg font-bold text-slate-800">團長後台身份驗證</h2>
+                <p class="text-xs text-slate-400">請輸入管理員密碼以存取訂單管理與商品設定 (預設密碼：<code class="bg-slate-100 px-1 py-0.5 rounded text-orange-600 font-mono">admin123</code>)</p>
+                <div class="space-y-3">
+                    <input type="password" id="admin-password-input" placeholder="請輸入密碼..." class="w-full px-4 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/50">
+                    <button onclick="loginAdmin()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 rounded-xl shadow transition-all text-sm">
+                        登入管理後台
+                    </button>
+                </div>
+            </div>
+
+            <!-- ADMIN DASHBOARD CONTENT (When authenticated) -->
+            <div id="admin-dashboard" class="hidden space-y-6">
+                
+                <!-- Dashboard Bar -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-wrap justify-between items-center gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-pie text-orange-500"></i> 團購管理後台
+                        </h2>
+                        <p class="text-xs text-slate-500 mt-1">管理訂單、設定開團時間與調整商品上下架狀態</p>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-3">
+                        <button onclick="exportToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-4 py-2 rounded-xl shadow-sm transition-all flex items-center gap-2 text-sm">
+                            <i class="fa-solid fa-file-excel"></i> 匯出 Excel 報表
+                        </button>
+                        <button onclick="togglePasswordModal()" class="bg-amber-500 hover:bg-amber-600 text-white font-medium px-3.5 py-2 rounded-xl shadow-sm transition-all flex items-center gap-1.5 text-sm">
+                            <i class="fa-solid fa-key"></i> 變更密碼
+                        </button>
+                        <button onclick="logoutAdmin()" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-medium px-3.5 py-2 rounded-xl border border-slate-200 transition-all flex items-center gap-1.5 text-sm">
+                            <i class="fa-solid fa-right-from-bracket"></i> 登出
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Admin Tabs / Settings Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Left 1 Col: Group Buying Settings (Time & Info) -->
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-3">
+                        <h3 class="font-bold text-slate-800 border-b border-slate-100 pb-2 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-clock text-amber-500"></i> 開團設定與時間控制
+                        </h3>
+                        <div class="space-y-2.5 text-xs">
+                            <div>
+                                <label class="block font-medium text-slate-600 mb-1">開團名稱 / 團次標題</label>
+                                <input type="text" id="setting-group-name" placeholder="例如：11月號日韓限定特快車" class="w-full px-3 py-1.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500/50 text-xs">
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block font-medium text-slate-600 mb-1">開始時間</label>
+                                    <input type="datetime-local" id="setting-start-time" class="w-full px-2 py-1.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500/50 text-xs">
+                                </div>
+                                <div>
+                                    <label class="block font-medium text-slate-600 mb-1">截止時間</label>
+                                    <input type="datetime-local" id="setting-end-time" class="w-full px-2 py-1.5 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500/50 text-xs">
+                                </div>
+                            </div>
+                            <button onclick="saveTimeSettings()" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 rounded-xl shadow-sm transition-all">
+                                儲存開團資訊與時間
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right 2 Cols: Add/Manage Products -->
+                    <div class="lg:col-span-2 bg-white p-5 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+                        <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                            <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-boxes-stacked text-orange-500"></i> 商品上下架與新增
+                            </h3>
+                            <button onclick="toggleProductModal()" class="bg-orange-500 hover:bg-orange-600 text-white text-xs px-3 py-1.5 rounded-lg font-medium transition-all">
+                                <i class="fa-solid fa-plus mr-1"></i> 新增商品
+                            </button>
+                        </div>
+
+                        <!-- Product List in Admin -->
+                        <div id="admin-product-list" class="max-h-64 overflow-y-auto space-y-2 pr-1">
+                            <!-- Admin Products dynamically rendered -->
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Stats Overview -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center space-x-4">
+                        <div class="p-3 bg-blue-50 text-blue-600 rounded-xl"><i class="fa-solid fa-receipt text-2xl"></i></div>
+                        <div>
+                            <div class="text-xs text-slate-500 font-medium">總訂單數</div>
+                            <div id="stat-total-orders" class="text-2xl font-bold text-slate-800">0 筆</div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center space-x-4">
+                        <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl"><i class="fa-solid fa-sack-dollar text-2xl"></i></div>
+                        <div>
+                            <div class="text-xs text-slate-500 font-medium">總累積金額</div>
+                            <div id="stat-total-amount" class="text-2xl font-bold text-emerald-600">NT$ 0</div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center space-x-4">
+                        <div class="p-3 bg-amber-50 text-amber-600 rounded-xl"><i class="fa-solid fa-boxes-packing text-2xl"></i></div>
+                        <div>
+                            <div class="text-xs text-slate-500 font-medium">已售出商品總數</div>
+                            <div id="stat-total-items" class="text-2xl font-bold text-amber-600">0 件</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Orders Table -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                        <h3 class="font-bold text-slate-700 text-sm">訂單列表</h3>
+                        <button onclick="clearAllOrders()" class="text-xs text-rose-600 hover:text-rose-700 font-medium">
+                            <i class="fa-solid fa-trash-can mr-1"></i>清空所有訂單
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-600">
+                            <thead class="bg-slate-50 text-xs font-bold text-slate-500 uppercase border-b border-slate-100">
+                                <tr>
+                                    <th class="px-4 py-3">訂單編號</th>
+                                    <th class="px-4 py-3">時間</th>
+                                    <th class="px-4 py-3">訂購人 / 電話</th>
+                                    <th class="px-4 py-3">付款後五碼</th>
+                                    <th class="px-4 py-3">取貨方式 / 地址</th>
+                                    <th class="px-4 py-3">訂購商品明細</th>
+                                    <th class="px-4 py-3 text-right">總金額</th>
+                                    <th class="px-4 py-3 text-center">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orders-table-body" class="divide-y divide-slate-100">
+                                <!-- Orders will be dynamically inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Modal: Add New Product -->
+    <div id="product-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="font-bold text-slate-800">新增零食商品</h3>
+                <button onclick="toggleProductModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form onsubmit="handleAddProduct(event)" class="space-y-3 text-sm">
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">商品名稱</label>
+                    <input type="text" id="new-prod-name" required placeholder="例如：🇯🇵 東京牛奶起司工房餅乾" class="w-full px-3 py-2 border border-slate-200 rounded-xl">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">商品分類</label>
+                    <select id="new-prod-cat" class="w-full px-3 py-2 border border-slate-200 rounded-xl bg-white">
+                        <option value="japan">🇯🇵 日本限定</option>
+                        <option value="korea">🇰🇷 韓國熱銷</option>
+                        <option value="western">🇺🇸 歐美經典</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">價格 (NT$)</label>
+                    <input type="number" id="new-prod-price" required min="1" placeholder="150" class="w-full px-3 py-2 border border-slate-200 rounded-xl">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">商品描述</label>
+                    <input type="text" id="new-prod-desc" placeholder="簡短介紹這款零食..." class="w-full px-3 py-2 border border-slate-200 rounded-xl">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">圖片網址 (選填)</label>
+                    <input type="url" id="new-prod-image" placeholder="https://..." class="w-full px-3 py-2 border border-slate-200 rounded-xl">
+                </div>
+                <div class="pt-2 flex space-x-2">
+                    <button type="button" onclick="toggleProductModal()" class="w-1/2 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl text-xs">取消</button>
+                    <button type="submit" class="w-1/2 py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl text-xs shadow-md">確認新增</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Change Password -->
+    <div id="password-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="font-bold text-slate-800">變更團長後台密碼</h3>
+                <button onclick="togglePasswordModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form onsubmit="handleChangePassword(event)" class="space-y-3 text-sm">
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">舊密碼</label>
+                    <input type="password" id="old-password-input" required placeholder="請輸入目前的密碼" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">新密碼</label>
+                    <input type="password" id="new-password-input" required placeholder="請輸入新密碼" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">再次確認新密碼</label>
+                    <input type="password" id="confirm-password-input" required placeholder="請再次輸入新密碼" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50">
+                </div>
+                <div class="pt-2 flex space-x-2">
+                    <button type="button" onclick="togglePasswordModal()" class="w-1/2 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl text-xs">取消</button>
+                    <button type="submit" class="w-1/2 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-xs shadow-md">確認修改</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-xl z-50 flex items-center space-x-3 border border-slate-700">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span id="toast-msg" class="text-sm font-medium">提示訊息</span>
+    </div>
+
+    <!-- Application Script -->
+    <script>
+        // Safely access localStorage to prevent iFrame security error
+        function safeLocalStorageGet(key, defaultVal) {
+            try { return localStorage.getItem(key) || defaultVal; } 
+            catch(e) { return defaultVal; }
+        }
+        function safeLocalStorageSet(key, val) {
+            try { localStorage.setItem(key, val); } 
+            catch(e) {}
+        }
+        function safeSessionStorageGet(key, defaultVal) {
+            try { return sessionStorage.getItem(key) || defaultVal; } 
+            catch(e) { return defaultVal; }
+        }
+        function safeSessionStorageSet(key, val) {
+            try { sessionStorage.setItem(key, val); } 
+            catch(e) {}
+        }
+
+        // --- INITIAL DEFAULT DATA ---
+        const DEFAULT_PRODUCTS = [
+            { id: 'p1', name: '🇯🇵 薯條三兄弟 (10包入)', category: 'japan', price: 320, active: true, image: 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=400&q=80', desc: '北海道限定名產，酥脆鹹香無法抗拒' },
+            { id: 'p2', name: '🇯🇵 提拉米蘇巧克力 (250g)', category: 'japan', price: 280, active: true, image: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=400&q=80', desc: '濃郁杏仁夾心，香醇苦甜極致口感' },
+            { id: 'p3', name: '🇰🇷 烏龜餅乾 - 濃郁玉蜀黍味', category: 'korea', price: 65, active: true, image: 'https://images.unsplash.com/photo-1621939514649-280e2ee25f60?w=400&q=80', desc: '4層超酥脆結構，韓國熱銷人氣第1名' },
+            { id: 'p4', name: '🇰🇷 HBAF 蜂蜜黃油杏仁果 (190g)', category: 'korea', price: 185, active: true, image: 'https://images.unsplash.com/photo-1508061253366-f7da158b6d46?w=400&q=80', desc: '經典蜂蜜奶油風味，涮嘴停不下來' },
+            { id: 'p5', name: '🇺🇸 Lay’s 樂事酸奶洋蔥洋片', category: 'western', price: 120, active: true, image: 'https://images.unsplash.com/photo-1528751014936-863e6e7a319c?w=400&q=80', desc: '美式經典大包裝，酸甜爽口濃郁滋味' },
+            { id: 'p6', name: '🇮🇹 Loacker 萊嘉榛果威化餅', category: 'western', price: 95, active: true, image: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&q=80', desc: '天然榛果醬填充，無人工添加物' }
+        ];
+
+        const DEFAULT_COPY = {
+            title: '環球零食特快車 🍿',
+            subtitle: '本期開團：日韓歐美爆款零食限定優惠',
+            notice: '本期滿 $999 即享免運！請於團購截止前確認資料並送出訂單。',
+            freeThreshold: 999
+        };
+
+        // --- STATE MANAGEMENT ---
+        let products = JSON.parse(safeLocalStorageGet('snack_products', 'null')) || DEFAULT_PRODUCTS;
+        let siteCopy = JSON.parse(safeLocalStorageGet('snack_copy', 'null')) || DEFAULT_COPY;
+        let cart = {}; // { productId: quantity }
+        let currentCategory = 'all';
+        let orders = JSON.parse(safeLocalStorageGet('snack_orders', '[]'));
+        let isAdminLoggedIn = safeSessionStorageGet('admin_logged', 'false') === 'true';
+        let adminPassword = safeLocalStorageGet('snack_admin_pwd', 'admin123');
+        // Group Buying Times & Name
+        const now = new Date();
+        const defaultStart = new Date(now.getTime() - 3600 * 1000 * 24).toISOString().slice(0, 16);
+        const defaultEnd = new Date(now.getTime() + 3600 * 1000 * 72).toISOString().slice(0, 16);
+
+        let groupTimes = JSON.parse(safeLocalStorageGet('snack_times', 'null')) || {
+            name: '【秋季特快車】日韓熱銷零食團',
+            start: defaultStart,
+            end: defaultEnd
+        };
+
+        let countdownInterval = null;
+
+        // --- INIT ---
+        window.onload = function() {
+            applyCopySettings();
+            initCopyInputs();
+            renderProducts();
+            updateCartUI();
+            updateOrdersUI();
+            initTimeSettings();
+            startCountdown();
+            checkAdminAuth();
+        };
+
+        // --- COPY & TEXT MANAGEMENT ---
+        function applyCopySettings() {
+            const mainTitle = document.getElementById('main-title');
+            const subTitle = document.getElementById('sub-title');
+            const copyNotice = document.getElementById('copy-notice-text');
+
+            if (mainTitle) mainTitle.innerText = siteCopy.title;
+            if (subTitle) subTitle.innerText = `${siteCopy.subtitle}（滿 $${siteCopy.freeThreshold} 免運）`;
+            if (copyNotice) copyNotice.innerText = siteCopy.notice;
+
+            // Update free shipping labels in cart
+            const freeThresholdLabel = document.getElementById('free-shipping-threshold-label');
+            if (freeThresholdLabel) freeThresholdLabel.innerText = siteCopy.freeThreshold;
+        }
+
+        function initCopyInputs() {
+            const inputTitle = document.getElementById('setting-site-title');
+            const inputSub = document.getElementById('setting-site-subtitle');
+            const inputNotice = document.getElementById('setting-site-notice');
+            const inputThreshold = document.getElementById('setting-free-shipping');
+
+            if (inputTitle) inputTitle.value = siteCopy.title;
+            if (inputSub) inputSub.value = siteCopy.subtitle;
+            if (inputNotice) inputNotice.value = siteCopy.notice;
+            if (inputThreshold) inputThreshold.value = siteCopy.freeThreshold;
+        }
+
+        function saveCopySettings() {
+            const title = document.getElementById('setting-site-title').value.trim();
+            const subtitle = document.getElementById('setting-site-subtitle').value.trim();
+            const notice = document.getElementById('setting-site-notice').value.trim();
+            const freeThreshold = parseInt(document.getElementById('setting-free-shipping').value) || 0;
+
+            if (!title) {
+                showToast('大標題不能為空！', 'error');
+                return;
+            }
+
+            siteCopy = { title, subtitle, notice, freeThreshold };
+            safeLocalStorageSet('snack_copy', JSON.stringify(siteCopy));
+            
+            applyCopySettings();
+            updateCartUI();
+            showToast('✨ 前台版面文案已成功更新！');
+        }
+
+        // --- ADMIN AUTH ---
+        function checkAdminAuth() {
+            const loginCard = document.getElementById('admin-login-card');
+            const dashboard = document.getElementById('admin-dashboard');
+
+            if (isAdminLoggedIn) {
+                if (loginCard) loginCard.classList.add('hidden');
+                if (dashboard) dashboard.classList.remove('hidden');
+                renderAdminProducts();
+            } else {
+                if (loginCard) loginCard.classList.remove('hidden');
+                if (dashboard) dashboard.classList.add('hidden');
+            }
+        }
+
+        function loginAdmin() {
+            const input = document.getElementById('admin-password-input').value;
+            if (input === adminPassword) {
+                isAdminLoggedIn = true;
+                safeSessionStorageSet('admin_logged', 'true');
+                checkAdminAuth();
+                showToast('🔑 後台登入成功！');
+            } else {
+                showToast('密碼錯誤！請重新輸入。', 'error');
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            safeSessionStorageSet('admin_logged', 'false');
+            checkAdminAuth();
+            showToast('已安全登出後台');
+        }
+
+        // --- PASSWORD MANAGEMENT ---
+        function togglePasswordModal() {
+            const modal = document.getElementById('password-modal');
+            if (modal) modal.classList.toggle('hidden');
+            if (modal && !modal.classList.contains('hidden')) {
+                document.getElementById('old-password-input').value = '';
+                document.getElementById('new-password-input').value = '';
+                document.getElementById('confirm-password-input').value = '';
+            }
+        }
+
+        function handleChangePassword(e) {
+            e.preventDefault();
+            const oldPwd = document.getElementById('old-password-input').value;
+            const newPwd = document.getElementById('new-password-input').value;
+            const confirmPwd = document.getElementById('confirm-password-input').value;
+
+            if (oldPwd !== adminPassword) {
+                showToast('舊密碼不正確！', 'error');
+                return;
+            }
+
+            if (newPwd.length < 4) {
+                showToast('新密碼長度至少需 4 個字元！', 'error');
+                return;
+            }
+
+            if (newPwd !== confirmPwd) {
+                showToast('新密碼與確認密碼不符！', 'error');
+                return;
+            }
+
+            adminPassword = newPwd;
+            safeLocalStorageSet('snack_admin_pwd', adminPassword);
+            togglePasswordModal();
+            showToast('🔑 密碼已成功變更！下次登入請使用新密碼。');
+        }
+
+        // --- TIME & COUNTDOWN LOGIC ---
+        function initTimeSettings() {
+            const nameInput = document.getElementById('setting-group-name');
+            const startInput = document.getElementById('setting-start-time');
+            const endInput = document.getElementById('setting-end-time');
+            if (nameInput) nameInput.value = groupTimes.name || '';
+            if (startInput) startInput.value = groupTimes.start;
+            if (endInput) endInput.value = groupTimes.end;
+
+            updateGroupNameDisplay();
+        }
+
+        function updateGroupNameDisplay() {
+            const groupNameTag = document.getElementById('group-name-tag');
+            if (groupNameTag) {
+                groupNameTag.innerText = groupTimes.name ? `【${groupTimes.name}】` : '【熱門團購中】';
+            }
+        }
+
+        function saveTimeSettings() {
+            const nameVal = document.getElementById('setting-group-name').value.trim();
+            const startVal = document.getElementById('setting-start-time').value;
+            const endVal = document.getElementById('setting-end-time').value;
+
+            if (!startVal || !endVal) {
+                showToast('請設定完整的開始與截止時間！', 'error');
+                return;
+            }
+
+            if (new Date(startVal) >= new Date(endVal)) {
+                showToast('截止時間必須晚於開始時間！', 'error');
+                return;
+            }
+
+            groupTimes = { name: nameVal || '本期團購', start: startVal, end: endVal };
+            safeLocalStorageSet('snack_times', JSON.stringify(groupTimes));
+            updateGroupNameDisplay();
+            showToast('⏰ 開團資訊與時間設定已更新！');
+            startCountdown();
+        }
+
+        function startCountdown() {
+            if (countdownInterval) clearInterval(countdownInterval);
+
+            function updateTimer() {
+                const currentTime = new Date().getTime();
+                const startTime = new Date(groupTimes.start).getTime();
+                const endTime = new Date(groupTimes.end).getTime();
+
+                const timerEl = document.getElementById('countdown-timer');
+                const tagEl = document.getElementById('group-status-tag');
+                const submitBtn = document.getElementById('submit-btn');
+
+                updateGroupNameDisplay();
+
+                if (currentTime < startTime) {
+                    if (tagEl) {
+                        tagEl.className = "text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-500 text-white mb-1";
+                        tagEl.innerText = "尚未開團";
+                    }
+                    if (timerEl) timerEl.innerText = "開團準備中";
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.className = "w-full bg-slate-300 text-slate-500 font-bold py-3 rounded-xl cursor-not-allowed";
+                        submitBtn.innerText = "🚫 尚未開團";
+                    }
+                    return;
+                }
+
+                if (currentTime > endTime) {
+                    if (tagEl) {
+                        tagEl.className = "text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-500 text-white mb-1";
+                        tagEl.innerText = "團購已截止";
+                    }
+                    if (timerEl) timerEl.innerText = "00 天 00:00:00";
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.className = "w-full bg-slate-300 text-slate-500 font-bold py-3 rounded-xl cursor-not-allowed";
+                        submitBtn.innerText = "🔒 本期團購已截止";
+                    }
+                    return;
+                }
+
+                if (tagEl) {
+                    tagEl.className = "text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-500 text-white mb-1";
+                    tagEl.innerText = "團購進行中";
+                }
+
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.className = "w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all flex justify-center items-center gap-2";
+                    submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> 確認送出訂單';
+                }
+
+                const distance = endTime - currentTime;
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                const pad = (n) => n < 10 ? '0' + n : n;
+                if (timerEl) timerEl.innerText = `${pad(days)} 天 ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+            }
+
+            updateTimer();
+            countdownInterval = setInterval(updateTimer, 1000);
+        }
+
+        // --- TAB SWITCHING ---
+        function switchTab(tab) {
+            const viewForm = document.getElementById('view-form');
+            const viewAdmin = document.getElementById('view-admin');
+            const btnForm = document.getElementById('tab-form-btn');
+            const btnAdmin = document.getElementById('tab-admin-btn');
+
+            if (tab === 'form') {
+                if (viewForm) viewForm.classList.remove('hidden');
+                if (viewAdmin) viewAdmin.classList.add('hidden');
+                if (btnForm) btnForm.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all bg-white text-orange-600 shadow-sm";
+                if (btnAdmin) btnAdmin.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all text-white hover:bg-orange-600/50";
+            } else {
+                if (viewForm) viewForm.classList.add('hidden');
+                if (viewAdmin) viewAdmin.classList.remove('hidden');
+                if (btnAdmin) btnAdmin.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all bg-white text-orange-600 shadow-sm";
+                if (btnForm) btnForm.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all text-white hover:bg-orange-600/50";
+                checkAdminAuth();
+            }
+        }
+
+        // --- PRODUCT RENDER & FILTER ---
+        function filterCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.className = "cat-btn px-3.5 py-1.5 rounded-xl text-sm font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all";
+            });
+            if (event && event.target) {
+                event.target.className = "cat-btn active px-3.5 py-1.5 rounded-xl text-sm font-medium bg-orange-500 text-white shadow-sm transition-all";
+            }
+            renderProducts();
+        }
+
+        function renderProducts() {
+            const container = document.getElementById('products-container');
+            if (!container) return;
+
+            const searchInput = document.getElementById('search-input');
+            const searchVal = searchInput ? searchInput.value.toLowerCase() : '';
+
+            // Filter by Active status + Category + Search
+            const filtered = products.filter(p => {
+                const isActive = p.active !== false;
+                const matchCat = currentCategory === 'all' || p.category === currentCategory;
+                const matchSearch = p.name.toLowerCase().includes(searchVal) || (p.desc && p.desc.toLowerCase().includes(searchVal));
+                return isActive && matchCat && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full bg-white p-8 rounded-2xl text-center text-slate-400 border border-slate-100">
+                        <i class="fa-solid fa-magnifying-glass text-3xl mb-2 opacity-50"></i>
+                        <p>找不到符合條件或已上架的零食</p>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(p => {
+                const qty = cart[p.id] || 0;
+                return `
+                <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-3">
+                    <div class="flex space-x-3">
+                        <img src="${p.image || 'https://placehold.co/100x100/f1f5f9/94a3b8?text=Snack'}" alt="${p.name}" class="w-20 h-20 object-cover rounded-xl bg-slate-100 flex-shrink-0" onerror="this.src='https://placehold.co/100x100/f1f5f9/94a3b8?text=Snack'">
+                        <div class="space-y-1">
+                            <h3 class="font-bold text-slate-800 text-sm leading-snug">${p.name}</h3>
+                            <p class="text-xs text-slate-400 line-clamp-2">${p.desc || ''}</p>
+                            <div class="text-orange-600 font-bold text-base">NT$ ${p.price}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between pt-2 border-t border-slate-50">
+                        <span class="text-xs text-slate-400">已選: <strong class="text-slate-700">${qty}</strong></span>
+                        <div class="flex items-center space-x-2 bg-slate-100 p-1 rounded-xl">
+                            <button onclick="updateQty('${p.id}', -1)" class="w-7 h-7 rounded-lg bg-white text-slate-600 hover:bg-rose-50 hover:text-rose-600 shadow-sm flex items-center justify-center font-bold text-sm transition-all">-</button>
+                            <span class="w-6 text-center font-bold text-sm text-slate-700">${qty}</span>
+                            <button onclick="updateQty('${p.id}', 1)" class="w-7 h-7 rounded-lg bg-white text-slate-600 hover:bg-orange-50 hover:text-orange-600 shadow-sm flex items-center justify-center font-bold text-sm transition-all">+</button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // --- PRODUCT MANAGEMENT IN ADMIN ---
+        function renderAdminProducts() {
+            const container = document.getElementById('admin-product-list');
+            if (!container) return;
+
+            if (products.length === 0) {
+                container.innerHTML = `<div class="text-xs text-slate-400 text-center py-4">無任何商品，請點擊新增。</div>`;
+                return;
+            }
+
+            container.innerHTML = products.map(p => `
+                <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl text-sm">
+                    <div class="flex items-center space-x-3">
+                        <span class="w-2.5 h-2.5 rounded-full ${p.active !== false ? 'bg-emerald-500' : 'bg-slate-300'}"></span>
+                        <div>
+                            <div class="font-bold text-slate-800 text-xs">${p.name}</div>
+                            <div class="text-slate-400 text-xs">NT$ ${p.price}</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="toggleProductActive('${p.id}')" class="px-2.5 py-1 text-xs font-bold rounded-lg ${p.active !== false ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'bg-slate-200 text-slate-600 hover:bg-slate-300'} transition-all">
+                            ${p.active !== false ? '已上架' : '已下架'}
+                        </button>
+                        <button onclick="deleteProduct('${p.id}')" class="text-slate-400 hover:text-rose-500 p-1 text-xs"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleProductActive(id) {
+            const p = products.find(item => item.id === id);
+            if (p) {
+                p.active = p.active === false ? true : false;
+                safeLocalStorageSet('snack_products', JSON.stringify(products));
+                renderProducts();
+                renderAdminProducts();
+                showToast(`商品「${p.name}」已${p.active ? '上架' : '下架'}`);
+            }
+        }
+
+        function deleteProduct(id) {
+            if (confirm('確定要刪除這項商品嗎？')) {
+                products = products.filter(p => p.id !== id);
+                delete cart[id];
+                safeLocalStorageSet('snack_products', JSON.stringify(products));
+                renderProducts();
+                renderAdminProducts();
+                updateCartUI();
+                showToast('商品已刪除');
+            }
+        }
+
+        function toggleProductModal() {
+            const modal = document.getElementById('product-modal');
+            if (modal) modal.classList.toggle('hidden');
+        }
+
+        function handleAddProduct(e) {
+            e.preventDefault();
+            const name = document.getElementById('new-prod-name').value.trim();
+            const category = document.getElementById('new-prod-cat').value;
+            const price = parseInt(document.getElementById('new-prod-price').value);
+            const desc = document.getElementById('new-prod-desc').value.trim();
+            const image = document.getElementById('new-prod-image').value.trim();
+
+            const newProduct = {
+                id: 'p_' + Date.now(),
+                name,
+                category,
+                price,
+                desc,
+                image,
+                active: true
+            };
+
+            products.push(newProduct);
+            safeLocalStorageSet('snack_products', JSON.stringify(products));
+            
+            toggleProductModal();
+            renderProducts();
+            renderAdminProducts();
+            showToast('🎉 新商品已成功上架！');
+        }
+
+        // --- CART LOGIC ---
+        function updateQty(id, change) {
+            cart[id] = (cart[id] || 0) + change;
+            if (cart[id] <= 0) delete cart[id];
+            renderProducts();
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const cartContainer = document.getElementById('cart-items');
+            if (!cartContainer) return;
+
+            const cartKeys = Object.keys(cart);
+            let subtotal = 0;
+            let totalCount = 0;
+
+            if (cartKeys.length === 0) {
+                cartContainer.innerHTML = `
+                    <div class="text-center py-8 text-slate-400">
+                        <i class="fa-solid fa-cookie text-3xl mb-2 opacity-50"></i>
+                        <p>購物車空空如也，快去挑選零食吧！</p>
+                    </div>`;
+            } else {
+                cartContainer.innerHTML = cartKeys.map(id => {
+                    const product = products.find(p => p.id === id);
+                    if (!product) return '';
+                    const qty = cart[id];
+                    const itemTotal = product.price * qty;
+                    subtotal += itemTotal;
+                    totalCount += qty;
+
+                    return `
+                    <div class="flex justify-between items-center bg-slate-50 p-2.5 rounded-xl">
+                        <div class="flex-grow pr-2">
+                            <div class="font-medium text-slate-800 text-xs">${product.name}</div>
+                            <div class="text-slate-400 text-xs">NT$ ${product.price} × ${qty}</div>
+                        </div>
+                        <div class="text-right flex items-center space-x-2">
+                            <span class="font-bold text-slate-700 text-xs">NT$ ${itemTotal}</span>
+                            <button onclick="updateQty('${id}', -${qty})" class="text-slate-400 hover:text-rose-500 p-1 text-xs"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                    </div>`;
+                }).join('');
+            }
+
+            const threshold = siteCopy.freeThreshold || 999;
+            const shipping = (subtotal >= threshold || subtotal === 0) ? 0 : 60;
+            const total = subtotal > 0 ? subtotal + shipping : 0;
+            const gap = Math.max(0, threshold - subtotal);
+            const progressPercent = Math.min(100, (subtotal / threshold) * 100);
+
+            // Update DOM
+            const cartBadge = document.getElementById('cart-count-badge');
+            const subtotalPrice = document.getElementById('subtotal-price');
+            const shippingFee = document.getElementById('shipping-fee');
+            const totalPrice = document.getElementById('total-price');
+
+            if (cartBadge) cartBadge.innerText = `${totalCount} 件項目`;
+            if (subtotalPrice) subtotalPrice.innerText = `NT$ ${subtotal}`;
+            if (shippingFee) shippingFee.innerText = shipping === 0 ? (subtotal > 0 ? '免運費 🎉' : 'NT$ 0') : `NT$ ${shipping}`;
+            if (totalPrice) totalPrice.innerText = `NT$ ${total}`;
+
+            const freeShipBox = document.getElementById('free-shipping-progress');
+            if (freeShipBox) {
+                if (subtotal >= threshold) {
+                    freeShipBox.className = "bg-emerald-50 p-2 rounded-xl text-xs text-emerald-700 font-medium text-center";
+                    freeShipBox.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i> 已達免運門檻！享免運優惠';
+                } else {
+                    freeShipBox.className = "bg-orange-50 p-2 rounded-xl text-xs text-orange-700 space-y-1";
+                    freeShipBox.innerHTML = `
+                        <div class="flex justify-between">
+                            <span>免運門檻差額：</span>
+                            <span class="font-bold">NT$ ${gap}</span>
+                        </div>
+                        <div class="w-full bg-orange-200 h-1.5 rounded-full overflow-hidden">
+                            <div class="bg-orange-500 h-full transition-all duration-300" style="width: ${progressPercent}%"></div>
+                        </div>`;
+                }
+            }
+        }
+
+        function toggleShippingFields() {
+            const shipType = document.getElementById('cust-shipping').value;
+            const label = document.getElementById('address-label');
+            const input = document.getElementById('cust-address');
+
+            if (shipType === 'Home') {
+                if (label) label.innerHTML = '收件宅配地址 <span class="text-rose-500">*</span>';
+                if (input) input.placeholder = '請輸入完整宅配地址';
+            } else {
+                if (label) label.innerHTML = `${shipType === '7-11' ? '7-11' : '全家'} 門市名稱 / 店號 <span class="text-rose-500">*</span>`;
+                if (input) input.placeholder = `例如：${shipType === '7-11' ? '7-11 鑫泰門市' : '全家 德國店'}`;
+            }
+        }
+
+        // --- SUBMIT ORDER ---
+        function handleFormSubmit(e) {
+            e.preventDefault();
+
+            // Time Validation Check
+            const nowTime = new Date().getTime();
+            const startTime = new Date(groupTimes.start).getTime();
+            const endTime = new Date(groupTimes.end).getTime();
+
+            if (nowTime < startTime) {
+                showToast('本期團購尚未開始！暫無法提交訂單。', 'error');
+                return;
+            }
+            if (nowTime > endTime) {
+                showToast('本期團購已截止！無法提交訂單。', 'error');
+                return;
+            }
+
+            if (Object.keys(cart).length === 0) {
+                showToast('請至少挑選一項商品再提交訂單！', 'error');
+                return;
+            }
+
+            const name = document.getElementById('cust-name').value.trim();
+            const phone = document.getElementById('cust-phone').value.trim();
+            const pay5 = document.getElementById('cust-pay5').value.trim();
+            const shippingType = document.getElementById('cust-shipping').value;
+            const address = document.getElementById('cust-address').value.trim();
+            const note = document.getElementById('cust-note').value.trim();
+
+            let subtotal = 0;
+            const orderItems = [];
+
+            for (let id in cart) {
+                const p = products.find(item => item.id === id);
+                if (!p) continue;
+                const qty = cart[id];
+                subtotal += p.price * qty;
+                orderItems.push({
+                    id: p.id,
+                    name: p.name,
+                    price: p.price,
+                    qty: qty,
+                    subtotal: p.price * qty
+                });
+            }
+
+            const threshold = siteCopy.freeThreshold || 999;
+            const shippingFee = subtotal >= threshold ? 0 : 60;
+            const totalAmount = subtotal + shippingFee;
+
+            const order = {
+                orderId: 'SNK' + Date.now().toString().slice(-6),
+                time: new Date().toLocaleString('zh-TW', { hour12: false }),
+                customer: { name, phone, pay5, shippingType, address, note },
+                items: orderItems,
+                subtotal: subtotal,
+                shippingFee: shippingFee,
+                totalAmount: totalAmount
+            };
+
+            orders.unshift(order);
+            safeLocalStorageSet('snack_orders', JSON.stringify(orders));
+
+            // Reset Form & Cart
+            cart = {};
+            document.getElementById('order-form').reset();
+            renderProducts();
+            updateCartUI();
+            updateOrdersUI();
+
+            showToast('🎉 訂單已成功送出！感謝您的訂購。');
+        }
+
+        // --- ADMIN & ORDERS VIEW ---
+        function updateOrdersUI() {
+            const tbody = document.getElementById('orders-table-body');
+            const badge = document.getElementById('order-badge');
+
+            if (badge) {
+                if (orders.length > 0) {
+                    badge.innerText = orders.length;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+
+            // Stats
+            let grandTotal = 0;
+            let totalItemsCount = 0;
+
+            orders.forEach(o => {
+                grandTotal += o.totalAmount;
+                o.items.forEach(i => totalItemsCount += i.qty);
+            });
+
+            const statOrders = document.getElementById('stat-total-orders');
+            const statAmount = document.getElementById('stat-total-amount');
+            const statItems = document.getElementById('stat-total-items');
+
+            if (statOrders) statOrders.innerText = `${orders.length} 筆`;
+            if (statAmount) statAmount.innerText = `NT$ ${grandTotal.toLocaleString()}`;
+            if (statItems) statItems.innerText = `${totalItemsCount} 件`;
+
+            if (!tbody) return;
+
+            // Table Render
+            if (orders.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center py-8 text-slate-400">
+                            <i class="fa-solid fa-folder-open text-3xl mb-2 opacity-50 block"></i>
+                            目前尚未收到任何訂單
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            tbody.innerHTML = orders.map((o, idx) => {
+                const itemsSummary = o.items.map(i => `${i.name} × ${i.qty}`).join('<br>');
+                const shipText = o.customer.shippingType === 'Home' ? '宅配' : o.customer.shippingType;
+
+                return `
+                <tr class="hover:bg-slate-50/80 transition-all">
+                    <td class="px-4 py-3 font-mono text-xs font-bold text-orange-600">${o.orderId}</td>
+                    <td class="px-4 py-3 text-xs text-slate-500">${o.time}</td>
+                    <td class="px-4 py-3">
+                        <div class="font-bold text-slate-800">${o.customer.name}</div>
+                        <div class="text-xs text-slate-400">${o.customer.phone}</div>
+                    </td>
+                    <td class="px-4 py-3 text-xs">
+                        <span class="px-2 py-0.5 bg-amber-50 text-amber-700 font-mono font-bold rounded border border-amber-200/60">${o.customer.pay5 || '未提供'}</span>
+                    </td>
+                    <td class="px-4 py-3 text-xs">
+                        <span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md font-medium">${shipText}</span>
+                        <div class="text-slate-500 mt-1">${o.customer.address}</div>
+                        ${o.customer.note ? `<div class="text-amber-600 italic">備註: ${o.customer.note}</div>` : ''}
+                    </td>
+                    <td class="px-4 py-3 text-xs text-slate-700 leading-relaxed">${itemsSummary}</td>
+                    <td class="px-4 py-3 text-right font-bold text-slate-800">NT$ ${o.totalAmount.toLocaleString()}</td>
+                    <td class="px-4 py-3 text-center">
+                        <button onclick="deleteOrder(${idx})" class="text-slate-400 hover:text-rose-500 p-1 transition-all" title="刪除訂單">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        function deleteOrder(index) {
+            if (confirm('確定要刪除這筆訂單嗎？')) {
+                orders.splice(index, 1);
+                safeLocalStorageSet('snack_orders', JSON.stringify(orders));
+                updateOrdersUI();
+                showToast('已成功刪除訂單');
+            }
+        }
+
+        function clearAllOrders() {
+            if (orders.length === 0) return;
+            if (confirm('確定要清空「所有」訂單紀錄嗎？此動作無法復原！')) {
+                orders = [];
+                safeLocalStorageSet('snack_orders', JSON.stringify(orders));
+                updateOrdersUI();
+                showToast('已清空所有訂單紀錄');
+            }
+        }
+
+        // --- EXPORT TO EXCEL ---
+        function exportToExcel() {
+            if (orders.length === 0) {
+                showToast('目前尚無訂單可供匯出！', 'error');
+                return;
+            }
+
+            const excelData = [];
+            orders.forEach(o => {
+                const itemDetails = o.items.map(i => `${i.name} (單價$${i.price} x ${i.qty})`).join('; ');
+
+                excelData.push({
+                    "訂單編號": o.orderId,
+                    "訂購時間": o.time,
+                    "訂購人姓名": o.customer.name,
+                    "聯絡電話": o.customer.phone,
+                    "付款帳號末五碼": o.customer.pay5 || '',
+                    "取貨方式": o.customer.shippingType,
+                    "門市/地址": o.customer.address,
+                    "訂購明細": itemDetails,
+                    "商品小計": o.subtotal,
+                    "運費": o.shippingFee,
+                    "總金額": o.totalAmount,
+                    "備註": o.customer.note || ''
+                });
+            });
+
+            const summaryMap = {};
+            products.forEach(p => summaryMap[p.name] = 0);
+
+            orders.forEach(o => {
+                o.items.forEach(i => {
+                    summaryMap[i.name] = (summaryMap[i.name] || 0) + i.qty;
+                });
+            });
+
+            const summaryData = Object.keys(summaryMap).map(pName => ({
+                "商品名稱": pName,
+                "累計訂購總數": summaryMap[pName]
+            }));
+
+            const wb = XLSX.utils.book_new();
+
+            const wsOrders = XLSX.utils.json_to_sheet(excelData);
+            const wsSummary = XLSX.utils.json_to_sheet(summaryData);
+
+            wsOrders['!cols'] = [
+                { wch: 14 }, { wch: 18 }, { wch: 12 }, { wch: 14 }, { wch: 15 },
+                { wch: 10 }, { wch: 25 }, { wch: 40 }, { wch: 10 }, 
+                { wch: 8 }, { wch: 10 }, { wch: 20 }
+            ];
+            wsSummary['!cols'] = [{ wch: 35 }, { wch: 15 }];
+
+            XLSX.utils.book_append_sheet(wb, wsOrders, "訂單總表");
+            XLSX.utils.book_append_sheet(wb, wsSummary, "商品採購統計");
+
+            const dateStr = new Date().toISOString().slice(0, 10);
+            XLSX.writeFile(wb, `進口零食團購訂單表_${dateStr}.xlsx`);
+
+            showToast('📊 Excel 報表匯出成功！');
+        }
+
+        // --- TOAST NOTIFICATION ---
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-msg');
+            const toastIcon = document.getElementById('toast-icon');
+
+            if (!toast || !toastMsg || !toastIcon) return;
+
+            toastMsg.innerText = msg;
+            if (type === 'error') {
+                toastIcon.className = "fa-solid fa-circle-exclamation text-rose-400";
+            } else {
+                toastIcon.className = "fa-solid fa-circle-check text-emerald-400";
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

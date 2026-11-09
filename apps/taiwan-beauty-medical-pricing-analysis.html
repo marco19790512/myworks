@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台灣美業與醫美儀器價格差異與經濟學分析</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fbf7f5',
+                            100: '#f7eeea',
+                            200: '#eddcd4',
+                            300: '#dec2b4',
+                            400: '#ca9e8a',
+                            500: '#b88069',
+                            600: '#aa6d57',
+                            700: '#8e5645',
+                            800: '#75483b',
+                            900: '#613e33',
+                        },
+                        sand: {
+                            50: '#fdfbf7',
+                            100: '#f7f4ed',
+                            200: '#eee7d8',
+                            300: '#e1d4bb',
+                            400: '#d0bb99',
+                            500: '#c1a47b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Embedded minimal style for mandatory responsive chart containers -->
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 680px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 360px;
+            }
+        }
+        .tab-btn.active {
+            border-bottom: 2px solid #aa6d57;
+            color: #aa6d57;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<!-- Chosen Palette: Warm Neutrals & Terracotta Soft Warm (Background: #fdfbf7, Accents: #aa6d57, #b88069, #75483b) -->
+<!-- Application Structure Plan:
+     1. Executive Summary & Header: Brief intro to the economics of aesthetic devices.
+     2. Main Navigation Tabs:
+        - "五項重要發現" (5 Key Insights): Accordion/card format highlighting core industry patterns (crypto chips, US vs Kr, lens ladder, gray market, LTV matrix).
+        - "儀器療程價格矩陣" (Interactive Device & Price Matrix): Interactive table with filters (Anti-aging, Pigment/Texture, Body/Facial Care, US vs Korea) and text explanations.
+        - "價格階梯與成本分析" (Price Range & Dynamic Charts): Chart.js visual comparisons for cost distribution and multi-mode price gaps (e.g., standard vs honeycomb lens).
+        - "診所商業策略矩陣" (Clinic Business Strategy): LTV funnel flowchart showing Traffic Driver vs High Profit items.
+     WHY: This structure allows users to jump directly between quantitative data (pricing table/charts) and qualitative insights (insights & business model), enhancing comprehension beyond a static paper.
+-->
+<!-- Visualization & Content Choices:
+     - Goal: Inform/Key Discoveries -> Dynamic interactive cards with expanders -> Clear icons + clean typography -> HTML/CSS.
+     - Goal: Compare Prices across Brands/Origins -> Grouped Bar Chart (Chart.js Canvas) -> US vs Korean price floors -> High contrast colors, responsive tooltips.
+     - Goal: Display Feature Add-ons -> Stacked/Horizontal Bar Chart (Chart.js Canvas) -> Basic Pico vs Honeycomb Lens, Standard FLX vs Eye Tip.
+     - Goal: Clinic Strategy -> Interactive Funnel Card (HTML/CSS Grid) -> High-frequency low-cost vs Low-frequency high-cost -> Visual contrast.
+     - Confirmation: NO SVG graphics used. NO Mermaid JS used.
+-->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+<body class="bg-sand-50 text-stone-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Header Section -->
+    <header class="bg-white border-b border-sand-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-brand-500 text-white flex items-center justify-center font-bold text-lg">美</div>
+                <div>
+                    <h1 class="text-xl font-bold text-stone-900 tracking-tight">台灣美業與醫美儀器價格差異分析儀表板</h1>
+                    <p class="text-xs text-stone-500">市場經濟學、耗材攤提與終端療程價格研究報告</p>
+                </div>
+            </div>
+            <!-- Dynamic Navigation Tabs -->
+            <nav class="flex space-x-1 sm:space-x-4 text-sm font-medium">
+                <button onclick="switchTab('insights')" id="tab-insights" class="tab-btn active px-3 py-2 text-stone-600 hover:text-brand-600 transition">五項重要發現</button>
+                <button onclick="switchTab('matrix')" id="tab-matrix" class="tab-btn px-3 py-2 text-stone-600 hover:text-brand-600 transition">療程價格矩陣</button>
+                <button onclick="switchTab('charts')" id="tab-charts" class="tab-btn px-3 py-2 text-stone-600 hover:text-brand-600 transition">圖表視覺化比較</button>
+                <button onclick="switchTab('strategy')" id="tab-strategy" class="tab-btn px-3 py-2 text-stone-600 hover:text-brand-600 transition">診所商業矩陣</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- SECTION 1: FIVE KEY INSIGHTS -->
+        <section id="section-insights" class="space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-sand-200">
+                <h2 class="text-2xl font-bold text-stone-900 mb-2">五項重要產業發現與市場洞察</h2>
+                <p class="text-stone-600 text-sm leading-relaxed">
+                    本區塊整理自最新研究報告的核心結論。台灣醫美市場的療程定價並非隨意設定，而是由設備的買斷資本（CapEx）、原廠加密耗材（OpEx）、專利技術門檻以及診所對顧客生命週期價值（LTV）的佈局所共同決定。點擊下方卡片可查看深入分析。
+                </p>
+            </div>
+
+            <!-- 5 Insight Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Insight 1 -->
+                <div class="bg-white rounded-xl p-6 border border-sand-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-2.5 py-1 text-xs font-semibold bg-brand-100 text-brand-700 rounded-full">發現 1</span>
+                            <span class="text-xs text-stone-400">專利技術與防偽</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-stone-900 mb-2">防偽加密晶片與耗材鎖定價位下限</h3>
+                        <p class="text-stone-600 text-sm leading-relaxed mb-4">
+                            美系旗艦儀器（如 Thermage FLX）透過加密晶片與一次性探頭限制，創造極高的探頭邊際成本。900發全臉紫鑽探頭進貨成本固定，直接決定了療程價格底線（約10萬–15萬元）。
+                        </p>
+                    </div>
+                    <div class="pt-3 border-t border-sand-100 text-xs text-stone-500">
+                        🔑 <strong>市場意義：</strong> 遠低於行情的價格往往暗示水貨、重複充填探頭或共用發數等營運風險。
+                    </div>
+                </div>
+
+                <!-- Insight 2 -->
+                <div class="bg-white rounded-xl p-6 border border-sand-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-2.5 py-1 text-xs font-semibold bg-brand-100 text-brand-700 rounded-full">發現 2</span>
+                            <span class="text-xs text-stone-400">品牌階梯</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-stone-900 mb-2">美系旗艦與韓系平替構建雙軌市場</h3>
+                        <p class="text-stone-600 text-sm leading-relaxed mb-4">
+                            市場呈現美系高價（如鳳凰電波 $10-15萬、美音 $5-7萬）與韓系性價比（如玩美電波 $5-8萬、海芙音波 $1.8-4萬）的分流格局。韓系儀器有效擴大了醫美普及率。
+                        </p>
+                    </div>
+                    <div class="pt-3 border-t border-sand-100 text-xs text-stone-500">
+                        🔑 <strong>市場意義：</strong> 診所利用韓系儀器吸引小資初體驗族群，美系原廠維持高端品牌忠誠度。
+                    </div>
+                </div>
+
+                <!-- Insight 3 -->
+                <div class="bg-white rounded-xl p-6 border border-sand-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-2.5 py-1 text-xs font-semibold bg-brand-100 text-brand-700 rounded-full">發現 3</span>
+                            <span class="text-xs text-stone-400">技術加價</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-stone-900 mb-2">專利光學與微針技術劃分「加價階梯」</h3>
+                        <p class="text-stone-600 text-sm leading-relaxed mb-4">
+                            同台儀器搭配不同探頭價差可達 100%。例如皮秒雷射全臉單打僅 $3,000–$6,000，若加上專利蜂巢/聚焦透鏡（Focus Lens）售價隨即推升至 $8,000–$16,000。
+                        </p>
+                    </div>
+                    <div class="pt-3 border-t border-sand-100 text-xs text-stone-500">
+                        🔑 <strong>市場意義：</strong> 能解決難題（凹疤、深層斑、薄嫩眼周）的臨床技術具有極高溢價力。
+                    </div>
+                </div>
+
+                <!-- Insight 4 -->
+                <div class="bg-white rounded-xl p-6 border border-sand-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-2.5 py-1 text-xs font-semibold bg-brand-100 text-brand-700 rounded-full">發現 4</span>
+                            <span class="text-xs text-stone-400">品質風控</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-stone-900 mb-2">灰產套利與低價陷阱導向信任危機</h3>
+                        <p class="text-stone-600 text-sm leading-relaxed mb-4">
+                            少數機構運用名稱模糊性進行價格套利（如重覆解碼舊探頭、租用未認證設備）。這迫使原廠與診所推行「現場掃碼解碼防偽」，提高衛教與品牌驗證門檻。
+                        </p>
+                    </div>
+                    <div class="pt-3 border-t border-sand-100 text-xs text-stone-500">
+                        🔑 <strong>市場意義：</strong> 正規診所正透過透明化驗證與教育消費者建立品質護城河。
+                    </div>
+                </div>
+
+                <!-- Insight 5 -->
+                <div class="bg-white rounded-xl p-6 border border-sand-200 shadow-sm hover:shadow-md transition flex flex-col justify-between lg:col-span-2">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-2.5 py-1 text-xs font-semibold bg-brand-100 text-brand-700 rounded-full">發現 5</span>
+                            <span class="text-xs text-stone-400">營運策略</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-stone-900 mb-2">高頻帶路項目與高客單包套共構顧客生命週期 (LTV)</h3>
+                        <p class="text-stone-600 text-sm leading-relaxed mb-4">
+                            診所將海菲秀（$3,000–$7,000）與基礎皮秒作為低單價、無恢復期的「流量引流型」產品；在建立信任後，將顧客升導至電波/音波/微針電波（$6萬–$15萬）等高利潤項目。
+                        </p>
+                    </div>
+                    <div class="pt-3 border-t border-sand-100 text-xs text-stone-500">
+                        🔑 <strong>市場意義：</strong> 完美的產品線組合能有效降低顧客取得成本 (CAC) 並顯著拉升總體 LTV。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: INTERACTIVE PRICING MATRIX -->
+        <section id="section-matrix" class="space-y-6 hidden">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-sand-200">
+                <h2 class="text-2xl font-bold text-stone-900 mb-2">主流醫美儀器與療程價格矩陣</h2>
+                <p class="text-stone-600 text-sm leading-relaxed mb-4">
+                    下表收錄台灣市場主流醫美儀器之核心技術、專利耗材說明及終端療程售價區間。您可以透過篩選按鈕依「療程類別」或「儀器產地」進行精準檢索。
+                </p>
+                
+                <!-- Filter Controls -->
+                <div class="flex flex-wrap gap-2 pt-2 border-t border-sand-100">
+                    <span class="text-xs font-semibold text-stone-500 self-center mr-2">類別篩選：</span>
+                    <button onclick="filterMatrix('all')" class="filter-btn active-filter px-3 py-1.5 text-xs rounded-full bg-brand-500 text-white font-medium">全部儀器</button>
+                    <button onclick="filterMatrix('antiaging')" class="filter-btn px-3 py-1.5 text-xs rounded-full bg-sand-100 text-stone-700 font-medium hover:bg-sand-200">抗老拉提 (電波/音波)</button>
+                    <button onclick="filterMatrix('skin')" class="filter-btn px-3 py-1.5 text-xs rounded-full bg-sand-100 text-stone-700 font-medium hover:bg-sand-200">膚質膚色 (皮秒/微針)</button>
+                    <button onclick="filterMatrix('body')" class="filter-btn px-3 py-1.5 text-xs rounded-full bg-sand-100 text-stone-700 font-medium hover:bg-sand-200">基礎清潔與體雕</button>
+                    <span class="text-xs font-semibold text-stone-500 self-center mx-2">| 產地：</span>
+                    <button onclick="filterMatrix('us')" class="filter-btn px-3 py-1.5 text-xs rounded-full bg-sand-100 text-stone-700 font-medium hover:bg-sand-200">美系/歐美</button>
+                    <button onclick="filterMatrix('kr')" class="filter-btn px-3 py-1.5 text-xs rounded-full bg-sand-100 text-stone-700 font-medium hover:bg-sand-200">韓系</button>
+                </div>
+            </div>
+
+            <!-- Dynamic Table -->
+            <div class="bg-white rounded-2xl shadow-sm border border-sand-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-sand-100 text-stone-700 font-semibold border-b border-sand-200">
+                            <tr>
+                                <th class="p-4">儀器名稱 (品牌/產地)</th>
+                                <th class="p-4">核心技術與特色</th>
+                                <th class="p-4">常見療程規格/發數</th>
+                                <th class="p-4">台灣市場單次售價 (NT$)</th>
+                                <th class="p-4">主要影響價差動態</th>
+                            </tr>
+                        </thead>
+                        <tbody id="matrix-table-body" class="divide-y divide-sand-100 text-stone-600">
+                            <!-- Populated via Javascript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: VISUAL CHARTS -->
+        <section id="section-charts" class="space-y-6 hidden">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-sand-200">
+                <h2 class="text-2xl font-bold text-stone-900 mb-2">療程價格階梯與耗材溢價圖表分析</h2>
+                <p class="text-stone-600 text-sm leading-relaxed">
+                    圖表展現了不同類別儀器在市場上的價格分配區間，以及專利探頭/透鏡如何推升終端療程價格。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Chart 1: Anti-aging RF/HIFU Price Comparison -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-sand-200 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-base font-bold text-stone-900 mb-1">抗老拉提儀器市場價格區間 (全臉單次)</h3>
+                        <p class="text-xs text-stone-500 mb-4">美系旗艦（鳳凰、索夫波）與韓系高性價比（玩美、海芙）之價格階梯對比 (NT$)</p>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="antiAgingChart"></canvas>
+                    </div>
+                    <p class="text-xs text-stone-400 mt-2">資料來源：診所市場實訪與原廠定價資料庫整理</p>
+                </div>
+
+                <!-- Chart 2: Picosecond Laser Upgrade Premium -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-sand-200 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-base font-bold text-stone-900 mb-1">皮秒雷射：基礎模式 vs 專利透鏡加價</h3>
+                        <p class="text-xs text-stone-500 mb-4">專利蜂巢 / 聚焦透鏡對於單次療程價格之推升影響 (NT$)</p>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="picoChart"></canvas>
+                    </div>
+                    <p class="text-xs text-stone-400 mt-2">資料來源：台灣醫美診所公開價目彙整</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: CLINIC STRATEGY & LTV FUNNEL -->
+        <section id="section-strategy" class="space-y-6 hidden">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-sand-200">
+                <h2 class="text-2xl font-bold text-stone-900 mb-2">診所營運矩陣與顧客生命週期 (LTV) 模型</h2>
+                <p class="text-stone-600 text-sm leading-relaxed">
+                    現代醫美診所不依靠單一儀器獲利，而是打造「帶路引流」與「高額利潤」兩大組合。此漏斗模型說明了儀器在診所經營策略中的職能劃分。
+                </p>
+            </div>
+
+            <!-- Interactive Funnel / Matrix Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Level 1: Traffic Acquisition -->
+                <div class="bg-white rounded-2xl p-6 border-t-4 border-emerald-500 shadow-sm border-x border-b border-sand-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">第一階段：高頻帶路</span>
+                        <span class="text-xs text-stone-400">無恢復期</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-stone-900 mb-2">入口體驗型項目</h3>
+                    <p class="text-xs text-stone-500 mb-4">單價低、施打頻率高（每月/每季），建立顧客入店習慣與信任度。</p>
+                    
+                    <ul class="space-y-3 text-sm">
+                        <li class="p-3 bg-sand-50 rounded-lg">
+                            <div class="font-semibold text-stone-800">HydraFacial 海菲秀</div>
+                            <div class="text-xs text-stone-500 mt-1">單次 NT$ 3,000 – 7,000</div>
+                        </li>
+                        <li class="p-3 bg-sand-50 rounded-lg">
+                            <div class="font-semibold text-stone-800">全臉基礎皮秒淨膚</div>
+                            <div class="text-xs text-stone-500 mt-1">單次 NT$ 3,000 – 6,000</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Level 2: Conversion & Value Addition -->
+                <div class="bg-white rounded-2xl p-6 border-t-4 border-amber-500 shadow-sm border-x border-b border-sand-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-bold uppercase tracking-wider text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full">第二階段：深層修復</span>
+                        <span class="text-xs text-stone-400">解決痛點</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-stone-900 mb-2">進階問題改善型</h3>
+                    <p class="text-xs text-stone-500 mb-4">針對特定問題（凹疤、深層斑、膚質重建）進行波段式治療。</p>
+
+                    <ul class="space-y-3 text-sm">
+                        <li class="p-3 bg-sand-50 rounded-lg">
+                            <div class="font-semibold text-stone-800">蜂巢皮秒 / 探索皮秒加強</div>
+                            <div class="text-xs text-stone-500 mt-1">單次 NT$ 8,000 – 16,000</div>
+                        </li>
+                        <li class="p-3 bg-sand-50 rounded-lg">
+                            <div class="font-semibold text-stone-800">Sylfirm X 矽谷電波</div>
+                            <div class="text-xs text-stone-500 mt-1">全臉單次 NT$ 18,000 – 30,000</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Level 3: High Margin & Retention -->
+                <div class="bg-white rounded-2xl p-6 border-t-4 border-brand-500 shadow-sm border-x border-b border-sand-200">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-bold uppercase tracking-wider text-brand-600 bg-brand-50 px-2.5 py-1 rounded-full">第三階段：利潤核心</span>
+                        <span class="text-xs text-stone-400">年度抗老</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-stone-900 mb-2">旗艦拉提與體雕</h3>
+                    <p class="text-xs text-stone-500 mb-4">客單價高，決定診所整體利潤與年度營運成長率。</p>
+
+                    <ul class="space-y-3 text-sm">
+                        <li class="p-3 bg-sand-50 rounded-lg">
+                            <div class="font-semibold text-stone-800">Thermage FLX 鳳凰電波</div>
+                            <div class="text-xs text-stone-500 mt-1">900發 NT$ 100,000 – 150,000</div>
+                        </li>
+                        <li class="p-3 bg-sand-50 rounded-lg">
+                            <div class="font-semibold text-stone-800">Sofwave 索夫波 / 酷塑減脂</div>
+                            <div class="text-xs text-stone-500 mt-1">全臉 / 體雕套裝 NT$ 60,000 – 150,000</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sources Footer Info -->
+        <footer class="mt-12 pt-6 border-t border-sand-200 text-xs text-stone-500">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h4 class="font-bold text-stone-700 mb-1">資料來源與說明</h4>
+                    <p>本報告數據綜合彙整自：台灣衛福部醫療器材核准公開資訊、原廠公開價目資料、台灣各大醫美診所公開核定價格及衛教白皮書。</p>
+                </div>
+                <div class="text-stone-400">
+                    最後更新：2026 年
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- JavaScript Data Logic & Interactions -->
+    <script>
+        // Source Data for Table Matrix
+        const matrixData = [
+            {
+                name: "Thermage FLX 鳳凰電波",
+                origin: "us",
+                type: "antiaging",
+                tech: "單極電波、AccuREP™ 智慧自動能量調節",
+                specs: "紫鑽900發 (全臉)<br>紫鑽600發 (中下臉)<br>碧眼450發 (眼周)",
+                price: "$100,000 – $150,000<br>$60,000 – $120,000<br>$45,000 – $70,000",
+                dynamic: "加密防偽防重複使用探頭，每發耗材邊際成本高；原廠認證與現場拆封為重要計價指標。"
+            },
+            {
+                name: "Oligio 玩美電波",
+                origin: "kr",
+                type: "antiaging",
+                tech: "單極電波、連續冷噴保護技術",
+                specs: "300發 (局部)<br>600發 (全臉)<br>900發 (加強)",
+                price: "$20,000 – $30,000<br>$50,000 – $60,000<br>$60,000 – $80,000",
+                dynamic: "韓系高性價比平替方案，探頭進貨費用較美系低，促銷彈性大。"
+            },
+            {
+                name: "Sofwave 索夫波",
+                origin: "us",
+                type: "antiaging",
+                tech: "SUPERB™ 同步超音波平行煞車技術",
+                specs: "100–150發 (眼周/頸部)<br>200–300發 (全臉)",
+                price: "$35,000 – $60,000<br>$100,000 – $150,000",
+                dynamic: "單發成本高（平均約 $400/發），主要作用於真皮層 1.5mm 緊致。",
+            },
+            {
+                name: "Ulthera 美國音波",
+                origin: "us",
+                type: "antiaging",
+                tech: "聚焦超音波 (HIFU)、4.5mm SMAS 筋膜層拉提",
+                specs: "600條 (局部)<br>900條 (全臉)",
+                price: "$36,000 – $45,000<br>$54,000 – $70,000",
+                dynamic: "市場高知名度美系音波，依據條數計價，價格波動取決於機器新舊與認證醫師操作。"
+            },
+            {
+                name: "Ultraformer 海芙音波 (三代/媚必提)",
+                origin: "kr",
+                type: "antiaging",
+                tech: "多深度微點與圈狀聚焦超音波",
+                specs: "300–500條 (局部)<br>800–1000條 (全臉)",
+                price: "$18,000 – $40,000<br>$45,000 – $70,000",
+                dynamic: "探頭深度豐富，韓系低耗材門檻，滿足小資族頻繁保養需求。"
+            },
+            {
+                name: "PicoSure 蜂巢皮秒",
+                origin: "us",
+                type: "skin",
+                tech: "755nm 蜂巢透鏡 (Focus Lens Array)",
+                specs: "全臉基礎淨膚<br>全臉 + 蜂巢透鏡",
+                price: "$5,000 – $8,000<br>$10,000 – $15,000",
+                dynamic: "755nm黑色素吸收率高；專利蜂巢透鏡具壽命限制，加價後價格提升 80–100%。"
+            },
+            {
+                name: "PicoWay 超皮秒",
+                origin: "us",
+                type: "skin",
+                tech: "532/785/1064nm 全像聚焦透鏡",
+                specs: "全臉淨膚<br>全臉 + 全像透鏡",
+                price: "$4,000 – $6,000<br>$8,000 – $12,000",
+                dynamic: "多波長配置，適合深層斑與彩繪刺青淡化。"
+            },
+            {
+                name: "Sylfirm X 矽谷電波",
+                origin: "kr",
+                type: "skin",
+                tech: "雙波微針電波、0.3mm 雙極修復",
+                specs: "局部治療<br>全臉單次<br>完整套裝 (3–6次)",
+                price: "$10,000 – $15,000<br>$18,000 – $30,000<br>$60,000 – $150,000",
+                dynamic: "具備一次性微針實體探頭耗材，主要以套裝組合銷售以達到皮膚修復療效。"
+            },
+            {
+                name: "HydraFacial 海菲秀",
+                origin: "us",
+                type: "body",
+                tech: "HydroPeel® 專利螺旋端頭、專屬精華",
+                specs: "標準清潔保濕<br>高階加強方案 (安瓶/LED)",
+                price: "$3,000 – $7,000<br>$8,000 – $10,000+",
+                dynamic: "耗材包括螺旋探頭與專用精華液，高頻流動型項目，加購原廠安瓶顯著提升客單價。"
+            },
+            {
+                name: "CoolSculpting 酷塑減脂 (Elite)",
+                origin: "us",
+                type: "body",
+                tech: "低溫冷凍溶脂、CoolAdvantage 探頭",
+                specs: "單一卡槽點位/格<br>腹部套裝 (4–8格)",
+                price: "$15,000 – $25,000 /格<br>$60,000 – $120,000",
+                dynamic: "點位計價模式，每打一格即消耗一個冷壓感應晶片卡與防凍貼片，邊際成本硬性固化。"
+            }
+        ];
+
+        // Populate Table Function
+        function renderTable(data) {
+            const tbody = document.getElementById('matrix-table-body');
+            tbody.innerHTML = '';
+            
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-sand-50 transition';
+                
+                const originBadge = item.origin === 'us' 
+                    ? '<span class="ml-1.5 px-2 py-0.5 text-[10px] font-medium bg-blue-50 text-blue-700 rounded-md">美/歐系</span>' 
+                    : '<span class="ml-1.5 px-2 py-0.5 text-[10px] font-medium bg-rose-50 text-rose-700 rounded-md">韓系</span>';
+
+                tr.innerHTML = `
+                    <td class="p-4 font-semibold text-stone-900">${item.name} ${originBadge}</td>
+                    <td class="p-4 text-xs leading-relaxed">${item.tech}</td>
+                    <td class="p-4 text-xs leading-relaxed">${item.specs}</td>
+                    <td class="p-4 font-medium text-brand-700 leading-relaxed">${item.price}</td>
+                    <td class="p-4 text-xs text-stone-500 leading-relaxed">${item.dynamic}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Filter Table Function
+        function filterMatrix(category) {
+            // Update filter buttons UI
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-brand-500', 'text-white', 'active-filter');
+                btn.classList.add('bg-sand-100', 'text-stone-700');
+            });
+            event.target.classList.remove('bg-sand-100', 'text-stone-700');
+            event.target.classList.add('bg-brand-500', 'text-white', 'active-filter');
+
+            if (category === 'all') {
+                renderTable(matrixData);
+            } else if (category === 'us' || category === 'kr') {
+                const filtered = matrixData.filter(d => d.origin === category);
+                renderTable(filtered);
+            } else {
+                const filtered = matrixData.filter(d => d.type === category);
+                renderTable(filtered);
+            }
+        }
+
+        // Tab Navigation Switcher
+        function switchTab(tabId) {
+            const sections = ['insights', 'matrix', 'charts', 'strategy'];
+            sections.forEach(s => {
+                document.getElementById(`section-${s}`).classList.add('hidden');
+                document.getElementById(`tab-${s}`).classList.remove('active');
+            });
+            document.getElementById(`section-${tabId}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+
+            // Trigger Chart Render when chart tab becomes visible
+            if (tabId === 'charts' && !window.chartsRendered) {
+                renderCharts();
+                window.chartsRendered = true;
+            }
+        }
+
+        // Render Chart.js Visualizations
+        function renderCharts() {
+            // Label helper to wrap text to 16 chars
+            const wrapLabel = (str) => {
+                if (str.length > 16) {
+                    return [str.substring(0, 16), str.substring(16)];
+                }
+                return str;
+            };
+
+            // Chart 1: Anti-Aging RF & Ultrasound
+            const ctx1 = document.getElementById('antiAgingChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['鳳凰電波 (美系)', '索夫波 (美系)', '美國音波 (美系)', '玩美電波 (韓系)', '海芙音波 (韓系)'].map(wrapLabel),
+                    datasets: [
+                        {
+                            label: '市場最低單價 (NT$)',
+                            data: [100000, 100000, 54000, 50000, 45000],
+                            backgroundColor: '#dec2b4',
+                            borderRadius: 6
+                        },
+                        {
+                            label: '市場最高單價 (NT$)',
+                            data: [150000, 150000, 70000, 80000, 70000],
+                            backgroundColor: '#aa6d57',
+                            borderRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: NT$ ${context.raw.toLocaleString()}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) { return 'NT$ ' + (value/1000) + 'k'; }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Chart 2: Pico Laser Basic vs Focused Lens
+            const ctx2 = document.getElementById('picoChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ['PicoSure 蜂巢皮秒', 'PicoWay 超皮秒', 'Discovery Pico 探索皮秒'].map(wrapLabel),
+                    datasets: [
+                        {
+                            label: '基礎全臉淨膚單價 (NT$)',
+                            data: [65000, 5000, 6000],
+                            backgroundColor: '#c1a47b',
+                            borderRadius: 6
+                        },
+                        {
+                            label: '加價專利聚焦/蜂巢透鏡 (NT$)',
+                            data: [13000, 10000, 10000],
+                            backgroundColor: '#75483b',
+                            borderRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: NT$ ${context.raw.toLocaleString()}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) { return 'NT$ ' + value; }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize Default Table
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTable(matrixData);
+        });
+    </script>
+</body>
+</html>

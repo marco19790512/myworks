@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>個資假名化與去識別化工具 (Local PII Anonymizer)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SheetJS (xlsx) for Excel / CSV processing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Crypto-JS for SHA-256 and Encryption -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-indigo-600 text-white rounded-xl shadow-md shadow-indigo-200">
+                        <i data-lucide="shield-check" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg text-slate-900 leading-tight">個資假名化與去識別化工具</h1>
+                        <p class="text-xs text-slate-500">100% 離線純前端運算 · 個資防護與關聯保留</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        本地安全運算中
+                    </span>
+                    <button onclick="switchTab('anonymize')" id="tab-btn-anon" class="px-3 py-1.5 text-sm font-medium rounded-lg text-indigo-600 bg-indigo-50">
+                        假名化處理
+                    </button>
+                    <button onclick="switchTab('unmask')" id="tab-btn-unmask" class="px-3 py-1.5 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-100">
+                        反向還原 (Revert)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- TAB 1: ANONYMIZE PROCESS -->
+        <div id="tab-anonymize" class="space-y-6">
+            
+            <!-- Step 1: Upload File -->
+            <div id="upload-card" class="bg-white rounded-2xl border border-slate-200 p-8 text-center transition-all hover:border-indigo-300 shadow-sm">
+                <div class="max-w-md mx-auto space-y-4">
+                    <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <i data-lucide="upload-cloud" class="w-8 h-8"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">上傳 Excel 或 CSV 檔案</h2>
+                        <p class="text-sm text-slate-500 mt-1">支援 .xlsx, .xls, .csv 格式。資料不會傳送至伺服器。</p>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-3 w-full">
+                        <div class="relative inline-block w-full sm:w-auto flex-1">
+                            <input type="file" id="file-input" accept=".xlsx, .xls, .csv" class="hidden" onchange="handleFileUpload(event)">
+                            <label for="file-input" class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl cursor-pointer shadow-lg shadow-indigo-100 transition-all text-sm">
+                                <i data-lucide="file-text" class="w-4 h-4"></i>
+                                選擇本地檔案
+                            </label>
+                        </div>
+                        
+                        <button onclick="loadDemoData()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 font-medium rounded-xl cursor-pointer transition-all text-sm">
+                            <i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i>
+                            載入範例測試資料
+                        </button>
+                    </div>
+                    
+                    <div class="flex justify-center items-center gap-4 text-xs text-slate-400 pt-2">
+                        <span class="flex items-center gap-1"><i data-lucide="lock" class="w-3.5 h-3.5"></i> 純前端運算</span>
+                        <span>•</span>
+                        <span class="flex items-center gap-1"><i data-lucide="cpu" class="w-3.5 h-3.5"></i> 自動欄位感知</span>
+                        <span>•</span>
+                        <span class="flex items-center gap-1"><i data-lucide="key" class="w-3.5 h-3.5"></i> 對照表加密</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workspace Section (Hidden until file uploaded) -->
+            <div id="workspace" class="hidden space-y-6">
+                
+                <!-- File Stats & Quick Actions Toolbar -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200 flex flex-wrap justify-between items-center gap-4 shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2.5 bg-slate-100 text-slate-700 rounded-lg">
+                            <i data-lucide="file-spreadsheet" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h3 id="file-name" class="font-semibold text-slate-900">filename.xlsx</h3>
+                                <span id="file-size" class="text-xs bg-slate-100 px-2 py-0.5 rounded text-slate-500">0 KB</span>
+                            </div>
+                            <p class="text-xs text-slate-500" id="file-stats">共 0 列, 0 欄位</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <button onclick="autoDetectFields()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 rounded-lg border border-amber-200">
+                            <i data-lucide="wand-2" class="w-3.5 h-3.5"></i> 重新自動辨識
+                        </button>
+                        <button onclick="resetAllRules()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-100 rounded-lg border border-slate-200">
+                            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> 重置規則
+                        </button>
+                        <button onclick="processAnonymization()" class="inline-flex items-center gap-2 px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm rounded-xl shadow-md shadow-emerald-100 transition-all">
+                            <i data-lucide="play" class="w-4 h-4"></i> 執行假名化處理
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Column Rule Settings -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+                        <div>
+                            <h3 class="font-bold text-slate-900">欄位敏感度與脫敏規則設定</h3>
+                            <p class="text-xs text-slate-500">系統已自動偵測敏感欄位，您可自由調整對應的假名或遮蔽策略。</p>
+                        </div>
+                        <span id="detected-count" class="text-xs font-medium px-2.5 py-1 bg-indigo-50 text-indigo-700 rounded-full border border-indigo-100">
+                            已偵測 0 個敏感欄位
+                        </span>
+                    </div>
+
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="rules-container">
+                            <!-- Dynamic Cards Generated Here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Preview Table -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <h3 class="font-bold text-slate-900">資料預覽</h3>
+                            <span class="text-xs text-slate-400">(僅顯示前 10 筆資料)</span>
+                        </div>
+                        <span class="text-xs text-slate-500">提示：執行假名化後將可切換檢視處理結果</span>
+                    </div>
+                    <div class="overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-left text-sm text-slate-600">
+                            <thead class="bg-slate-50 text-slate-700 uppercase text-xs border-b border-slate-200" id="preview-thead">
+                                <!-- Headers -->
+                            </thead>
+                            <tbody class="divide-y divide-slate-100" id="preview-tbody">
+                                <!-- Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Export Modal / Result Area (Hidden initially) -->
+            <div id="export-section" class="hidden bg-white rounded-2xl border border-emerald-200 p-6 shadow-sm space-y-4 bg-emerald-50/30">
+                <div class="flex items-center justify-between border-b border-emerald-100 pb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-emerald-500 text-white rounded-xl">
+                            <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-900 text-lg">假名化處理完成！</h3>
+                            <p class="text-xs text-slate-600">已完成個資轉化，關聯性已成功保留。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-3">
+                        <button onclick="downloadDataset()" class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl shadow-sm">
+                            <i data-lucide="download" class="w-4 h-4"></i> 下載假名化資料檔 (.xlsx)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mapping Table Password & Export Option -->
+                <div class="bg-white p-5 rounded-xl border border-slate-200 space-y-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="font-semibold text-slate-900 flex items-center gap-2">
+                                <i data-lucide="key-round" class="w-4 h-4 text-amber-500"></i>
+                                匯出對照表 (Mapping Table / Key Vault)
+                            </h4>
+                            <p class="text-xs text-slate-500 mt-0.5">對照表包含真實個資與假名代碼的映射關係，請妥善保管。建議設定保護密碼。</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-4 pt-2">
+                        <div class="flex-1 min-w-[240px]">
+                            <label class="block text-xs font-medium text-slate-700 mb-1">加密密碼 (可選，還原時需輸入)</label>
+                            <input type="password" id="mapping-password" placeholder="請輸入對照表加密密碼" class="w-full text-sm px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        </div>
+                        <div class="self-end">
+                            <button onclick="downloadMappingTable()" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white text-sm font-medium rounded-xl shadow-sm">
+                                <i data-lucide="shield-alert" class="w-4 h-4"></i> 下載個資對照表 (.json)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- TAB 2: UNMASK / REVERT PROCESS -->
+        <div id="tab-unmask" class="hidden space-y-6">
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                <h2 class="text-lg font-bold text-slate-900 mb-1">反向還原假名資料</h2>
+                <p class="text-xs text-slate-500 mb-6">上傳先前產生的假名化 Excel/CSV 以及對應的 `.json` 對照表，還原真實個人資料。</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Upload Anonymized File -->
+                    <div class="border-2 border-dashed border-slate-200 rounded-xl p-6 text-center hover:border-indigo-300 transition-colors">
+                        <i data-lucide="file-spreadsheet" class="w-8 h-8 text-indigo-500 mx-auto mb-2"></i>
+                        <h4 class="font-semibold text-sm text-slate-800 mb-1">1. 上傳假名化資料檔</h4>
+                        <p class="text-xs text-slate-400 mb-3">.xlsx 或 .csv 檔案</p>
+                        <input type="file" id="revert-file-input" accept=".xlsx, .xls, .csv" class="hidden" onchange="handleRevertFileSelect(event)">
+                        <label for="revert-file-input" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-lg cursor-pointer">
+                            選擇資料檔
+                        </label>
+                        <p id="revert-file-name" class="text-xs text-indigo-600 font-medium mt-2"></p>
+                    </div>
+
+                    <!-- Upload Mapping Table -->
+                    <div class="border-2 border-dashed border-slate-200 rounded-xl p-6 text-center hover:border-indigo-300 transition-colors">
+                        <i data-lucide="file-key" class="w-8 h-8 text-amber-500 mx-auto mb-2"></i>
+                        <h4 class="font-semibold text-sm text-slate-800 mb-1">2. 上傳對照表 (.json)</h4>
+                        <p class="text-xs text-slate-400 mb-3">先前匯出的 mapping 檔案</p>
+                        <input type="file" id="revert-mapping-input" accept=".json" class="hidden" onchange="handleRevertMappingSelect(event)">
+                        <label for="revert-mapping-input" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-lg cursor-pointer">
+                            選擇對照檔
+                        </label>
+                        <p id="revert-mapping-name" class="text-xs text-amber-600 font-medium mt-2"></p>
+                    </div>
+                </div>
+
+                <!-- Password Key for Encrypted Mapping -->
+                <div class="mt-6 pt-6 border-t border-slate-100 flex flex-wrap items-center gap-4">
+                    <div class="w-full md:w-1/3">
+                        <label class="block text-xs font-medium text-slate-700 mb-1">對照表解密密碼 (若無設密碼請留空)</label>
+                        <input type="password" id="revert-password" placeholder="輸入解密密碼" class="w-full text-sm px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <div class="self-end">
+                        <button onclick="executeRevert()" class="inline-flex items-center gap-2 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-xl shadow-md">
+                            <i data-lucide="refresh-cw" class="w-4 h-4"></i> 開始還原檔案
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Revert Preview Table -->
+            <div id="revert-result-area" class="hidden bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+                    <h3 class="font-bold text-slate-900">還原結果預覽</h3>
+                    <button onclick="downloadRevertedFile()" class="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium rounded-lg">
+                        <i data-lucide="download" class="w-3.5 h-3.5"></i> 下載還原檔案 (.xlsx)
+                    </button>
+                </div>
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left text-sm text-slate-600">
+                        <thead class="bg-slate-50 text-slate-700 uppercase text-xs border-b border-slate-200" id="revert-thead"></thead>
+                        <tbody class="divide-y divide-slate-100" id="revert-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 text-sm">
+            <i id="toast-icon" data-lucide="info" class="w-5 h-5 text-indigo-400"></i>
+            <span id="toast-msg">訊息通知</span>
+        </div>
+    </div>
+
+    <script>
+        // --- State Management ---
+        let rawData = [];
+        let rawHeaders = [];
+        let fileName = '';
+        let columnRules = {};
+        
+        let processedData = [];
+        let globalMappingTable = {};
+        
+        // Revert State
+        let revertData = [];
+        let revertMapping = {};
+        let finalRevertedData = [];
+
+        // Sample Demo Dataset Generator
+        function loadDemoData() {
+            const demoCSVData = [
+                { "客戶編號": "CUST-1001", "姓名": "陳大明", "身分證字號": "A123456789", "電話號碼": "0912-345-678", "電子郵件": "daming.chen@example.com", "通訊地址": "臺北市中正區重慶南路一段122號", "出生日期": "1985/04/15", "信用卡號": "4563-1234-5678-9012", "消費金額": 25000 },
+                { "客戶編號": "CUST-1002", "姓名": "林美麗", "身分證字號": "B220198473", "電話號碼": "0928-111-222", "電子郵件": "meili.lin@gmail.com", "通訊地址": "新北市板橋區縣民大道二段7號", "出生日期": "1992/11/20", "信用卡號": "4123-5678-9012-3456", "消費金額": 12800 },
+                { "客戶編號": "CUST-1003", "姓名": "張志豪", "身分證字號": "C100482915", "電話號碼": "0935-888-999", "電子郵件": "chihhao.chang@yahoo.com", "通訊地址": "臺中市西屯區台灣大道三段99號", "出生日期": "1990/01/30", "信用卡號": "5412-3456-7890-1234", "消費金額": 45000 },
+                { "客戶編號": "CUST-1004", "姓名": "陳大明", "身分證字號": "A123456789", "電話號碼": "0912-345-678", "電子郵件": "daming.chen@example.com", "通訊地址": "臺北市中正區重慶南路一段122號", "出生日期": "1985/04/15", "信用卡號": "4563-1234-5678-9012", "消費金額": 3200 },
+                { "客戶編號": "CUST-1005", "姓名": "黃雅婷", "身分證字號": "D291823746", "電話號碼": "0952-666-777", "電子郵件": "yating.huang@outlook.com", "通訊地址": "高雄市苓雅區四維三路2號", "出生日期": "1995/08/08", "信用卡號": "4321-8765-4321-8765", "消費金額": 19500 },
+                { "客戶編號": "CUST-1006", "姓名": "李威德", "身分證字號": "E182736459", "電話號碼": "0970-333-444", "電子郵件": "weide.lee@company.org", "通訊地址": "新竹市東區光復路二段101號", "出生日期": "1988/03/12", "信用卡號": "4000-1234-5678-9999", "消費金額": 8600 },
+                { "客戶編號": "CUST-1007", "姓名": "林美麗", "身分證字號": "B220198473", "電話號碼": "0928-111-222", "電子郵件": "meili.lin@gmail.com", "通訊地址": "新北市板橋區縣民大道二段7號", "出生日期": "1992/11/20", "信用卡號": "4123-5678-9012-3456", "消費金額": 6700 },
+                { "客戶編號": "CUST-1008", "姓名": "王小華", "身分證字號": "F192837465", "電話號碼": "0988-555-123", "電子郵件": "xiaohua.wang@gmail.com", "通訊地址": "桃園市桃園區縣府路1號", "出生日期": "1997/12/05", "信用卡號": "5200-1122-3344-5566", "消費金額": 15400 }
+            ];
+
+            fileName = "demo_pii_sample.csv";
+            rawData = demoCSVData;
+            rawHeaders = Object.keys(rawData[0]);
+
+            document.getElementById('upload-card').classList.add('hidden');
+            document.getElementById('workspace').classList.remove('hidden');
+            document.getElementById('file-name').innerText = fileName;
+            document.getElementById('file-size').innerText = "~2.5 KB";
+            document.getElementById('file-stats').innerText = `共 ${rawData.length} 列, ${rawHeaders.length} 欄位`;
+
+            autoDetectFields();
+            renderPreviewTable(rawData.slice(0, 10));
+            showToast("已載入範例測試資料！", "success");
+        }
+
+        // PII Detection Rules
+        const PATTERNS = {
+            ID: /^[A-Z][12]\d{8}$/i,
+            EMAIL: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+            PHONE: /^09\d{2}-?\d{3}-?\d{3}$/,
+            CREDIT_CARD: /^\d{4}-?\d{4}-?\d{4}-?\d{4}$/,
+            DATE: /^\d{4}[\/\.-]\d{1,2}[\/\.-]\d{1,2}$/
+        };
+
+        const KEYWORD_MAP = {
+            'NAME': ['姓名', '名單', '客戶名', '聯絡人', 'owner', 'name'],
+            'ID': ['身分證', '身份证', '證號', 'id_card', 'id_no', 'twid'],
+            'PHONE': ['電話', '手機', '行動電話', 'mobile', 'phone', 'tel'],
+            'EMAIL': ['電子郵件', '信箱', '郵件', 'email', 'mail'],
+            'ADDRESS': ['地址', '住址', '通訊處', 'address'],
+            'CREDIT_CARD': ['信用卡', '卡號', 'credit_card', 'card'],
+            'DATE': ['生日', '出生日期', 'birthday', 'dob']
+        };
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            fileName = file.name;
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    
+                    rawData = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+
+                    if (rawData.length === 0) {
+                        showToast("檔案內無有效數據", "error");
+                        return;
+                    }
+
+                    rawHeaders = Object.keys(rawData[0]);
+
+                    document.getElementById('upload-card').classList.add('hidden');
+                    document.getElementById('workspace').classList.remove('hidden');
+                    document.getElementById('file-name').innerText = fileName;
+                    document.getElementById('file-size').innerText = `${Math.round(file.size / 1024)} KB`;
+                    document.getElementById('file-stats').innerText = `共 ${rawData.length} 列, ${rawHeaders.length} 欄位`;
+
+                    autoDetectFields();
+                    renderPreviewTable(rawData.slice(0, 10));
+                    showToast("檔案上傳解析成功！", "success");
+                } catch (err) {
+                    console.error(err);
+                    showToast("檔案讀取失敗，請確認格式", "error");
+                }
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+
+        function autoDetectFields() {
+            columnRules = {};
+            let detectedCount = 0;
+
+            rawHeaders.forEach(header => {
+                let detectedType = 'NONE';
+                const lowerHeader = header.toLowerCase();
+
+                for (const [type, keywords] of Object.entries(KEYWORD_MAP)) {
+                    if (keywords.some(k => lowerHeader.includes(k))) {
+                        detectedType = type;
+                        break;
+                    }
+                }
+
+                if (detectedType === 'NONE' && rawData.length > 0) {
+                    const sampleVals = rawData.slice(0, 15).map(r => String(r[header] || '').trim());
+                    for (const val of sampleVals) {
+                        if (PATTERNS.ID.test(val)) { detectedType = 'ID'; break; }
+                        if (PATTERNS.EMAIL.test(val)) { detectedType = 'EMAIL'; break; }
+                        if (PATTERNS.PHONE.test(val)) { detectedType = 'PHONE'; break; }
+                        if (PATTERNS.CREDIT_CARD.test(val)) { detectedType = 'CREDIT_CARD'; break; }
+                        if (PATTERNS.DATE.test(val)) { detectedType = 'DATE'; break; }
+                    }
+                }
+
+                if (detectedType !== 'NONE') detectedCount++;
+
+                let defaultMethod = 'PSEUDO';
+                let defaultPrefix = detectedType !== 'NONE' ? `${detectedType}_` : 'VAL_';
+                if (detectedType === 'NAME') defaultPrefix = 'USER_';
+
+                columnRules[header] = {
+                    type: detectedType,
+                    method: defaultMethod,
+                    prefix: defaultPrefix
+                };
+            });
+
+            document.getElementById('detected-count').innerText = `已自動偵測 ${detectedCount} 個敏感欄位`;
+            renderRulesUI();
+        }
+
+        function renderRulesUI() {
+            const container = document.getElementById('rules-container');
+            container.innerHTML = '';
+
+            rawHeaders.forEach(col => {
+                const rule = columnRules[col];
+                const isDetected = rule.type !== 'NONE';
+
+                const card = document.createElement('div');
+                card.className = `p-4 rounded-xl border ${isDetected ? 'border-indigo-200 bg-indigo-50/20' : 'border-slate-200 bg-slate-50/50'} space-y-3`;
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span class="font-semibold text-slate-800 text-sm truncate" title="${col}">${col}</span>
+                        ${isDetected ? `<span class="text-[10px] px-2 py-0.5 rounded bg-indigo-100 text-indigo-700 font-medium">${rule.type}</span>` : `<span class="text-[10px] px-2 py-0.5 rounded bg-slate-200 text-slate-600">一般欄位</span>`}
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <div>
+                            <label class="block text-[11px] font-medium text-slate-500 mb-1">脫敏處置方式</label>
+                            <select onchange="updateRule('${col}', 'method', this.value)" class="w-full text-xs bg-white border border-slate-300 rounded-lg p-2 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                                <option value="NONE" ${rule.method === 'NONE' ? 'selected' : ''}>不處理 (保持原樣)</option>
+                                <option value="PSEUDO" ${rule.method === 'PSEUDO' ? 'selected' : ''}>一致性假名代碼 (Pseudonym)</option>
+                                <option value="MASK" ${rule.method === 'MASK' ? 'selected' : ''}>部分遮蔽 (Masking ***)</option>
+                                <option value="HASH" ${rule.method === 'HASH' ? 'selected' : ''}>不可逆雜湊 (SHA-256)</option>
+                                <option value="RANDOM" ${rule.method === 'RANDOM' ? 'selected' : ''}>隨機干擾碼 (Random Noise)</option>
+                            </select>
+                        </div>
+
+                        ${rule.method === 'PSEUDO' ? `
+                            <div>
+                                <label class="block text-[11px] font-medium text-slate-500 mb-1">代碼字首 (Prefix)</label>
+                                <input type="text" value="${rule.prefix}" onchange="updateRule('${col}', 'prefix', this.value)" class="w-full text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function updateRule(col, field, value) {
+            columnRules[col][field] = value;
+            if (field === 'method') renderRulesUI();
+        }
+
+        function resetAllRules() {
+            autoDetectFields();
+            showToast("規則已成功重置", "info");
+        }
+
+        function renderPreviewTable(data, headers = rawHeaders) {
+            const thead = document.getElementById('preview-thead');
+            const tbody = document.getElementById('preview-tbody');
+
+            thead.innerHTML = `<tr>${headers.map(h => `<th class="px-4 py-3 font-semibold">${h}</th>`).join('')}</tr>`;
+            tbody.innerHTML = data.map(row => `
+                <tr class="hover:bg-slate-50/80 transition-colors">
+                    ${headers.map(h => `<td class="px-4 py-3 whitespace-nowrap font-mono text-xs">${row[h] !== undefined ? row[h] : ''}</td>`).join('')}
+                </tr>
+            `).join('');
+        }
+
+        // Anonymization Core
+        function processAnonymization() {
+            processedData = [];
+            globalMappingTable = {};
+
+            const valueToCodeMap = {}; // { col_value: code }
+            const counters = {}; // { col: index }
+
+            rawData.forEach(row => {
+                const newRow = { ...row };
+
+                rawHeaders.forEach(col => {
+                    const rule = columnRules[col];
+                    const val = String(row[col] || '').trim();
+
+                    if (!val || rule.method === 'NONE') return;
+
+                    if (!globalMappingTable[col]) globalMappingTable[col] = {};
+                    if (!counters[col]) counters[col] = 1;
+
+                    if (rule.method === 'PSEUDO') {
+                        const mapKey = `${col}_${val}`;
+                        if (!valueToCodeMap[mapKey]) {
+                            const codeNum = String(counters[col]++).padStart(4, '0');
+                            const pseudoCode = `${rule.prefix}${codeNum}`;
+                            valueToCodeMap[mapKey] = pseudoCode;
+                        }
+                        const generatedCode = valueToCodeMap[mapKey];
+                        newRow[col] = generatedCode;
+                        globalMappingTable[col][val] = generatedCode;
+                    } 
+                    else if (rule.method === 'MASK') {
+                        const maskedVal = maskValue(val, rule.type);
+                        newRow[col] = maskedVal;
+                        globalMappingTable[col][val] = maskedVal;
+                    } 
+                    else if (rule.method === 'HASH') {
+                        const hashedVal = CryptoJS.SHA256(val).toString().substring(0, 16);
+                        newRow[col] = hashedVal;
+                        globalMappingTable[col][val] = hashedVal;
+                    } 
+                    else if (rule.method === 'RANDOM') {
+                        const randVal = 'NOISE_' + Math.random().toString(36).substring(2, 10).toUpperCase();
+                        newRow[col] = randVal;
+                        globalMappingTable[col][val] = randVal;
+                    }
+                });
+
+                processedData.push(newRow);
+            });
+
+            renderPreviewTable(processedData.slice(0, 10));
+            document.getElementById('export-section').classList.remove('hidden');
+            document.getElementById('export-section').scrollIntoView({ behavior: 'smooth' });
+            showToast("假名化與去識別化運算完成！", "success");
+        }
+
+        function maskValue(val, type) {
+            if (!val) return val;
+            if (type === 'NAME') {
+                if (val.length === 2) return val[0] + '○';
+                if (val.length >= 3) return val[0] + '○'.repeat(val.length - 2) + val[val.length - 1];
+            }
+            if (type === 'ID') {
+                return val.substring(0, 3) + '*****' + val.substring(8);
+            }
+            if (type === 'PHONE') {
+                return val.replace(/(\d{4})-?\d{3}-?(\d{3})/, '$1-***-$2');
+            }
+            if (type === 'EMAIL') {
+                const parts = val.split('@');
+                if (parts.length === 2) {
+                    const name = parts[0];
+                    const maskedName = name.length > 2 ? name.substring(0, 2) + '***' : name + '***';
+                    return `${maskedName}@${parts[1]}`;
+                }
+            }
+            if (type === 'CREDIT_CARD') {
+                return val.replace(/^(\d{4})-?\d{4}-?\d{4}-?(\d{4})$/, '$1-****-****-$2');
+            }
+            if (val.length > 4) {
+                return val.substring(0, 2) + '*'.repeat(val.length - 4) + val.substring(val.length - 2);
+            }
+            return '***';
+        }
+
+        // Export Datasets & Mapping Tables
+        function downloadDataset() {
+            if (processedData.length === 0) return;
+            const ws = XLSX.utils.json_to_sheet(processedData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Anonymized");
+            
+            const exportName = fileName.replace(/\.[^/.]+$/, "") + "_anonymized.xlsx";
+            XLSX.writeFile(wb, exportName);
+            showToast("假名化資料檔已成功匯出！", "success");
+        }
+
+        function downloadMappingTable() {
+            if (Object.keys(globalMappingTable).length === 0) return;
+
+            const password = document.getElementById('mapping-password').value.trim();
+            let exportPayload = {
+                createdAt: new Date().toISOString(),
+                sourceFile: fileName,
+                mapping: globalMappingTable
+            };
+
+            let fileDataStr = "";
+            let fileExt = "json";
+
+            if (password) {
+                const encrypted = CryptoJS.AES.encrypt(JSON.stringify(exportPayload), password).toString();
+                fileDataStr = JSON.stringify({ isEncrypted: true, payload: encrypted }, null, 2);
+            } else {
+                fileDataStr = JSON.stringify(exportPayload, null, 2);
+            }
+
+            const blob = new Blob([fileDataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName.replace(/\.[^/.]+$/, "") + "_mapping_vault.json";
+            a.click();
+            URL.revokeObjectURL(url);
+
+            showToast(password ? "加密對照表匯出成功！" : "對照表匯出成功！", "success");
+        }
+
+        // --- Revert / Unmask Logic ---
+        function handleRevertFileSelect(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            document.getElementById('revert-file-name').innerText = file.name;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const data = new Uint8Array(evt.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                revertData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { defval: "" });
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function handleRevertMappingSelect(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            document.getElementById('revert-mapping-name').innerText = file.name;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    revertMapping = JSON.parse(evt.target.result);
+                } catch (err) {
+                    showToast("對照表格式無效", "error");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function executeRevert() {
+            if (revertData.length === 0 || !revertMapping) {
+                showToast("請先選擇假名化資料檔與對照表檔案", "error");
+                return;
+            }
+
+            const password = document.getElementById('revert-password').value.trim();
+            let mappingObj = {};
+
+            if (revertMapping.isEncrypted) {
+                if (!password) {
+                    showToast("此對照表受密碼保護，請輸入解密密碼", "error");
+                    return;
+                }
+                try {
+                    const decryptedBytes = CryptoJS.AES.decrypt(revertMapping.payload, password);
+                    const decryptedText = decryptedBytes.toString(CryptoJS.enc.Utf8);
+                    if (!decryptedText) throw new Error("Passcode mismatch");
+                    const parsed = JSON.parse(decryptedText);
+                    mappingObj = parsed.mapping;
+                } catch (err) {
+                    showToast("解密失敗，密碼錯誤！", "error");
+                    return;
+                }
+            } else {
+                mappingObj = revertMapping.mapping || revertMapping;
+            }
+
+            // Create inverted map for quick lookup { col: { pseudoVal: originalVal } }
+            const reverseLookup = {};
+            for (const col in mappingObj) {
+                reverseLookup[col] = {};
+                for (const origVal in mappingObj[col]) {
+                    const pseudoVal = mappingObj[col][origVal];
+                    reverseLookup[col][pseudoVal] = origVal;
+                }
+            }
+
+            finalRevertedData = revertData.map(row => {
+                const newRow = { ...row };
+                for (const col in row) {
+                    const currentVal = String(row[col]).trim();
+                    if (reverseLookup[col] && reverseLookup[col][currentVal]) {
+                        newRow[col] = reverseLookup[col][currentVal];
+                    }
+                }
+                return newRow;
+            });
+
+            // Display preview table
+            const headers = Object.keys(finalRevertedData[0] || {});
+            const thead = document.getElementById('revert-thead');
+            const tbody = document.getElementById('revert-tbody');
+
+            thead.innerHTML = `<tr>${headers.map(h => `<th class="px-4 py-3 font-semibold">${h}</th>`).join('')}</tr>`;
+            tbody.innerHTML = finalRevertedData.slice(0, 10).map(row => `
+                <tr class="hover:bg-slate-50 transition-colors">
+                    ${headers.map(h => `<td class="px-4 py-3 whitespace-nowrap font-mono text-xs">${row[h]}</td>`).join('')}
+                </tr>
+            `).join('');
+
+            document.getElementById('revert-result-area').classList.remove('hidden');
+            showToast("成功還原真實個資數據！", "success");
+        }
+
+        function downloadRevertedFile() {
+            if (finalRevertedData.length === 0) return;
+            const ws = XLSX.utils.json_to_sheet(finalRevertedData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Reverted");
+            XLSX.writeFile(wb, "reverted_original_data.xlsx");
+            showToast("還原資料檔下載成功！", "success");
+        }
+
+        // TAB Switching Logic
+        function switchTab(tab) {
+            if (tab === 'anonymize') {
+                document.getElementById('tab-anonymize').classList.remove('hidden');
+                document.getElementById('tab-unmask').classList.add('hidden');
+                document.getElementById('tab-btn-anon').className = "px-3 py-1.5 text-sm font-medium rounded-lg text-indigo-600 bg-indigo-50";
+                document.getElementById('tab-btn-unmask').className = "px-3 py-1.5 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-100";
+            } else {
+                document.getElementById('tab-anonymize').classList.add('hidden');
+                document.getElementById('tab-unmask').classList.remove('hidden');
+                document.getElementById('tab-btn-anon').className = "px-3 py-1.5 text-sm font-medium rounded-lg text-slate-600 hover:bg-slate-100";
+                document.getElementById('tab-btn-unmask').className = "px-3 py-1.5 text-sm font-medium rounded-lg text-indigo-600 bg-indigo-50";
+            }
+        }
+
+        // Notification Helper
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toast-msg');
+            const iconEl = document.getElementById('toast-icon');
+
+            msgEl.innerText = message;
+            
+            if (type === 'success') {
+                iconEl.setAttribute('data-lucide', 'check-circle');
+                iconEl.className = "w-5 h-5 text-emerald-400";
+            } else if (type === 'error') {
+                iconEl.setAttribute('data-lucide', 'alert-circle');
+                iconEl.className = "w-5 h-5 text-rose-400";
+            } else {
+                iconEl.setAttribute('data-lucide', 'info');
+                iconEl.className = "w-5 h-5 text-indigo-400";
+            }
+            
+            lucide.createIcons();
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Initialize icons on DOM ready
+        document.addEventListener("DOMContentLoaded", () => {
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>

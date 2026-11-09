@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>木鱉果大豐收 - 護眼天堂果接球大作戰</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Zen Maru Gothic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@700;900&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Zen Maru Gothic', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #0d131a;
+            color: #ffffff;
+        }
+        canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+        /* 玻璃擬態樣式 */
+        .glass-panel {
+            background: rgba(18, 24, 38, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        /* 自訂滾動條 */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #f97316;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="relative">
+
+    <!-- 頂部 HUD (避讓與遊戲資訊) -->
+    <div id="hud" class="fixed top-3 left-1/2 -translate-x-1/2 z-20 w-[95%] max-w-4xl glass-panel rounded-2xl px-4 py-2 flex items-center justify-between text-sm md:text-base border border-amber-500/30">
+        <div class="flex items-center space-x-3 md:space-x-6">
+            <div class="flex items-center space-x-1">
+                <span class="text-amber-400 font-bold">關卡:</span>
+                <span id="level-display" class="text-xl font-black text-amber-300">1</span>
+            </div>
+            <div class="flex items-center space-x-1">
+                <span class="text-amber-400 font-bold">得分:</span>
+                <span id="score-display" class="text-xl font-black text-orange-400">0</span>
+            </div>
+            <div class="hidden sm:flex items-center space-x-1">
+                <span class="text-gray-400 font-bold">最高分:</span>
+                <span id="highscore-display" class="text-lg font-bold text-gray-300">0</span>
+            </div>
+        </div>
+
+        <!-- 生命值 -->
+        <div class="flex items-center space-x-1" id="lives-container">
+            <!-- 動態繪製心形 -->
+        </div>
+
+        <!-- 控制按鈕 -->
+        <div class="flex items-center space-x-2">
+            <button id="bgm-toggle" class="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-amber-400 border border-amber-500/20 transition">
+                🎵 BGM
+            </button>
+            <button id="sfx-toggle" class="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-amber-400 border border-amber-500/20 transition">
+                🔊 SFX
+            </button>
+            <button id="restart-btn" class="p-2 rounded-xl bg-orange-600/80 hover:bg-orange-500 text-white font-bold transition">
+                🔄
+            </button>
+        </div>
+    </div>
+
+    <!-- 遊戲 Fullscreen Canvas -->
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- 開局 Modal -->
+    <div id="start-modal" class="fixed inset-0 z-30 flex items-center justify-center p-4 glass-panel bg-slate-950/80">
+        <div class="max-w-md w-full bg-slate-900/90 border border-amber-500/40 rounded-3xl p-6 text-center shadow-2xl relative overflow-hidden">
+            <div class="absolute -top-12 -right-12 w-32 h-32 bg-amber-500/20 rounded-full blur-2xl"></div>
+            <div class="text-5xl mb-3">🍈✨</div>
+            <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 mb-2">
+                木鱉果大豐收
+            </h1>
+            <p class="text-amber-200/80 text-sm mb-6">接住滿滿的「來自天堂的水果」！解鎖超級護眼營養與獨家專屬優惠！</p>
+            
+            <div class="bg-slate-800/60 rounded-2xl p-4 text-left text-xs space-y-2 mb-6 border border-slate-700">
+                <div class="flex items-center text-amber-300 font-bold"><span class="mr-2">🎮</span> 操作方式：</div>
+                <p class="text-gray-300">左右滑動手指 / 移動滑鼠 操控「竹籃」接住落下的木鱉果。</p>
+                <div class="flex items-center text-amber-300 font-bold pt-1"><span class="mr-2">🌟</span> 特殊道具與避障：</div>
+                <p class="text-gray-300">橙紅熟果 (+100分) | 雙倍黃果 (+200分) | 寶物道具 (加長籃子/黃金護網) | 避開壞果與烏雲雷擊！</p>
+            </div>
+
+            <button id="start-game-btn" class="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-black text-xl rounded-2xl shadow-lg shadow-orange-500/30 transform active:scale-95 transition">
+                開始豐收大作戰 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- 遊戲結束與木鱉果知識/優惠 Modal -->
+    <div id="gameover-modal" class="fixed inset-0 z-40 flex items-center justify-center p-4 glass-panel bg-slate-950/85 hidden">
+        <div class="max-w-xl w-full bg-slate-900 border border-orange-500/50 rounded-3xl p-6 text-center shadow-2xl max-h-[90vh] flex flex-col relative overflow-hidden">
+            
+            <!-- 標題區 -->
+            <div class="flex-shrink-0">
+                <h2 id="modal-title" class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500 mb-1">
+                    🎉 豐收完成！
+                </h2>
+                <p class="text-gray-400 text-xs mb-3">最終得分：<span id="final-score" class="text-2xl font-black text-orange-400">0</span> 分</p>
+            </div>
+
+            <!-- 可滾動內容區（知識 + 優惠） -->
+            <div class="flex-grow overflow-y-auto custom-scrollbar text-left space-y-4 px-1 py-2">
+                
+                <!-- 獨家優惠折扣碼卡片 -->
+                <div class="bg-gradient-to-br from-orange-950/60 to-amber-950/60 border-2 border-dashed border-amber-500/60 rounded-2xl p-4 text-center relative">
+                    <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-500 text-slate-950 px-3 py-0.5 rounded-full text-xs font-black">
+                        🎁 本局專屬訂購優惠
+                    </span>
+                    <p id="discount-rank" class="text-amber-300 font-bold text-sm mt-1">恭喜獲得【天堂果尊爵大禮】</p>
+                    <div class="my-2 flex items-center justify-center space-x-2">
+                        <span id="promo-code" class="text-2xl font-black text-amber-400 tracking-wider bg-slate-950/80 px-4 py-1 rounded-xl border border-amber-500/40">GAC888</span>
+                        <button id="copy-code-btn" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-2 rounded-xl text-xs transition">
+                            複製優惠碼
+                        </button>
+                    </div>
+                    <p id="discount-desc" class="text-amber-200/90 text-xs">憑此折扣碼購買「鮮採木鱉果 / 濃縮木鱉果油膠囊」立享 85 折優惠！</p>
+                </div>
+
+                <!-- 木鱉果衛教知識卡片 -->
+                <div class="bg-slate-800/80 rounded-2xl p-4 border border-slate-700 space-y-3">
+                    <div class="flex items-center space-x-2 border-b border-slate-700 pb-2">
+                        <span class="text-2xl">💡</span>
+                        <div>
+                            <h3 class="text-amber-400 font-bold text-sm">什麼是「木鱉果 (Gac Fruit)」？</h3>
+                            <p class="text-gray-400 text-xs">來自越南與台灣優質種植的「來自天堂的水果」</p>
+                        </div>
+                    </div>
+
+                    <!-- 衛教亮點列表 -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        <div class="bg-slate-900/60 p-2.5 rounded-xl border border-amber-500/20">
+                            <span class="text-orange-400 font-bold block mb-0.5">👁️ 眼睛全效護眼配方</span>
+                            <p class="text-gray-300">
+                                茄紅素為番茄 <strong class="text-amber-300">70倍</strong>！<br>
+                                β-胡蘿蔔素為紅蘿蔔 <strong class="text-amber-300">10倍</strong>！<br>
+                                包含葉黃素與玉米黃素，預防黃斑部病變與青光眼。
+                            </p>
+                        </div>
+                        <div class="bg-slate-900/60 p-2.5 rounded-xl border border-amber-500/20">
+                            <span class="text-orange-400 font-bold block mb-0.5">❤️ 心血管與吸收加倍</span>
+                            <p class="text-gray-300">
+                                富含 34.08% 油酸與 31.43% 亞麻油酸（不飽和脂肪酸），大幅提高類胡蘿蔔素的吸收與生物利用度！
+                            </p>
+                        </div>
+                        <div class="bg-slate-900/60 p-2.5 rounded-xl border border-amber-500/20">
+                            <span class="text-orange-400 font-bold block mb-0.5">🧠 腦部健康與防退化</span>
+                            <p class="text-gray-300">
+                                權威期刊《Journal of Functional Foods》研究證實：木鱉果油可透過腸腦溝通，減緩認知衰退與預防阿茲海默症。
+                            </p>
+                        </div>
+                        <div class="bg-slate-900/60 p-2.5 rounded-xl border border-amber-500/20">
+                            <span class="text-orange-400 font-bold block mb-0.5">✨ 專利膠原蛋白增生</span>
+                            <p class="text-gray-300">
+                                榮獲中華民國專利 (I732363號)：有效清除自由基、調控細胞活性，顯著增加皮膚膠原蛋白表現！
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 底部動作按鈕 -->
+            <div class="flex-shrink-0 pt-4 flex space-x-3">
+                <button id="modal-restart-btn" class="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl transition text-sm">
+                    再玩一次 🔄
+                </button>
+                <a id="order-link" href="#" target="_blank" onclick="alert('優惠碼已複製！即將前往線上農場訂購頁面！');" class="flex-1 py-3 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-black rounded-xl transition text-sm text-center flex items-center justify-center">
+                    立即領優惠訂購 🛒
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 訊息提示 Toast -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-amber-500 text-slate-950 px-4 py-2 rounded-full font-bold text-xs shadow-lg transition-opacity duration-300 opacity-0 pointer-events-none">
+        提示訊息
+    </div>
+
+    <script>
+        /**
+         * 木鱉果大豐收 - 完整遊戲邏輯
+         */
+        window.addEventListener('load', () => {
+            // --- 畫布與 DPR 初始化 ---
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            let dpr = window.devicePixelRatio || 1;
+
+            function resizeCanvas() {
+                dpr = window.devicePixelRatio || 1;
+                canvas.width = window.innerWidth * dpr;
+                canvas.height = window.innerHeight * dpr;
+                ctx.scale(dpr, dpr);
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            // --- 全域遊戲狀態 ---
+            let gameState = 'START'; // START, PLAYING, GAMEOVER
+            let score = 0;
+            let level = 1;
+            let lives = 3;
+            let highScore = parseInt(localStorage.getItem('gac_highscore') || '0', 10);
+            document.getElementById('highscore-display').innerText = highScore;
+
+            // 音訊開關設定
+            let bgmEnabled = localStorage.getItem('gac_bgm') !== 'false';
+            let sfxEnabled = localStorage.getItem('gac_sfx') !== 'false';
+            updateAudioButtonsUI();
+
+            // --- 籃子 (Player Basket) 屬性 ---
+            const basket = {
+                x: window.innerWidth / 2,
+                y: window.innerHeight - 80,
+                baseWidth: 120,
+                width: 120,
+                height: 35,
+                speed: 0,
+                targetX: window.innerWidth / 2,
+                powerupTimer: 0
+            };
+
+            // 護網 (Shield)
+            let hasShield = false;
+            let shieldTimer = 0;
+
+            // 遊戲實體陣列
+            let fruits = [];
+            let powerups = [];
+            let particles = [];
+            let floatingTexts = [];
+
+            // 生成計時器
+            let spawnTimer = 0;
+            let spawnInterval = 60; // 幀數
+
+            // --- Web Audio API 聲音引擎 ---
+            let audioCtx = null;
+            let bgmOscillator = null;
+            let bgmGain = null;
+            let isBgmPlaying = false;
+            let bgmTimer = null;
+
+            function initAudio() {
+                if (!audioCtx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    audioCtx = new AudioContext();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+            }
+
+            // 全域解鎖 AudioContext
+            window.addEventListener('click', initAudio, { once: true });
+            window.addEventListener('touchstart', initAudio, { once: true });
+
+            function playSFX(type) {
+                if (!sfxEnabled || !audioCtx) return;
+                try {
+                    const now = audioCtx.currentTime;
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+
+                    if (type === 'catch') {
+                        // 吃到木鱉果清脆聲
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(440, now);
+                        osc.frequency.exponentialRampToValueAtTime(880, now + 0.1);
+                        gain.gain.setValueAtTime(0.3, now);
+                        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                        osc.start(now);
+                        osc.stop(now + 0.1);
+                    } else if (type === 'bonus') {
+                        // 特殊黃果/寶物聲
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(523.25, now);
+                        osc.frequency.setValueAtTime(659.25, now + 0.08);
+                        osc.frequency.setValueAtTime(783.99, now + 0.16);
+                        gain.gain.setValueAtTime(0.3, now);
+                        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                        osc.start(now);
+                        osc.stop(now + 0.25);
+                    } else if (type === 'hurt') {
+                        // 扣血受創聲
+                        osc.type = 'sawtooth';
+                        osc.frequency.setValueAtTime(180, now);
+                        osc.frequency.linearRampToValueAtTime(60, now + 0.2);
+                        gain.gain.setValueAtTime(0.4, now);
+                        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                        osc.start(now);
+                        osc.stop(now + 0.2);
+                    } else if (type === 'powerup') {
+                        // 吃到長籃子/護盾
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(300, now);
+                        osc.frequency.exponentialRampToValueAtTime(1200, now + 0.3);
+                        gain.gain.setValueAtTime(0.2, now);
+                        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                        osc.start(now);
+                        osc.stop(now + 0.3);
+                    }
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+
+            // Synthwave 風格 BGM 播放器
+            const bgmNotes = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25]; // C5, D5, E5, G5, A5, C6
+            let bgmStep = 0;
+
+            function startBGM() {
+                if (!bgmEnabled || isBgmPlaying || !audioCtx) return;
+                isBgmPlaying = true;
+                
+                bgmTimer = setInterval(() => {
+                    if (!bgmEnabled || gameState !== 'PLAYING') return;
+                    try {
+                        const now = audioCtx.currentTime;
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+
+                        const freq = bgmNotes[bgmStep % bgmNotes.length];
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(freq, now);
+
+                        gain.gain.setValueAtTime(0.05, now);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+
+                        osc.start(now);
+                        osc.stop(now + 0.2);
+                        bgmStep++;
+                    } catch (e) {}
+                }, 200);
+            }
+
+            function stopBGM() {
+                isBgmPlaying = false;
+                if (bgmTimer) clearInterval(bgmTimer);
+            }
+
+            function updateAudioButtonsUI() {
+                const bgmBtn = document.getElementById('bgm-toggle');
+                const sfxBtn = document.getElementById('sfx-toggle');
+                bgmBtn.innerText = bgmEnabled ? '🎵 BGM ON' : '🔇 BGM OFF';
+                sfxBtn.innerText = sfxEnabled ? '🔊 SFX ON' : '🔇 SFX OFF';
+                bgmBtn.className = `p-2 rounded-xl text-xs font-bold transition border ${bgmEnabled ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-slate-800 text-gray-400 border-slate-700'}`;
+                sfxBtn.className = `p-2 rounded-xl text-xs font-bold transition border ${sfxEnabled ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-slate-800 text-gray-400 border-slate-700'}`;
+            }
+
+            document.getElementById('bgm-toggle').addEventListener('click', () => {
+                bgmEnabled = !bgmEnabled;
+                localStorage.setItem('gac_bgm', bgmEnabled);
+                updateAudioButtonsUI();
+                if (bgmEnabled && gameState === 'PLAYING') startBGM();
+                else stopBGM();
+            });
+
+            document.getElementById('sfx-toggle').addEventListener('click', () => {
+                sfxEnabled = !sfxEnabled;
+                localStorage.setItem('gac_sfx', sfxEnabled);
+                updateAudioButtonsUI();
+            });
+
+            // --- 輸入控制 ---
+            function handleMove(clientX) {
+                basket.targetX = clientX;
+            }
+
+            window.addEventListener('mousemove', (e) => handleMove(e.clientX));
+            window.addEventListener('touchmove', (e) => {
+                if (e.touches.length > 0) {
+                    handleMove(e.touches[0].clientX);
+                }
+            }, { passive: true });
+
+            // 鍵盤控制支援
+            let keys = {};
+            window.addEventListener('keydown', (e) => keys[e.key] = true);
+            window.addEventListener('keyup', (e) => keys[e.key] = false);
+
+            // --- 繪製矢量圖形庫 (向量繪圖) ---
+
+            // 繪製刺刺的「木鱉果 (Gac Fruit)」
+            function drawGacFruit(x, y, radius, colorType) {
+                ctx.save();
+                ctx.translate(x, y);
+
+                // 果實主體顏色
+                let bodyColor = '#f97316'; // 熟橙色 (預設)
+                let spikeColor = '#ea580c';
+                if (colorType === 'GOLD') {
+                    bodyColor = '#eab308'; // 金黃雙倍分果
+                    spikeColor = '#ca8a04';
+                } else if (colorType === 'BAD') {
+                    bodyColor = '#475569'; // 壞果 / 烏雲
+                    spikeColor = '#1e293b';
+                }
+
+                // 1. 繪製橢圓主體
+                ctx.beginPath();
+                ctx.ellipse(0, 0, radius * 0.85, radius * 1.1, 0, 0, Math.PI * 2);
+                ctx.fillStyle = bodyColor;
+                ctx.fill();
+
+                // 2. 繪製木鱉果表面招牌「密密麻麻的小刺」
+                const spikes = 14;
+                ctx.fillStyle = spikeColor;
+                for (let i = 0; i < spikes; i++) {
+                    const angle = (i / spikes) * Math.PI * 2;
+                    const sx = Math.cos(angle) * (radius * 0.85);
+                    const sy = Math.sin(angle) * (radius * 1.1);
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, radius * 0.18, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // 3. 果蒂 (頂部綠莖)
+                ctx.beginPath();
+                ctx.moveTo(0, -radius * 1.05);
+                ctx.quadraticCurveTo(3, -radius * 1.4, 6, -radius * 1.5);
+                ctx.lineWidth = 3;
+                ctx.strokeStyle = '#65a30d';
+                ctx.stroke();
+
+                // 4. 光澤 Highlight
+                if (colorType !== 'BAD') {
+                    ctx.beginPath();
+                    ctx.ellipse(-radius * 0.3, -radius * 0.3, radius * 0.25, radius * 0.4, -Math.PI / 4, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+                    ctx.fill();
+                }
+
+                ctx.restore();
+            }
+
+            // 繪製竹籃
+            function drawBasket(x, y, width, height) {
+                ctx.save();
+                ctx.translate(x - width / 2, y);
+
+                // 籃子主體 (編織質感)
+                ctx.fillStyle = '#b45309';
+                ctx.beginPath();
+                ctx.roundRect(0, 0, width, height, [8, 8, 16, 16]);
+                ctx.fill();
+
+                // 籃子金屬邊框發光 (若有長籃子效果)
+                ctx.strokeStyle = basket.powerupTimer > 0 ? '#38bdf8' : '#f59e0b';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+
+                // 編織紋路
+                ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
+                ctx.lineWidth = 2;
+                for (let i = 10; i < width; i += 15) {
+                    ctx.beginPath();
+                    ctx.moveTo(i, 0);
+                    ctx.lineTo(i, height);
+                    ctx.stroke();
+                }
+
+                ctx.restore();
+            }
+
+            // 繪製底部黃金防護光網
+            function drawShield() {
+                if (!hasShield) return;
+                ctx.save();
+                ctx.strokeStyle = '#eab308';
+                ctx.lineWidth = 6;
+                ctx.shadowColor = '#eab308';
+                ctx.shadowBlur = 15;
+                ctx.beginPath();
+                ctx.moveTo(0, window.innerHeight - 15);
+                ctx.lineTo(window.innerWidth, window.innerHeight - 15);
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            // --- 遊戲實體產生器 ---
+            function spawnFruit() {
+                const radius = 22;
+                const x = Math.random() * (window.innerWidth - radius * 2) + radius;
+                const rand = Math.random();
+                let type = 'NORMAL';
+                let speed = (2.5 + Math.random() * 1.5) + (level * 0.4);
+
+                if (rand < 0.2) {
+                    type = 'GOLD'; // 20% 機率高分果
+                } else if (rand < 0.35) {
+                    type = 'BAD';  // 15% 機率壞果扣血
+                }
+
+                fruits.push({ x, y: -radius, radius, type, speed });
+
+                // 隨機掉落寶物
+                if (Math.random() < 0.12) {
+                    const pTypes = ['WIDE', 'SHIELD', 'LIFE'];
+                    const pType = pTypes[Math.floor(Math.random() * pTypes.length)];
+                    powerups.push({
+                        x: Math.random() * (window.innerWidth - 30) + 15,
+                        y: -20,
+                        type: pType,
+                        speed: 2
+                    });
+                }
+            }
+
+            // 噴發爆裂粒子
+            function createParticles(x, y, color) {
+                for (let i = 0; i < 12; i++) {
+                    particles.push({
+                        x, y,
+                        vx: (Math.random() - 0.5) * 8,
+                        vy: (Math.random() - 0.5) * 8,
+                        radius: Math.random() * 4 + 2,
+                        color,
+                        alpha: 1
+                    });
+                }
+            }
+
+            // 飄浮得分文字
+            function addFloatingText(text, x, y, color = '#f97316') {
+                floatingTexts.push({ text, x, y, alpha: 1, vy: -1.5, color });
+            }
+
+            // --- 更新與物理邏輯 ---
+            function update() {
+                if (gameState !== 'PLAYING') return;
+
+                // 1. 籃子平滑跟隨 (包含鍵盤支援)
+                if (keys['ArrowLeft'] || keys['a']) basket.targetX -= 12;
+                if (keys['ArrowRight'] || keys['d']) basket.targetX += 12;
+
+                // 邊界限制
+                basket.targetX = Math.max(basket.width / 2, Math.min(window.innerWidth - basket.width / 2, basket.targetX));
+                basket.x += (basket.targetX - basket.x) * 0.25;
+
+                // 道具倒數
+                if (basket.powerupTimer > 0) {
+                    basket.powerupTimer--;
+                    if (basket.powerupTimer === 0) basket.width = basket.baseWidth;
+                }
+                if (shieldTimer > 0) {
+                    shieldTimer--;
+                    if (shieldTimer === 0) hasShield = false;
+                }
+
+                // 2. 生成水果
+                spawnTimer++;
+                if (spawnTimer >= Math.max(25, spawnInterval - level * 4)) {
+                    spawnFruit();
+                    spawnTimer = 0;
+                }
+
+                // 3. 水果移動與碰撞檢測
+                for (let i = fruits.length - 1; i >= 0; i--) {
+                    const f = fruits[i];
+                    f.y += f.speed;
+
+                    // 籃子碰撞檢測 (AABB + Circle)
+                    const basketTop = basket.y;
+                    const basketBottom = basket.y + basket.height;
+                    const basketLeft = basket.x - basket.width / 2;
+                    const basketRight = basket.x + basket.width / 2;
+
+                    if (f.y + f.radius >= basketTop && f.y - f.radius <= basketBottom &&
+                        f.x >= basketLeft && f.x <= basketRight) {
+                        
+                        // 成功接住木鱉果
+                        if (f.type === 'NORMAL') {
+                            score += 100;
+                            addFloatingText('+100 茄紅素!', f.x, f.y, '#f97316');
+                            playSFX('catch');
+                            createParticles(f.x, f.y, '#f97316');
+                        } else if (f.type === 'GOLD') {
+                            score += 200;
+                            addFloatingText('+200 β-胡蘿蔔素!', f.x, f.y, '#eab308');
+                            playSFX('bonus');
+                            createParticles(f.x, f.y, '#eab308');
+                        } else if (f.type === 'BAD') {
+                            lives--;
+                            addFloatingText('壞果 -1❤️', f.x, f.y, '#ef4444');
+                            playSFX('hurt');
+                            createParticles(f.x, f.y, '#64748b');
+                            updateLivesUI();
+                            if (lives <= 0) gameOver();
+                        }
+
+                        updateScoreUI();
+                        fruits.splice(i, 1);
+                        continue;
+                    }
+
+                    // 水果落到底部 (漏接)
+                    if (f.y - f.radius > window.innerHeight) {
+                        if (f.type !== 'BAD') {
+                            if (hasShield) {
+                                addFloatingText('黃金護盾擋下了!', f.x, window.innerHeight - 40, '#eab308');
+                                playSFX('catch');
+                            } else {
+                                lives--;
+                                playSFX('hurt');
+                                updateLivesUI();
+                                if (lives <= 0) gameOver();
+                            }
+                        }
+                        fruits.splice(i, 1);
+                    }
+                }
+
+                // 4. 寶物移動與碰撞
+                for (let i = powerups.length - 1; i >= 0; i--) {
+                    const p = powerups[i];
+                    p.y += p.speed;
+
+                    // 吃到寶物
+                    if (p.y >= basket.y && p.y <= basket.y + basket.height &&
+                        p.x >= basket.x - basket.width / 2 && p.x <= basket.x + basket.width / 2) {
+                        
+                        playSFX('powerup');
+                        if (p.type === 'WIDE') {
+                            basket.width = basket.baseWidth * 1.5;
+                            basket.powerupTimer = 600; // 10秒
+                            addFloatingText('籃子加長 10s! 🧺', p.x, p.y, '#38bdf8');
+                        } else if (p.type === 'SHIELD') {
+                            hasShield = true;
+                            shieldTimer = 900; // 15秒
+                            addFloatingText('黃金防護網 15s! 🛡️', p.x, p.y, '#eab308');
+                        } else if (p.type === 'LIFE') {
+                            if (lives < 5) lives++;
+                            updateLivesUI();
+                            addFloatingText('補血 +1❤️', p.x, p.y, '#ec4899');
+                        }
+
+                        powerups.splice(i, 1);
+                        continue;
+                    }
+
+                    if (p.y > window.innerHeight) powerups.splice(i, 1);
+                }
+
+                // 5. 更新爆裂粒子
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    const pt = particles[i];
+                    pt.x += pt.vx;
+                    pt.y += pt.vy;
+                    pt.alpha -= 0.03;
+                    if (pt.alpha <= 0) particles.splice(i, 1);
+                }
+
+                // 6. 更新飄浮文字
+                for (let i = floatingTexts.length - 1; i >= 0; i--) {
+                    const ft = floatingTexts[i];
+                    ft.y += ft.vy;
+                    ft.alpha -= 0.02;
+                    if (ft.alpha <= 0) floatingTexts.splice(i, 1);
+                }
+
+                // 關卡遞增檢查 (每 1000 分升一關)
+                const newLevel = Math.floor(score / 1000) + 1;
+                if (newLevel !== level) {
+                    level = newLevel;
+                    document.getElementById('level-display').innerText = level;
+                    addFloatingText(`Level UP! 關卡 ${level}`, window.innerWidth / 2, window.innerHeight / 2, '#38bdf8');
+                    playSFX('bonus');
+                }
+            }
+
+            // --- 畫面繪製渲染迴圈 ---
+            function render() {
+                // 清空畫布 (動態賽博農場夜景)
+                ctx.fillStyle = '#0d131a';
+                ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+                // 繪製背景星光網格
+                ctx.strokeStyle = 'rgba(249, 115, 22, 0.05)';
+                ctx.lineWidth = 1;
+                const gridSize = 40;
+                for (let x = 0; x < window.innerWidth; x += gridSize) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, window.innerHeight);
+                    ctx.stroke();
+                }
+
+                // 繪製黃金護盾
+                drawShield();
+
+                // 繪製水果
+                fruits.forEach(f => drawGacFruit(f.x, f.y, f.radius, f.type));
+
+                // 繪製寶物膠囊
+                powerups.forEach(p => {
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.fillStyle = p.type === 'WIDE' ? '#38bdf8' : p.type === 'SHIELD' ? '#eab308' : '#ec4899';
+                    ctx.beginPath();
+                    ctx.roundRect(-15, -10, 30, 20, 10);
+                    ctx.fill();
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = 'bold 10px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(p.type === 'WIDE' ? '長' : p.type === 'SHIELD' ? '盾' : '❤️', 0, 4);
+                    ctx.restore();
+                });
+
+                // 繪製籃子
+                drawBasket(basket.x, basket.y, basket.width, basket.height);
+
+                // 繪製爆裂粒子
+                particles.forEach(pt => {
+                    ctx.save();
+                    ctx.globalAlpha = pt.alpha;
+                    ctx.fillStyle = pt.color;
+                    ctx.beginPath();
+                    ctx.arc(pt.x, pt.y, pt.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                });
+
+                // 繪製飄浮文字
+                floatingTexts.forEach(ft => {
+                    ctx.save();
+                    ctx.globalAlpha = ft.alpha;
+                    ctx.fillStyle = ft.color;
+                    ctx.font = '900 16px "Zen Maru Gothic"';
+                    ctx.fillText(ft.text, ft.x - 20, ft.y);
+                    ctx.restore();
+                });
+            }
+
+            function gameLoop() {
+                update();
+                render();
+                requestAnimationFrame(gameLoop);
+            }
+
+            // --- UI 狀態更新 ---
+            function updateScoreUI() {
+                document.getElementById('score-display').innerText = score;
+            }
+
+            function updateLivesUI() {
+                const container = document.getElementById('lives-container');
+                container.innerHTML = '';
+                for (let i = 0; i < 5; i++) {
+                    const heart = document.createElement('span');
+                    heart.className = i < lives ? 'text-red-500 text-lg' : 'text-gray-600 text-lg';
+                    heart.innerText = '❤️';
+                    container.appendChild(heart);
+                }
+            }
+
+            function showToast(msg) {
+                const toast = document.getElementById('toast');
+                toast.innerText = msg;
+                toast.classList.remove('opacity-0');
+                setTimeout(() => toast.classList.add('opacity-0'), 2500);
+            }
+
+            // --- 遊戲開始 / 結束邏輯 ---
+            function startGame() {
+                score = 0;
+                level = 1;
+                lives = 3;
+                fruits = [];
+                powerups = [];
+                particles = [];
+                floatingTexts = [];
+                basket.x = window.innerWidth / 2;
+                basket.targetX = window.innerWidth / 2;
+                basket.width = basket.baseWidth;
+                hasShield = false;
+
+                updateScoreUI();
+                updateLivesUI();
+                document.getElementById('level-display').innerText = level;
+
+                document.getElementById('start-modal').classList.add('hidden');
+                document.getElementById('gameover-modal').classList.add('hidden');
+
+                gameState = 'PLAYING';
+                startBGM();
+            }
+
+            function gameOver() {
+                gameState = 'GAMEOVER';
+                stopBGM();
+
+                // 紀錄最高分
+                if (score > highScore) {
+                    highScore = score;
+                    localStorage.setItem('gac_highscore', highScore);
+                    document.getElementById('highscore-display').innerText = highScore;
+                }
+
+                document.getElementById('final-score').innerText = score;
+
+                // 根據分數生成獨家優惠等級與折扣碼
+                const codeElem = document.getElementById('promo-code');
+                const rankElem = document.getElementById('discount-rank');
+                const descElem = document.getElementById('discount-desc');
+
+                if (score >= 2000) {
+                    rankElem.innerText = '🏆 恭喜獲得【天堂果尊爵大禮】';
+                    codeElem.innerText = 'GAC888';
+                    descElem.innerText = '憑此折扣碼購買「鮮採木鱉果 / 濃縮木鱉果油膠囊」立享 75 折大優惠！';
+                } else if (score >= 1000) {
+                    rankElem.innerText = '🌟 恭喜獲得【護眼豐收禮】';
+                    codeElem.innerText = 'GAC85';
+                    descElem.innerText = '憑此折扣碼購買「鮮採木鱉果 / 濃縮木鱉果油膠囊」立享 85 折優惠！';
+                } else {
+                    rankElem.innerText = '🎁 恭喜獲得【健康體驗禮】';
+                    codeElem.innerText = 'GAC90';
+                    descElem.innerText = '憑此折扣碼購買「鮮採木鱉果 / 濃縮木鱉果油膠囊」立享 9 折優惠！';
+                }
+
+                document.getElementById('gameover-modal').classList.remove('hidden');
+            }
+
+            // --- 事件監聽綁定 ---
+            document.getElementById('start-game-btn').addEventListener('click', startGame);
+            document.getElementById('modal-restart-btn').addEventListener('click', startGame);
+            document.getElementById('restart-btn').addEventListener('click', startGame);
+
+            // 複製折扣碼功能
+            document.getElementById('copy-code-btn').addEventListener('click', () => {
+                const code = document.getElementById('promo-code').innerText;
+                const input = document.createElement('input');
+                input.value = code;
+                document.body.appendChild(input);
+                input.select();
+                document.execCommand('copy');
+                document.body.removeChild(input);
+                showToast(`已複製優惠碼：${code}！`);
+            });
+
+            // 啟動主繪製迴圈
+            requestAnimationFrame(gameLoop);
+        });
+    </script>
+</body>
+</html>

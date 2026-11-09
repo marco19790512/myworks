@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="h-full bg-slate-900 text-slate-100">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>眼睛疲勞度測試遊戲 & 護眼保健指南</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Google Font - Inter & Noto Sans TC -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+    }
+    .custom-shadow {
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+    }
+    .gac-gradient {
+      background: linear-gradient(135deg, #FF4500 0%, #FF8C00 50%, #FFA500 100%);
+    }
+    .gac-text-gradient {
+      background: linear-gradient(135deg, #FF5722, #FF9800);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    /* Simple Pulse Animation for Focus point */
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .pulse-target {
+      animation: pulse-ring 1.5s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between bg-slate-950 text-slate-100">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl gac-gradient flex items-center justify-center text-white font-bold text-xl shadow-lg">
+          <i class="fa-solid fa-eye"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-lg leading-tight">VisionCare 眼睛疲勞檢測</h1>
+          <p class="text-xs text-slate-400">專業視覺敏銳度與疲勞評估</p>
+        </div>
+      </div>
+      <button onclick="resetApp()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 transition">
+        <i class="fa-solid fa-rotate-right mr-1"></i> 重新測試
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-6 flex flex-col justify-center">
+
+    <!-- 1. Intro Screen -->
+    <div id="screen-intro" class="bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-10 custom-shadow text-center space-y-6">
+      <div class="inline-block p-4 rounded-full bg-slate-800/80 border border-slate-700 text-amber-500 mb-2">
+        <i class="fa-solid fa-brain-circuit text-4xl"></i>
+      </div>
+      <h2 class="text-2xl md:text-3xl font-bold">今天您的眼睛累了嗎？</h2>
+      <p class="text-slate-400 max-w-lg mx-auto text-sm md:text-base leading-relaxed">
+        本測試包含三個關卡，分別檢測您的<b>「視力敏銳度」</b>、<b>「微小色差辨識」</b>與<b>「動態視覺反應」</b>。系統將分析您的反應時間與正確率，為您評估眼睛疲勞程度。
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-left my-6">
+        <div class="p-4 rounded-2xl bg-slate-800/50 border border-slate-700/60">
+          <div class="text-amber-400 font-bold mb-1 flex items-center"><i class="fa-solid fa-circle-dot mr-2"></i> 第一關：C字開口</div>
+          <p class="text-xs text-slate-400">快速辨識 8 個方向（上下左右與四角斜向）的 Landolt C 缺口。</p>
+        </div>
+        <div class="p-4 rounded-2xl bg-slate-800/50 border border-slate-700/60">
+          <div class="text-emerald-400 font-bold mb-1 flex items-center"><i class="fa-solid fa-border-all mr-2"></i> 第二關：色塊辨識</div>
+          <p class="text-xs text-slate-400">在眾多色塊中找出色彩有些許不同的方塊。</p>
+        </div>
+        <div class="p-4 rounded-2xl bg-slate-800/50 border border-slate-700/60">
+          <div class="text-sky-400 font-bold mb-1 flex items-center"><i class="fa-solid fa-bullseye mr-2"></i> 第三關：動態追蹤</div>
+          <p class="text-xs text-slate-400">點擊隨機出現且逐漸縮小的閃爍標靶。</p>
+        </div>
+      </div>
+
+      <div class="pt-2">
+        <button onclick="startGame()" class="w-full sm:w-auto px-8 py-3.5 gac-gradient hover:opacity-90 text-white font-bold text-lg rounded-xl shadow-lg transition-transform active:scale-95">
+          開始疲勞度測試 <i class="fa-solid fa-arrow-right ml-2"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- 2. Game Canvas / Playing Screen -->
+    <div id="screen-game" class="hidden bg-slate-900 border border-slate-800 rounded-3xl p-4 md:p-6 custom-shadow flex-col">
+      <!-- Top Status Bar -->
+      <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-800">
+        <div>
+          <span id="game-stage-title" class="text-xs font-semibold uppercase tracking-wider text-amber-500 bg-amber-500/10 px-2.5 py-1 rounded-md border border-amber-500/20">關卡 1/3</span>
+          <h3 id="game-instruction" class="text-lg font-bold mt-1 text-slate-200">請選擇 C 字環的缺口方向</h3>
+        </div>
+        <div class="text-right">
+          <div class="text-xs text-slate-400">剩餘題目</div>
+          <div id="game-progress" class="text-lg font-bold text-slate-100">1 / 5</div>
+        </div>
+      </div>
+
+      <!-- Game Stage Area -->
+      <div id="game-stage" class="min-h-[320px] md:min-h-[380px] bg-slate-950 rounded-2xl flex items-center justify-center p-4 relative overflow-hidden border border-slate-800/80">
+        
+        <!-- Stage 1 Container: C Ring -->
+      <div id="stage-1" class="flex flex-col items-center justify-center w-full h-full">
+        <div id="c-ring-wrapper" class="transition-transform duration-200 flex items-center justify-center my-6">
+          <svg id="c-ring-svg" width="120" height="120" viewBox="0 0 100 100" class="text-slate-100 transition-all duration-300">
+            <!-- Path for C ring with opening facing UP by default -->
+            <path d="M 50 15 A 35 35 0 1 1 49.9 15" fill="none" stroke="currentColor" stroke-width="12" stroke-dasharray="190 40" stroke-dashoffset="20" stroke-linecap="square"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Stage 2 Container: Color Grid -->
+      <div id="stage-2" class="hidden w-full max-w-xs aspect-square grid gap-2 p-2">
+        <!-- Dynamically populated grid -->
+      </div>
+
+      <!-- Stage 3 Container: Dynamic Target -->
+      <div id="stage-3" class="hidden w-full h-80 relative cursor-crosshair">
+        <button id="dynamic-target" class="absolute w-14 h-14 rounded-full bg-rose-500/80 hover:bg-rose-400 text-white flex items-center justify-center shadow-lg transition-all duration-150 transform -translate-x-1/2 -translate-y-1/2 pulse-target">
+          <i class="fa-solid fa-crosshairs text-2xl"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Control / Answer Controls -->
+    <div id="stage-1-controls" class="mt-4 grid grid-cols-3 gap-2.5 max-w-xs mx-auto w-full">
+      <!-- Row 1: Top-Left, Up, Top-Right -->
+      <button onclick="handleStage1Answer('upleft')" class="bg-slate-800 hover:bg-slate-700 active:bg-amber-600 text-slate-100 p-3 rounded-xl flex flex-col items-center justify-center border border-slate-700 transition">
+        <i class="fa-solid fa-arrow-up-left text-lg"></i>
+        <span class="text-[10px] mt-0.5">左上</span>
+      </button>
+      <button onclick="handleStage1Answer('up')" class="bg-slate-800 hover:bg-slate-700 active:bg-amber-600 text-slate-100 p-3 rounded-xl flex flex-col items-center justify-center border border-slate-700 transition">
+        <i class="fa-solid fa-arrow-up text-lg"></i>
+        <span class="text-[10px] mt-0.5">上</span>
+      </button>
+      <button onclick="handleStage1Answer('upright')" class="bg-slate-800 hover:bg-slate-700 active:bg-amber-600 text-slate-100 p-3 rounded-xl flex flex-col items-center justify-center border border-slate-700 transition">
+        <i class="fa-solid fa-arrow-up-right text-lg"></i>
+        <span class="text-[10px] mt-0.5">右上</span>
+      </button>
+
+      <!-- Row 2: Left, Center Blank, Right -->
+      <button onclick="handleStage1Answer('left')" class="bg-slate-800 hover:bg-slate-700 active:bg-amber-600 text-slate-100 p-3 rounded-xl flex flex-col items-center justify-center border border-slate-700 transition">
+        <i class="fa-solid fa-arrow-left text-lg"></i>
+        <span class="text-[10px] mt-0.5">左</span>
+      </button>
+      <div class="flex items-center justify-center text-slate-600 text-xs font-semibold">
+        8方位
+      </div>
+      <button onclick="handleStage1Answer('right')" class="bg-slate-800 hover:bg-slate-700 active:bg-amber-600 text-slate-100 p-3 rounded-xl flex flex-col items-center justify-center border border-slate-700 transition">
+        <i class="fa-solid fa-arrow-right text-lg"></i>
+        <span class="text-[10px] mt-0.5">右</span>
+      </button>
+
+      <!-- Row 3: Down-Left, Down, Down-Right -->
+      <button onclick="handleStage1Answer('downleft')" class="bg-slate-800 hover:bg-slate-700 active:bg-amber-600 text-slate-100 p-3 rounded-xl flex flex-col items-center justify-center border border-slate-700 transition">
+        <i class="fa-solid fa-arrow-down-left text-lg"></i>
+        <span class="text-[10px] mt-0.5">左下</span>
+      </button>
+      <button onclick="handleStage1Answer('down')" class="bg-slate-800 hover:bg-slate-700 active:bg-amber-600 text-slate-100 p-3 rounded-xl flex flex-col items-center justify-center border border-slate-700 transition">
+        <i class="fa-solid fa-arrow-down text-lg"></i>
+        <span class="text-[10px] mt-0.5">下</span>
+      </button>
+      <button onclick="handleStage1Answer('downright')" class="bg-slate-800 hover:bg-slate-700 active:bg-amber-600 text-slate-100 p-3 rounded-xl flex flex-col items-center justify-center border border-slate-700 transition">
+        <i class="fa-solid fa-arrow-down-right text-lg"></i>
+        <span class="text-[10px] mt-0.5">右下</span>
+      </button>
+    </div>
+
+    <div id="stage-2-hint" class="hidden text-center text-slate-400 text-xs mt-4">
+        請觀察色彩差異，點擊顏色較淺/較特殊的方塊
+      </div>
+
+      <div id="stage-3-hint" class="hidden text-center text-slate-400 text-xs mt-4">
+        目標會在畫面上移動，請盡快點擊紅色的目標點！
+      </div>
+
+    </div>
+
+    <!-- 3. Results & Advice Screen -->
+    <div id="screen-result" class="hidden space-y-6">
+      
+      <!-- Score Overview Card -->
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8 custom-shadow text-center relative overflow-hidden">
+        <div class="absolute -top-12 -right-12 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">您的測試結果</span>
+        
+        <div class="my-4 flex items-center justify-center space-x-2">
+          <span id="result-score" class="text-6xl font-extrabold text-transparent bg-clip-text gac-gradient">85</span>
+          <span class="text-slate-500 font-bold text-xl self-end mb-2">/ 100 分</span>
+        </div>
+
+        <div id="fatigue-status-badge" class="inline-block px-4 py-1.5 rounded-full text-sm font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 mb-4">
+          輕度疲勞 (Medium Fatigue)
+        </div>
+
+        <p id="result-summary" class="text-slate-300 text-sm md:text-base max-w-lg mx-auto">
+          您的辨識精準度表現不錯，但平均反應時間偏慢，顯示眼部肌肉已出現初期緊繃與疲勞現象。
+        </p>
+
+        <!-- Stats Breakdown -->
+        <div class="grid grid-cols-3 gap-3 mt-6 pt-6 border-t border-slate-800 text-left">
+          <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800">
+            <div class="text-xs text-slate-400">平均反應速度</div>
+            <div id="stat-reaction" class="text-base font-bold text-slate-200 mt-1">0.85 秒</div>
+          </div>
+          <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800">
+            <div class="text-xs text-slate-400">辨識正確率</div>
+            <div id="stat-accuracy" class="text-base font-bold text-slate-200 mt-1">90 %</div>
+          </div>
+          <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800">
+            <div class="text-xs text-slate-400">視覺敏銳指數</div>
+            <div id="stat-acuity" class="text-base font-bold text-slate-200 mt-1">中等</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Professional Advice & Gac Fruit Info -->
+      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8 custom-shadow space-y-6">
+        <h3 class="text-xl font-bold text-slate-100 flex items-center">
+          <i class="fa-solid fa-user-doctor text-amber-500 mr-2.5"></i> 護眼專家改善建議
+        </h3>
+
+        <!-- Dynamic Advice List -->
+        <div id="advice-list" class="space-y-3 text-sm text-slate-300">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Supplement & Gac Fruit Feature Section -->
+        <div class="mt-8 pt-6 border-t border-slate-800">
+          <div class="bg-gradient-to-br from-slate-800/90 to-orange-950/40 p-5 md:p-6 rounded-2xl border border-orange-500/30 space-y-6">
+            
+            <!-- Header with Product & Fruit Display -->
+            <div class="flex flex-col md:flex-row items-center gap-6">
+              
+              <!-- Fruit & Product Image Illustration Group -->
+              <div class="flex items-center space-x-3 flex-shrink-0">
+                <!-- Gac Fruit SVG / Visual -->
+                <div class="w-32 h-44 md:w-36 md:h-48 relative bg-slate-950/70 border border-orange-500/40 rounded-2xl flex flex-col items-center justify-center p-3 shadow-xl overflow-hidden group">
+                  <div class="absolute inset-0 bg-gradient-to-t from-orange-950/60 to-transparent pointer-events-none"></div>
+                  <!-- SVG representation of Gac Fruit (木鱉果B) -->
+                  <svg viewBox="0 0 200 240" class="w-24 h-32 drop-shadow-[0_10px_10px_rgba(255,140,0,0.3)] transition-transform duration-300 group-hover:scale-110">
+                    <!-- Stem -->
+                    <path d="M 92 10 L 108 10 L 105 50 L 95 50 Z" fill="#556B2F" stroke="#3B4A20" stroke-width="2"/>
+                    <!-- Fruit Base Body -->
+                    <ellipse cx="100" cy="140" rx="75" ry="85" fill="url(#gacGrad)" stroke="#E65100" stroke-width="3"/>
+                    <!-- Spikes Texture -->
+                    <g fill="#FFAB00" opacity="0.8">
+                      <circle cx="60" cy="90" r="3"/><circle cx="100" cy="80" r="3.5"/><circle cx="140" cy="90" r="3"/>
+                      <circle cx="45" cy="120" r="3.5"/><circle cx="80" cy="115" r="4"/><circle cx="120" cy="115" r="4"/><circle cx="155" cy="120" r="3.5"/>
+                      <circle cx="40" cy="150" r="3"/><circle cx="70" cy="145" r="4"/><circle cx="100" cy="140" r="4.5"/><circle cx="130" cy="145" r="4"/><circle cx="160" cy="150" r="3"/>
+                      <circle cx="55" cy="180" r="3.5"/><circle cx="85" cy="175" r="4"/><circle cx="115" cy="175" r="4"/><circle cx="145" cy="180" r="3.5"/>
+                      <circle cx="75" cy="205" r="3"/><circle cx="100" cy="205" r="3.5"/><circle cx="125" cy="205" r="3"/>
+                    </g>
+                    <!-- Gradient definitions -->
+                    <defs>
+                      <radialGradient id="gacGrad" cx="30%" cy="30%" r="70%">
+                        <stop offset="0%" stop-color="#FF9800"/>
+                        <stop offset="50%" stop-color="#FF5722"/>
+                        <stop offset="100%" stop-color="#E65100"/>
+                      </radialGradient>
+                    </defs>
+                  </svg>
+                  <span class="text-[11px] font-bold text-orange-300 mt-2 z-10">天然木鱉果 (天堂果)</span>
+                </div>
+
+                <!-- Product Card Badge -->
+                <div class="w-32 h-44 md:w-36 md:h-48 bg-slate-900 border-2 border-orange-500/50 rounded-2xl p-3 flex flex-col justify-between shadow-xl relative overflow-hidden group">
+                  <div class="bg-gradient-to-r from-orange-500 to-amber-500 text-slate-950 font-black text-[10px] px-2 py-0.5 rounded text-center uppercase tracking-wider">
+                    NextEra
+                  </div>
+                  <div class="my-auto text-center">
+                    <div class="text-orange-400 text-lg font-black tracking-tight leading-tight">愛晶亮</div>
+                    <div class="text-[10px] text-slate-300 font-semibold mt-1">木鱉果油膠囊</div>
+                    <div class="w-8 h-10 mx-auto my-2 bg-gradient-to-b from-amber-400 to-orange-600 rounded-full blur-[0.5px] shadow-[0_0_12px_rgba(255,152,0,0.6)] flex items-center justify-center">
+                      <i class="fa-solid fa-droplet text-white/90 text-xs"></i>
+                    </div>
+                  </div>
+                  <div class="text-[9px] text-slate-400 text-center border-t border-slate-800 pt-1">
+                    純素可食 30粒
+                  </div>
+                </div>
+              </div>
+
+              <!-- Product Info Text -->
+              <div class="space-y-2 text-center md:text-left flex-grow">
+                <div class="inline-flex items-center space-x-2">
+                  <span class="px-3 py-1 bg-orange-500/20 text-orange-400 text-xs font-bold rounded-lg border border-orange-500/40">
+                    吳明昌教授團隊研發
+                  </span>
+                  <span class="text-xs text-slate-400">獨特超臨界分餾製程</span>
+                </div>
+                <h4 class="font-bold text-2xl text-orange-200">愛晶亮 木鱉果油膠囊</h4>
+                <p class="text-slate-300 text-sm leading-relaxed">
+                  結合學術權威專業研發與金屬工業研究發展中心技術輔導。採用低溫精萃技術，高純度、易吸收，帶來晶採舒適與水潤有感的護眼體驗！
+                </p>
+              </div>
+            </div>
+
+            <!-- Comparison Metric Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-2.5 text-center">
+              <div class="bg-slate-900/90 p-3 rounded-xl border border-orange-500/20">
+                <div class="text-xs text-slate-400">茄紅素</div>
+                <div class="text-lg font-extrabold text-orange-400 mt-0.5">番茄 70倍</div>
+                <div class="text-[10px] text-slate-500 mt-1">過濾有害光線/防護</div>
+              </div>
+              <div class="bg-slate-900/90 p-3 rounded-xl border border-orange-500/20">
+                <div class="text-xs text-slate-400">β-胡蘿蔔素</div>
+                <div class="text-lg font-extrabold text-amber-400 mt-0.5">紅蘿蔔 10倍</div>
+                <div class="text-[10px] text-slate-500 mt-1">維持視力/超強抗氧</div>
+              </div>
+              <div class="bg-slate-900/90 p-3 rounded-xl border border-orange-500/20">
+                <div class="text-xs text-slate-400">玉米黃素</div>
+                <div class="text-lg font-extrabold text-yellow-400 mt-0.5">枸杞 3倍</div>
+                <div class="text-[10px] text-slate-500 mt-1">預防黃斑部老化</div>
+              </div>
+              <div class="bg-slate-900/90 p-3 rounded-xl border border-orange-500/20">
+                <div class="text-xs text-slate-400">維生素 E</div>
+                <div class="text-lg font-extrabold text-emerald-400 mt-0.5">酪梨 4倍</div>
+                <div class="text-[10px] text-slate-500 mt-1">對抗自由基老縮</div>
+              </div>
+              <div class="bg-slate-900/90 p-3 rounded-xl border border-orange-500/20 col-span-2 md:col-span-1">
+                <div class="text-xs text-slate-400">維生素 C</div>
+                <div class="text-lg font-extrabold text-rose-400 mt-0.5">柳橙 40倍</div>
+                <div class="text-[10px] text-slate-500 mt-1">促進膠原生成</div>
+              </div>
+            </div>
+
+            <!-- Essential Fatty Acids Absorptive Advantage -->
+            <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700/60 space-y-2">
+              <h5 class="text-sm font-bold text-amber-300 flex items-center">
+                <i class="fa-solid fa-droplet text-amber-500 mr-2"></i> 天然不飽和脂肪酸：提高類胡蘿蔔素吸收與生物利用度
+              </h5>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                木鱉果油富含油脂成分，能讓脂溶性葉黃素與茄紅素不需額外搭配高油飲食即可高效吸收：
+              </p>
+              <div class="grid grid-cols-3 gap-2 text-center text-xs pt-1">
+                <div class="bg-slate-950/80 p-2 rounded-lg border border-slate-800">
+                  <div class="text-amber-400 font-bold">34.08% 油酸</div>
+                  <div class="text-[10px] text-slate-400">抗氧化，維持心血管健康</div>
+                </div>
+                <div class="bg-slate-950/80 p-2 rounded-lg border border-slate-800">
+                  <div class="text-amber-400 font-bold">31.43% 亞麻油酸</div>
+                  <div class="text-[10px] text-slate-400">促進免疫力、調節代謝</div>
+                </div>
+                <div class="bg-slate-950/80 p-2 rounded-lg border border-slate-800">
+                  <div class="text-amber-400 font-bold">2.14% α-亞麻酸</div>
+                  <div class="text-[10px] text-slate-400">幫助體內循環、抗發炎</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Scientific Journal & Patent Certification Section -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+              <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-700/60 flex items-start space-x-3">
+                <div class="p-2.5 rounded-lg bg-orange-500/10 text-orange-400 flex-shrink-0 text-base">
+                  <i class="fa-solid fa-book-bookmark"></i>
+                </div>
+                <div>
+                  <div class="font-bold text-slate-200">國際期刊證實 (Journal of Functional Foods)</div>
+                  <p class="text-slate-400 text-[11px] mt-0.5">
+                    木鱉果油富含 β-胡蘿蔔素與茄紅素，可通過「腸腦溝通」調節阿茲海默症標記物與自噬作用，減緩認知衰退。
+                  </p>
+                </div>
+              </div>
+
+              <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-700/60 flex items-start space-x-3">
+                <div class="p-2.5 rounded-lg bg-emerald-500/10 text-emerald-400 flex-shrink-0 text-base">
+                  <i class="fa-solid fa-certificate"></i>
+                </div>
+                <div>
+                  <div class="font-bold text-slate-200">屏科大研發專利 (發明第 I732363 號)</div>
+                  <p class="text-slate-400 text-[11px] mt-0.5">
+                    實驗證實木鱉果油可有效降低細胞內活性氧濃度，調控膠原蛋白相關表現，增加皮膚細胞膠原蛋白增生。
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Exclusive Offer Card -->
+        <div class="bg-gradient-to-r from-orange-600 to-amber-600 rounded-2xl p-6 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+          <div class="space-y-1 text-center md:text-left">
+            <span class="bg-white/20 text-white text-xs px-2.5 py-0.5 rounded-full font-semibold">疲勞測試者專屬優惠</span>
+            <h4 class="text-xl font-extrabold">愛晶亮 木鱉果油膠囊 (30粒裝)</h4>
+            <p class="text-orange-100 text-xs md:text-sm">憑測試結果即享 85 折優惠，輕鬆擁有晶亮水潤感！</p>
+          </div>
+          <div class="flex flex-col items-center md:items-end w-full md:w-auto">
+            <div class="text-2xl font-extrabold mb-2">85 折 優惠券</div>
+            <button onclick="claimCoupon()" class="w-full md:w-auto px-6 py-2.5 bg-slate-950 hover:bg-slate-900 text-orange-400 font-bold rounded-xl shadow-lg transition active:scale-95 text-sm">
+              <i class="fa-solid fa-ticket mr-1.5"></i> 立即領取折扣碼
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Coupon Modal -->
+  <div id="modal-coupon" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl">
+      <div class="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto text-2xl border border-emerald-500/30">
+        <i class="fa-solid fa-check"></i>
+      </div>
+      <h3 class="text-xl font-bold text-slate-100">優惠券已順利領取！</h3>
+      <p class="text-slate-400 text-sm">
+        請在結帳時輸入下方專屬折扣碼，即享 <span class="text-orange-400 font-bold">【愛晶亮 木鱉果油膠囊】85折</span> 優惠：
+      </p>
+
+      <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex items-center justify-between">
+        <span id="coupon-code-text" class="font-mono text-xl tracking-wider font-bold text-amber-400">GACCARE85</span>
+        <button onclick="copyCouponCode()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 transition">
+          <i class="fa-regular fa-copy mr-1"></i> 複製
+        </button>
+      </div>
+
+      <p class="text-xs text-slate-500">優惠有效期限至本月底止。建議配合定時休息，效果更佳。</p>
+
+      <div class="pt-2">
+        <button onclick="closeCouponModal()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl transition text-sm">
+          關閉
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-800 text-slate-100 text-xs px-4 py-2.5 rounded-xl border border-slate-700 shadow-xl opacity-0 transition-opacity duration-300 pointer-events-none z-50">
+    <span id="toast-message">訊息提示</span>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 bg-slate-950 py-4 text-center text-xs text-slate-500">
+    <div class="max-w-4xl mx-auto px-4">
+      <p>© VisionCare Studio. 本測試結果僅供自我疲勞程度參考，非醫療診斷依據。</p>
+    </div>
+  </footer>
+
+  <!-- Game & Assessment Logic -->
+  <script>
+    // --- State Variables ---
+    let currentStage = 1;
+    let stageStep = 0;
+    const maxStepsPerStage = 5;
+    
+    // User Performance Tracking
+    let gameStats = {
+      stage1: { correct: 0, total: 0, times: [] },
+      stage2: { correct: 0, total: 0, times: [] },
+      stage3: { correct: 0, total: 0, times: [] }
+    };
+
+    let stepStartTime = 0;
+    let stage1CurrentDirection = 'up'; // up, down, left, right
+    let stage2TargetIndex = 0;
+
+    // --- Navigation & Flow Controls ---
+    function showScreen(screenId) {
+      document.getElementById('screen-intro').classList.add('hidden');
+      document.getElementById('screen-game').classList.add('hidden');
+      document.getElementById('screen-game').classList.remove('flex');
+      document.getElementById('screen-result').classList.add('hidden');
+
+      const target = document.getElementById(screenId);
+      target.classList.remove('hidden');
+      if (screenId === 'screen-game') {
+        target.classList.add('flex');
+      }
+    }
+
+    function resetApp() {
+      currentStage = 1;
+      stageStep = 0;
+      gameStats = {
+        stage1: { correct: 0, total: 0, times: [] },
+        stage2: { correct: 0, total: 0, times: [] },
+        stage3: { correct: 0, total: 0, times: [] }
+      };
+      showScreen('screen-intro');
+    }
+
+    function startGame() {
+      currentStage = 1;
+      stageStep = 0;
+      showScreen('screen-game');
+      initStage(1);
+    }
+
+    function initStage(stageNum) {
+      currentStage = stageNum;
+      stageStep = 0;
+
+      // Update UI Header
+      const stageTitle = document.getElementById('game-stage-title');
+      const instruction = document.getElementById('game-instruction');
+
+      document.getElementById('stage-1').classList.add('hidden');
+      document.getElementById('stage-2').classList.add('hidden');
+      document.getElementById('stage-3').classList.add('hidden');
+      document.getElementById('stage-1-controls').classList.add('hidden');
+      document.getElementById('stage-2-hint').classList.add('hidden');
+      document.getElementById('stage-3-hint').classList.add('hidden');
+
+      if (stageNum === 1) {
+        stageTitle.textContent = "關卡 1/3：視力敏銳度";
+        instruction.textContent = "請觀察 C 字環缺口方向並選擇";
+        document.getElementById('stage-1').classList.remove('hidden');
+        document.getElementById('stage-1-controls').classList.remove('hidden');
+      } else if (stageNum === 2) {
+        stageTitle.textContent = "關卡 2/3：微小色差辨識";
+        instruction.textContent = "請找出顏色不同的微異色塊";
+        document.getElementById('stage-2').classList.remove('hidden');
+        document.getElementById('stage-2-hint').classList.remove('hidden');
+      } else if (stageNum === 3) {
+        stageTitle.textContent = "關卡 3/3：動態微敏追蹤";
+        instruction.textContent = "請迅速點擊隨機出現的紅色目標點";
+        document.getElementById('stage-3').classList.remove('hidden');
+        document.getElementById('stage-3-hint').classList.remove('hidden');
+      }
+
+      nextQuestion();
+    }
+
+    function nextQuestion() {
+      stageStep++;
+      if (stageStep > maxStepsPerStage) {
+        // Move to next stage or finish
+        if (currentStage < 3) {
+          initStage(currentStage + 1);
+        } else {
+          calculateAndShowResults();
+        }
+        return;
+      }
+
+      document.getElementById('game-progress').textContent = `${stageStep} / ${maxStepsPerStage}`;
+      stepStartTime = performance.now();
+
+      if (currentStage === 1) {
+        setupStage1Question();
+      } else if (currentStage === 2) {
+        setupStage2Question();
+      } else if (currentStage === 3) {
+        setupStage3Question();
+      }
+    }
+
+    // --- STAGE 1: C Ring Orientation ---
+    function setupStage1Question() {
+      const directions = ['up', 'upright', 'right', 'downright', 'down', 'downleft', 'left', 'upleft'];
+      stage1CurrentDirection = directions[Math.floor(Math.random() * directions.length)];
+      
+      const svg = document.getElementById('c-ring-svg');
+      const wrapper = document.getElementById('c-ring-wrapper');
+
+      // Randomize size slightly for difficulty
+      const scale = 0.6 + Math.random() * 0.5; // 0.6x to 1.1x
+      wrapper.style.transform = `scale(${scale})`;
+
+      // Rotate C ring based on 8 directions
+      // Default SVG opening is UP (0 deg)
+      const rotationMap = {
+        'up': 0,
+        'upright': 45,
+        'right': 90,
+        'downright': 135,
+        'down': 180,
+        'downleft': 225,
+        'left': 270,
+        'upleft': 315
+      };
+
+      const rotation = rotationMap[stage1CurrentDirection];
+      svg.style.transform = `rotate(${rotation}deg)`;
+    }
+
+    function handleStage1Answer(selectedDir) {
+      const reactionTime = (performance.now() - stepStartTime) / 1000;
+      const isCorrect = (selectedDir === stage1CurrentDirection);
+
+      gameStats.stage1.total++;
+      if (isCorrect) gameStats.stage1.correct++;
+      gameStats.stage1.times.push(reactionTime);
+
+      nextQuestion();
+    }
+
+    // --- STAGE 2: Color Difference Grid ---
+    function setupStage2Question() {
+      const gridContainer = document.getElementById('stage-2');
+      gridContainer.innerHTML = '';
+
+      // Grid size increases with step (3x3 to 4x4)
+      const gridSize = stageStep > 2 ? 4 : 3;
+      const totalCells = gridSize * gridSize;
+      gridContainer.style.gridTemplateColumns = `repeat(${gridSize}, minmax(0, 1fr))`;
+
+      // Base color generation
+      const baseHue = Math.floor(Math.random() * 360);
+      const baseSat = 60 + Math.floor(Math.random() * 20);
+      const baseLight = 40 + Math.floor(Math.random() * 20);
+
+      // Color delta decreases as steps go on (harder to spot)
+      const delta = Math.max(8 - stageStep * 1.2, 3);
+      
+      stage2TargetIndex = Math.floor(Math.random() * totalCells);
+
+      for (let i = 0; i < totalCells; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'w-full h-full rounded-xl transition transform active:scale-95 border border-white/10';
+
+        if (i === stage2TargetIndex) {
+          btn.style.backgroundColor = `hsl(${baseHue}, ${baseSat}%, ${baseLight + delta}%)`;
+        } else {
+          btn.style.backgroundColor = `hsl(${baseHue}, ${baseSat}%, ${baseLight}%)`;
+        }
+
+        btn.onclick = () => handleStage2Answer(i === stage2TargetIndex);
+        gridContainer.appendChild(btn);
+      }
+    }
+
+    function handleStage2Answer(isCorrect) {
+      const reactionTime = (performance.now() - stepStartTime) / 1000;
+
+      gameStats.stage2.total++;
+      if (isCorrect) gameStats.stage2.correct++;
+      gameStats.stage2.times.push(reactionTime);
+
+      nextQuestion();
+    }
+
+    // --- STAGE 3: Dynamic Target Tracking ---
+    function setupStage3Question() {
+      const target = document.getElementById('dynamic-target');
+      const container = document.getElementById('stage-3');
+
+      const containerWidth = container.clientWidth - 60;
+      const containerHeight = container.clientHeight - 60;
+
+      const randomX = Math.floor(Math.random() * containerWidth) + 30;
+      const randomY = Math.floor(Math.random() * containerHeight) + 30;
+
+      target.style.left = `${randomX}px`;
+      target.style.top = `${randomY}px`;
+
+      // Scale target smaller in later steps
+      const scale = Math.max(1 - (stageStep * 0.12), 0.5);
+      target.style.transform = `translate(-50%, -50%) scale(${scale})`;
+
+      target.onclick = (e) => {
+        e.stopPropagation();
+        handleStage3Answer(true);
+      };
+    }
+
+    function handleStage3Answer(isCorrect) {
+      const reactionTime = (performance.now() - stepStartTime) / 1000;
+
+      gameStats.stage3.total++;
+      if (isCorrect) gameStats.stage3.correct++;
+      gameStats.stage3.times.push(reactionTime);
+
+      // Remove event listener to prevent double clicks
+      document.getElementById('dynamic-target').onclick = null;
+      nextQuestion();
+    }
+
+
+    // --- RESULTS & FATIGUE SCORE CALCULATION ---
+    function calculateAndShowResults() {
+      // Calculate overall stats
+      const totalQuestions = gameStats.stage1.total + gameStats.stage2.total + gameStats.stage3.total;
+      const totalCorrect = gameStats.stage1.correct + gameStats.stage2.correct + gameStats.stage3.correct;
+      const accuracyRate = (totalCorrect / totalQuestions);
+
+      const allTimes = [
+        ...gameStats.stage1.times,
+        ...gameStats.stage2.times,
+        ...gameStats.stage3.times
+      ];
+      const avgReactionTime = allTimes.reduce((a, b) => a + b, 0) / allTimes.length;
+
+      // Base Score Calculation
+      // Accuracy weight 60%, Speed weight 40%
+      // Normal expected reaction time ~ 0.7 seconds. Higher time lowers score.
+      let speedScore = Math.max(100 - (avgReactionTime - 0.5) * 60, 20);
+      if (speedScore > 100) speedScore = 100;
+
+      const accuracyScore = accuracyRate * 100;
+      const finalScore = Math.round((accuracyScore * 0.6) + (speedScore * 0.4));
+
+      // Display Numerical Data
+      document.getElementById('result-score').textContent = finalScore;
+      document.getElementById('stat-reaction').textContent = `${avgReactionTime.toFixed(2)} 秒`;
+      document.getElementById('stat-accuracy').textContent = `${Math.round(accuracyRate * 100)} %`;
+
+      // Determine Acuity Level Text
+      let acuityText = "優秀";
+      if (accuracyRate < 0.7) acuityText = "需多留意";
+      else if (accuracyRate < 0.85) acuityText = "中等";
+      document.getElementById('stat-acuity').textContent = acuityText;
+
+      // Determine Fatigue Level & Advice
+      const badge = document.getElementById('fatigue-status-badge');
+      const summary = document.getElementById('result-summary');
+      const adviceContainer = document.getElementById('advice-list');
+
+      let adviceItems = [];
+
+      if (finalScore >= 85) {
+        // Low Fatigue
+        badge.className = "inline-block px-4 py-1.5 rounded-full text-sm font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 mb-4";
+        badge.textContent = "狀態良好 (Low Fatigue)";
+        summary.textContent = "您的眼睛視覺敏銳度與反應速度極佳，目前眼部肌肉處於放鬆且靈敏狀態。";
+
+        adviceItems = [
+          "<b>保持 20-20-20 用眼原則：</b> 每用眼 20 分鐘，遠眺 20 呎（約6公尺）外物件 20 秒。",
+          "<b>日常基礎保養：</b> 每日補充適量深綠色蔬菜與複方葉黃素，維持黃斑部健康。",
+          "<b>環境光線維持：</b> 避免在黑暗環境中單獨使用手機或螢幕。"
+        ];
+      } else if (finalScore >= 65) {
+        // Medium Fatigue
+        badge.className = "inline-block px-4 py-1.5 rounded-full text-sm font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 mb-4";
+        badge.textContent = "輕度至中度疲勞 (Moderate Fatigue)";
+        summary.textContent = "您的精準度尚可，但辨識與反應時間略有延遲，顯示視覺神經與眼睛調節肌肉已開始顯露疲倦感。";
+
+        adviceItems = [
+          "<b>適度熱敷雙眼：</b> 每天睡前或休息時使用 40°C 溫熱敷眼罩 10-15 分鐘，促進眼周血液循環。",
+          "<b>補充關鍵抗氧化物：</b> 建議補充含<b>木鱉果（Gac Fruit）</b>與<b>花青素</b>之補充劑，舒緩眼部痠澀緊繃。",
+          "<b>調降螢幕藍光：</b> 調整電腦與手機螢幕亮度，並開啟夜間/護眼模式。"
+        ];
+      } else {
+        // High Fatigue
+        badge.className = "inline-block px-4 py-1.5 rounded-full text-sm font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30 mb-4";
+        badge.textContent = "顯著疲勞 (High Fatigue)";
+        summary.textContent = "您的答題正確率與反應速度皆受影響，眼部極可能處於長期過度使用狀態，容易出現乾澀、緊繃與模糊感。";
+
+        adviceItems = [
+          "<b>立即安排眼部休息：</b> 建議關閉螢幕，進行 15 分鐘閉目養神或眼球放鬆伸展。",
+          "<b>重點補充晶亮營養素：</b> 強烈建議補充高生物利用率的<b>木鱉果抽出物（天然酯化態茄紅素+葉黃素）</b>，能高效護衛靈魂之窗。",
+          "<b>加強人工淚液或眼濕潤度：</b> 若有乾澀症狀，可諮詢藥師使用無防腐劑人工淚液，並定期進行眼科檢查。"
+        ];
+      }
+
+      // Populate Advice List
+      adviceContainer.innerHTML = adviceItems.map(item => `
+        <div class="flex items-start space-x-2.5">
+          <i class="fa-solid fa-circle-check text-amber-500 mt-1 flex-shrink-0"></i>
+          <span>${item}</span>
+        </div>
+      `).join('');
+
+      showScreen('screen-result');
+    }
+
+    // --- COUPON & UTILS ---
+    function claimCoupon() {
+      document.getElementById('modal-coupon').classList.remove('hidden');
+    }
+
+    function closeCouponModal() {
+      document.getElementById('modal-coupon').classList.add('hidden');
+    }
+
+    function copyCouponCode() {
+      const code = document.getElementById('coupon-code-text').textContent;
+      
+      // Copy logic with execCommand fallback
+      const tempInput = document.createElement('input');
+      tempInput.value = code;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      try {
+        document.execCommand('copy');
+        showToast('折扣碼已成功複製到剪貼簿！');
+      } catch (err) {
+        showToast('複製失敗，請手動複製折扣碼。');
+      }
+      document.body.removeChild(tempInput);
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-message');
+      toastMsg.textContent = message;
+      toast.classList.remove('opacity-0');
+      
+      setTimeout(() => {
+        toast.classList.add('opacity-0');
+      }, 2500);
+    }
+  </script>
+</body>
+</html>

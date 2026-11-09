@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天堂果（木鱉果）- 來自天堂的水果與營養之王</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            red: '#E63946',
+                            orange: '#F4A261',
+                            yellow: '#E9C46A',
+                            green: '#2A9D8F',
+                            dark: '#264653'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans TC', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(230, 57, 70, 0.95) 0%, rgba(244, 162, 97, 0.9) 100%);
+        }
+        .bg-pattern {
+            background-color: #fbfbfb;
+            background-image: radial-gradient(#e5e7eb 0.75px, transparent 0.75px);
+            background-size: 16px 16px;
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800 bg-gray-50 bg-pattern antialiased selection:bg-brand-orange selection:text-white">
+
+    <!-- 導覽列 Navbar -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-brand-red to-brand-orange flex items-center justify-center text-white text-xl font-bold shadow-md">
+                        <i class="fa-solid fa-apple-whole"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-black text-brand-dark tracking-wide">木鱉果</span>
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded bg-amber-100 text-amber-800 ml-1">天堂果</span>
+                    </div>
+                </div>
+
+                <!-- 桌面版選單 -->
+                <div class="hidden md:flex space-x-8 text-base font-medium text-gray-600">
+                    <a href="#about" class="hover:text-brand-red transition-colors duration-200">什麼是木鱉果</a>
+                    <a href="#nutrition" class="hover:text-brand-red transition-colors duration-200">超凡營養成分</a>
+                    <a href="#benefits" class="hover:text-brand-red transition-colors duration-200">健康益處</a>
+                    <a href="#recipes" class="hover:text-brand-red transition-colors duration-200">食用與烹調</a>
+                    <a href="#faq" class="hover:text-brand-red transition-colors duration-200">常見疑問</a>
+                </div>
+
+                <!-- 行動裝置選單按鈕 -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-600 hover:text-brand-red focus:outline-none p-2" aria-label="選單">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 行動裝置下拉選單 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-gray-200 px-4 pt-2 pb-4 space-y-3">
+            <a href="#about" class="block text-gray-700 hover:text-brand-red font-medium py-2 border-b border-gray-50">什麼是木鱉果</a>
+            <a href="#nutrition" class="block text-gray-700 hover:text-brand-red font-medium py-2 border-b border-gray-50">超凡營養成分</a>
+            <a href="#benefits" class="block text-gray-700 hover:text-brand-red font-medium py-2 border-b border-gray-50">健康益處</a>
+            <a href="#recipes" class="block text-gray-700 hover:text-brand-red font-medium py-2 border-b border-gray-50">食用與烹調</a>
+            <a href="#faq" class="block text-gray-700 hover:text-brand-red font-medium py-2">常見疑問</a>
+        </div>
+    </nav>
+
+    <!-- Hero 橫幅區塊 -->
+    <header class="pt-28 pb-16 md:pt-36 md:pb-24 hero-gradient text-white relative overflow-hidden">
+        <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6 text-center md:text-left">
+                    <div class="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full text-sm font-medium">
+                        <i class="fa-solid fa-star text-amber-300"></i>
+                        <span>來自東南亞的奇蹟超級水果</span>
+                    </div>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
+                        來自天堂的禮物<br>
+                        <span class="text-amber-200">木鱉果 Gac Fruit</span>
+                    </h1>
+                    <p class="text-lg opacity-90 leading-relaxed font-light max-w-xl mx-auto md:mx-0">
+                        美譽為「來自天堂的水果」，木鱉果富含令人驚嘆的茄紅素與β-胡蘿蔔素。其植物油脂包覆營養的特性，更讓人體吸收率高居植物界頂峰！
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start pt-4">
+                        <a href="#about" class="px-8 py-4 bg-white text-brand-red font-bold rounded-xl shadow-lg hover:bg-amber-50 hover:shadow-xl transition-all duration-300 text-center">
+                            探索木鱉果奧秘
+                        </a>
+                        <a href="#nutrition" class="px-8 py-4 bg-brand-dark/30 hover:bg-brand-dark/50 text-white font-semibold rounded-xl border border-white/30 backdrop-blur-sm transition-all duration-300 text-center">
+                            查看營養比較
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Hero 右側展示 SVG 圖示與卡片 -->
+                <div class="relative flex justify-center">
+                    <div class="w-72 h-72 sm:w-80 sm:h-80 lg:w-96 lg:h-96 relative flex items-center justify-center">
+                        <!-- 模擬木鱉果外觀的 SVG 創作 -->
+                        <div class="absolute inset-0 bg-amber-400/30 rounded-full filter blur-xl animate-pulse"></div>
+                        <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-2xl relative z-10">
+                            <!-- 木鱉果外皮與刺刺圖樣 -->
+                            <path d="M 100 20 C 145 20, 180 55, 180 100 C 180 145, 145 180, 100 180 C 55 180, 20 145, 20 100 C 20 55, 55 20, 100 20 Z" fill="#E63946" />
+                            <!-- 果刺微小凸起裝飾 -->
+                            <circle cx="60" cy="40" r="3" fill="#F4A261" />
+                            <circle cx="100" cy="35" r="3" fill="#F4A261" />
+                            <circle cx="140" cy="45" r="3" fill="#F4A261" />
+                            <circle cx="40" cy="80" r="3" fill="#F4A261" />
+                            <circle cx="160" cy="90" r="3" fill="#F4A261" />
+                            <circle cx="50" cy="130" r="3" fill="#F4A261" />
+                            <circle cx="150" cy="130" r="3" fill="#F4A261" />
+                            <circle cx="90" cy="165" r="3" fill="#F4A261" />
+                            <!-- 果肉剖面區 -->
+                            <path d="M 100 35 C 135 35, 165 65, 165 100 C 165 135, 135 165, 100 165 C 65 165, 35 135, 35 100 C 35 65, 65 35, 100 35 Z" fill="#F4A261" opacity="0.9" />
+                            <!-- 黃色厚果肉 -->
+                            <circle cx="100" cy="100" r="50" fill="#E9C46A" />
+                            <!-- 紅色假種皮 (核心) -->
+                            <ellipse cx="100" cy="100" rx="35" ry="30" fill="#9B2226" />
+                            <!-- 黑色木鱉狀種子 -->
+                            <rect x="88" y="90" width="24" height="20" rx="6" fill="#2B2D42" />
+                            <!-- 果蒂 -->
+                            <path d="M 100 20 C 98 10, 105 5, 110 2" stroke="#2A9D8F" stroke-width="6" stroke-linecap="round" fill="none" />
+                        </svg>
+
+                        <!-- 浮動亮點標籤 -->
+                        <div class="absolute -top-2 left-0 bg-white text-gray-800 rounded-lg p-3 shadow-xl flex items-center space-x-2 text-xs font-bold border border-gray-100">
+                            <span class="flex h-3 w-3 rounded-full bg-red-500"></span>
+                            <span>茄紅素 ＝ 番茄 70 倍</span>
+                        </div>
+                        <div class="absolute -bottom-2 right-0 bg-white text-gray-800 rounded-lg p-3 shadow-xl flex items-center space-x-2 text-xs font-bold border border-gray-100">
+                            <span class="flex h-3 w-3 rounded-full bg-amber-500"></span>
+                            <span>β-胡蘿蔔素 ＝ 胡蘿蔔 15 倍</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-24">
+
+        <!-- 區塊一：什麼是木鱉果 -->
+        <section id="about" class="scroll-mt-28">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-xs font-extrabold tracking-widest text-brand-red uppercase mb-2">Botanical Overview</h2>
+                <p class="text-3xl sm:text-4xl font-black text-brand-dark">認識天堂果（木鱉果）</p>
+                <div class="w-16 h-1 bg-brand-orange mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- 卡片 1 -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300">
+                    <div class="w-14 h-14 bg-red-100 text-brand-red rounded-xl flex items-center justify-center text-2xl font-bold mb-6">
+                        <i class="fa-solid fa-seedling"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">植物學特徵與來源</h3>
+                    <p class="text-gray-600 leading-relaxed text-sm">
+                        木鱉果（學名：<em class="italic">Momordica cochinchinensis</em>）為葫蘆科苦瓜屬的草本藤本植物，原生於越南及東南亞地區。台灣原住民亦有栽培食用歷史。
+                    </p>
+                </div>
+
+                <!-- 卡片 2 -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300">
+                    <div class="w-14 h-14 bg-amber-100 text-brand-orange rounded-xl flex items-center justify-center text-2xl font-bold mb-6">
+                        <i class="fa-solid fa-shapes"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">為什麼叫「木鱉果」？</h3>
+                    <p class="text-gray-600 leading-relaxed text-sm">
+                        因其成熟果實內部的黑褐色種子形狀扁平、邊緣有鋸齒突起，長相酷似一隻隻小小的「木雕鱉魚」，因而得此特殊又好記的名字。
+                    </p>
+                </div>
+
+                <!-- 卡片 3 -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300">
+                    <div class="w-14 h-14 bg-teal-100 text-brand-green rounded-xl flex items-center justify-center text-2xl font-bold mb-6">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">「天堂來的果實」</h3>
+                    <p class="text-gray-600 leading-relaxed text-sm">
+                        美軍美廣研究或美洲醫學權威發現其豐富營養價值後，讚譽其為「Fruit from Heaven（天堂果）」，在越南傳統中更是滋補強身、喜慶節日的美味聖品。
+                    </p>
+                </div>
+            </div>
+
+            <!-- 特色結構圖解 -->
+            <div class="mt-12 bg-gradient-to-r from-amber-50 to-orange-50 rounded-3xl p-8 border border-amber-100">
+                <h4 class="text-lg font-bold text-amber-900 mb-6 text-center">解密木鱉果的果實結構與食用部位</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    <div class="bg-white p-5 rounded-xl border border-amber-200/60 shadow-sm text-center">
+                        <span class="inline-block px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-full mb-2">外層果皮與黃色果肉</span>
+                        <p class="text-gray-600 text-sm">表面布滿軟刺，成熟時由綠轉橘紅。黃色果肉通常用於煮湯或燉煮。</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-red-200 shadow-sm text-center ring-2 ring-brand-red/20">
+                        <span class="inline-block px-3 py-1 bg-red-100 text-brand-red text-xs font-bold rounded-full mb-2">紅色假種皮 (精華所在)</span>
+                        <p class="text-gray-600 text-sm">鮮紅色的包膜，是整顆果實植化素與茄紅素濃度最高、最精華的部位！</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm text-center">
+                        <span class="inline-block px-3 py-1 bg-gray-100 text-gray-800 text-xs font-bold rounded-full mb-2">黑褐色種子 (注意)</span>
+                        <p class="text-gray-600 text-sm">形似木鱉。含有微量毒性成分（木鱉子），不可直接生食，一般需去除。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 區塊二：超凡營養成分比對 -->
+        <section id="nutrition" class="scroll-mt-28">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-xs font-extrabold tracking-widest text-brand-red uppercase mb-2">Nutritional Supremacy</h2>
+                <p class="text-3xl sm:text-4xl font-black text-brand-dark">植物界中的營養王者</p>
+                <p class="text-gray-500 mt-3">與常見蔬果相比，木鱉果的植化素含量高得令人吃驚！</p>
+                <div class="w-16 h-1 bg-brand-orange mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <!-- 營養成分動態圖表 -->
+            <div class="bg-white rounded-3xl p-6 sm:p-10 shadow-lg border border-gray-100">
+                <div class="space-y-8">
+                    <!-- 茄紅素 -->
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold text-gray-800 flex items-center">
+                                <i class="fa-solid fa-fire text-red-500 mr-2"></i> 茄紅素 (Lycopene)
+                            </span>
+                            <span class="text-sm font-semibold text-brand-red">番茄的 70 倍</span>
+                        </div>
+                        <div class="w-full bg-gray-100 rounded-full h-5 overflow-hidden flex">
+                            <div class="bg-gradient-to-r from-red-500 to-brand-red h-full rounded-full transition-all duration-1000" style="width: 95%;"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-gray-400 mt-1">
+                            <span>成熟番茄</span>
+                            <span class="font-bold text-brand-red">木鱉果 (假種皮)</span>
+                        </div>
+                    </div>
+
+                    <!-- β-胡蘿蔔素 -->
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold text-gray-800 flex items-center">
+                                <i class="fa-solid fa-carrot text-orange-500 mr-2"></i> β-胡蘿蔔素 (Beta-Carotene)
+                            </span>
+                            <span class="text-sm font-semibold text-brand-orange">胡蘿蔔的 15 倍</span>
+                        </div>
+                        <div class="w-full bg-gray-100 rounded-full h-5 overflow-hidden flex">
+                            <div class="bg-gradient-to-r from-amber-400 to-brand-orange h-full rounded-full transition-all duration-1000" style="width: 80%;"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-gray-400 mt-1">
+                            <span>深色胡蘿蔔</span>
+                            <span class="font-bold text-brand-orange">木鱉果 (假種皮)</span>
+                        </div>
+                    </div>
+
+                    <!-- 葉黃素 & 玉米黃素 -->
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold text-gray-800 flex items-center">
+                                <i class="fa-solid fa-eye text-teal-500 mr-2"></i> 葉黃素與玉米黃素 (Lutein & Zeaxanthin)
+                            </span>
+                            <span class="text-sm font-semibold text-brand-green">黃玉米的 33 倍</span>
+                        </div>
+                        <div class="w-full bg-gray-100 rounded-full h-5 overflow-hidden flex">
+                            <div class="bg-gradient-to-r from-teal-400 to-brand-green h-full rounded-full transition-all duration-1000" style="width: 70%;"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-gray-400 mt-1">
+                            <span>黃色甜玉米</span>
+                            <span class="font-bold text-brand-green">木鱉果</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 亮點特點：必需脂肪酸媒介 -->
+                <div class="mt-10 p-6 bg-amber-50/70 rounded-2xl border border-amber-200/80 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-amber-500 text-white rounded-full flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-droplet"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-amber-900">關鍵優勢：天然「脂類胡蘿蔔素 (Lipocarotenes)」</h4>
+                            <p class="text-gray-600 text-sm">木鱉果自身含有豐富的長鏈脂肪酸（如 Omega-3、Omega-6）。因為類胡蘿蔔素為脂溶性，這項天然特性使其在人體內的**吸收率比一般蔬果高出 3 到 5 倍**！</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 區塊三：健康益處 -->
+        <section id="benefits" class="scroll-mt-28">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-xs font-extrabold tracking-widest text-brand-red uppercase mb-2">Health Benefits</h2>
+                <p class="text-3xl sm:text-4xl font-black text-brand-dark">對人體的五大健康效益</p>
+                <div class="w-16 h-1 bg-brand-orange mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 益處 1 -->
+                <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:border-brand-orange/40 hover:shadow-lg transition-all duration-300">
+                    <div class="w-12 h-12 bg-red-100 text-brand-red rounded-xl flex items-center justify-center text-xl font-bold mb-5">
+                        <i class="fa-solid fa-eye"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">晶亮護眼與視力保健</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        豐富的葉黃素、玉米黃素與 β-胡蘿蔔素能協助過濾有害藍光，對於常使用 3C 產品的現代人、長時間閱讀者能提供關鍵的舒緩與保護。
+                    </p>
+                </div>
+
+                <!-- 益處 2 -->
+                <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:border-brand-orange/40 hover:shadow-lg transition-all duration-300">
+                    <div class="w-12 h-12 bg-amber-100 text-brand-orange rounded-xl flex items-center justify-center text-xl font-bold mb-5">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">強效抗氧化與防護力</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        超高濃度的茄紅素與維生素 C、E，可幫助中和體內自由基，減少氧化壓力，進而增強身體天然防禦機制與保護力。
+                    </p>
+                </div>
+
+                <!-- 益處 3 -->
+                <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:border-brand-orange/40 hover:shadow-lg transition-all duration-300">
+                    <div class="w-12 h-12 bg-rose-100 text-rose-500 rounded-xl flex items-center justify-center text-xl font-bold mb-5">
+                        <i class="fa-solid fa-heart-pulse"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">心血管健康維持</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        含有的必需脂肪酸（如亞麻油酸）與抗氧化因子，有助於促進新陳代謝、維護血管彈性與維持良好循環機能。
+                    </p>
+                </div>
+
+                <!-- 益處 4 -->
+                <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:border-brand-orange/40 hover:shadow-lg transition-all duration-300">
+                    <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center text-xl font-bold mb-5">
+                        <i class="fa-solid fa-sparkles"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">肌膚養顏與養青春</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        維生素 A 前驅物（β-胡蘿蔔素）有助於維持皮膚與黏膜健康，促進膠原白生成感，是天然的青春維持盛品。
+                    </p>
+                </div>
+
+                <!-- 益處 5 -->
+                <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:border-brand-orange/40 hover:shadow-lg transition-all duration-300">
+                    <div class="w-12 h-12 bg-teal-100 text-brand-green rounded-xl flex items-center justify-center text-xl font-bold mb-5">
+                        <i class="fa-solid fa-person-running"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">促進新陳代謝與體力</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        天然植物油脂配合微量元素與維生素，為身體提供優質養分來源，有助於提振體力與維持日常活力狀態。
+                    </p>
+                </div>
+
+                <!-- 益處 6 -->
+                <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:border-brand-orange/40 hover:shadow-lg transition-all duration-300">
+                    <div class="w-12 h-12 bg-blue-100 text-blue-500 rounded-xl flex items-center justify-center text-xl font-bold mb-5">
+                        <i class="fa-solid fa-stomach"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">幫助消化道機能</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        果肉含有豐富的膳食纖維，能夠促進腸道蠕動，幫助消化，使排便順暢，維持良好的腸道微生態。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 區塊四：食用與烹調方法 -->
+        <section id="recipes" class="scroll-mt-28">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-xs font-extrabold tracking-widest text-brand-red uppercase mb-2">Culinary Uses</h2>
+                <p class="text-3xl sm:text-4xl font-black text-brand-dark">木鱉果的食用與料理方式</p>
+                <p class="text-gray-500 mt-2">木鱉果本身風味溫和微甘，極易融入日常膳食！</p>
+                <div class="w-16 h-1 bg-brand-orange mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- 方式 1 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 group hover:shadow-md transition-all">
+                    <div class="h-48 bg-gradient-to-tr from-red-500 to-orange-400 p-6 flex flex-col justify-end text-white relative">
+                        <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold">傳統經典</div>
+                        <i class="fa-solid fa-bowl-rice text-4xl mb-2 opacity-80"></i>
+                        <h3 class="text-2xl font-bold">越式糯米飯 (Xôi Gấc)</h3>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                            越南喜慶結婚時必備美食。將紅色假種皮拌入糯米中蒸熟，米飯會呈現吉祥鮮豔的紅色，帶有淡淡清香與油脂甘香。
+                        </p>
+                        <div class="text-xs text-brand-red font-semibold">推薦：喜慶節日、日常養生主食</div>
+                    </div>
+                </div>
+
+                <!-- 方式 2 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 group hover:shadow-md transition-all">
+                    <div class="h-48 bg-gradient-to-tr from-amber-500 to-yellow-400 p-6 flex flex-col justify-end text-white relative">
+                        <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold">養生湯品</div>
+                        <i class="fa-solid fa-mug-hot text-4xl mb-2 opacity-80"></i>
+                        <h3 class="text-2xl font-bold">木鱉果燉雞湯 / 排骨湯</h3>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                            將黃色果肉切塊與紅色假種皮一同放入湯中燉煮，果肉口感類似冬瓜或苦瓜但無苦味，能讓湯頭呈現金黃濃郁香氣。
+                        </p>
+                        <div class="text-xs text-brand-orange font-semibold">推薦：家庭日常補給、冬日溫補</div>
+                    </div>
+                </div>
+
+                <!-- 方式 3 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 group hover:shadow-md transition-all">
+                    <div class="h-48 bg-gradient-to-tr from-rose-500 to-red-400 p-6 flex flex-col justify-end text-white relative">
+                        <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold">方便快捷</div>
+                        <i class="fa-solid fa-blender text-4xl mb-2 opacity-80"></i>
+                        <h3 class="text-2xl font-bold">果汁飲料與保健膠囊</h3>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                            假種皮去籽後與百香果、鳳梨或蘋果一同打成綜合果汁；現代亦常萃取製成「木鱉果油膠囊」，方便每日補充。
+                        </p>
+                        <div class="text-xs text-brand-red font-semibold">推薦：上班族、外食族護眼補給</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 注意事項 Banner -->
+            <div class="mt-12 bg-rose-50 border-l-4 border-brand-red p-6 rounded-r-2xl">
+                <div class="flex items-start space-x-3">
+                    <div class="text-brand-red text-xl font-bold mt-0.5">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-gray-900 text-base">食用注意事項與禁忌</h4>
+                        <ul class="text-sm text-gray-600 mt-2 space-y-1 list-disc list-inside">
+                            <li><strong class="text-gray-800">種子切勿生食：</strong>木鱉果黑褐色種子具有微毒性（中藥稱木鱉子），處理時應將種子剔除，僅取用紅色假種皮與黃色果肉。</li>
+                            <li><strong class="text-gray-800">需加熱或與油脂搭配：</strong>類胡蘿蔔素為脂溶性，經加熱加熱或與油脂同煮能達到最佳吸收效果。</li>
+                            <li><strong class="text-gray-800">適量即可：</strong>過量攝取可能導致皮膚暫時性偏黃（β-胡蘿蔔素沉澱現象），停用後即可恢復。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 區塊五：常見問題 FAQ (手風琴) -->
+        <section id="faq" class="scroll-mt-28">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-xs font-extrabold tracking-widest text-brand-red uppercase mb-2">FAQ</h2>
+                <p class="text-3xl sm:text-4xl font-black text-brand-dark">常見疑問解答</p>
+                <div class="w-16 h-1 bg-brand-orange mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="max-w-3xl mx-auto space-y-4" id="faq-container">
+                <!-- Q1 -->
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <button class="w-full text-left p-6 font-bold text-gray-900 flex justify-between items-center focus:outline-none faq-btn">
+                        <span>木鱉果吃起來是什麼味道？</span>
+                        <i class="fa-solid fa-chevron-down text-brand-red transition-transform duration-200"></i>
+                    </button>
+                    <div class="hidden px-6 pb-6 text-gray-600 text-sm leading-relaxed border-t border-gray-50 pt-4">
+                        新鮮木鱉果的假種皮本身幾乎沒有強烈的氣味或甜味，帶有微弱的植物清香與天然油脂感；黃色果肉吃起來類似黃瓜或青苦瓜但完全不苦。因此非常適合加入各種料理、甜湯或與其他水果混合打成汁。
+                    </div>
+                </div>
+
+                <!-- Q2 -->
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <button class="w-full text-left p-6 font-bold text-gray-900 flex justify-between items-center focus:outline-none faq-btn">
+                        <span>木鱉果與枸杞、番茄相比，護眼效果哪個好？</span>
+                        <i class="fa-solid fa-chevron-down text-brand-red transition-transform duration-200"></i>
+                    </button>
+                    <div class="hidden px-6 pb-6 text-gray-600 text-sm leading-relaxed border-t border-gray-50 pt-4">
+                        木鱉果被稱為「超級水果」的原因在於其綜合含量極高。它的茄紅素是番茄的 70 倍，β-胡蘿蔔素是胡蘿蔔的 15 倍，並且天然含有「脂類胡蘿蔔素」，人體吸收利用率比單純吃枸杞或番茄更高！
+                    </div>
+                </div>
+
+                <!-- Q3 -->
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <button class="w-full text-left p-6 font-bold text-gray-900 flex justify-between items-center focus:outline-none faq-btn">
+                        <span>孕婦或小孩可以食用木鱉果嗎？</span>
+                        <i class="fa-solid fa-chevron-down text-brand-red transition-transform duration-200"></i>
+                    </button>
+                    <div class="hidden px-6 pb-6 text-gray-600 text-sm leading-relaxed border-t border-gray-50 pt-4">
+                        熟透的木鱉果肉與紅色假種皮是非常好的營養補充品，孕婦與小孩適量食用（如喝木鱉果湯或果汁）能補充維生素與膳食纖維。但請特別注意務必**剔除黑色種子**，且若選擇保健膠囊，建議先諮詢醫師或營養師意見。
+                    </div>
+                </div>
+
+                <!-- Q4 -->
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <button class="w-full text-left p-6 font-bold text-gray-900 flex justify-between items-center focus:outline-none faq-btn">
+                        <span>在台灣哪裡可以買到木鱉果？</span>
+                        <i class="fa-solid fa-chevron-down text-brand-red transition-transform duration-200"></i>
+                    </button>
+                    <div class="hidden px-6 pb-6 text-gray-600 text-sm leading-relaxed border-t border-gray-50 pt-4">
+                        台灣花東地區（如台東、花蓮）及中南部有許多小農推廣種植，盛產期約在夏季至秋季（7月~11月）。可在傳統市場、東南亞食品超市、花東農會或網路小農平台購買新鮮果實或冷凍假種皮包。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 頁尾 Footer -->
+    <footer class="bg-brand-dark text-white pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-3 gap-8 pb-12 border-b border-gray-700">
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-brand-red flex items-center justify-center text-white text-xl font-bold">
+                            <i class="fa-solid fa-apple-whole"></i>
+                        </div>
+                        <span class="text-2xl font-black tracking-wide">木鱉果百科</span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        致力於普及天堂果（木鱉果）的健康價值與營養知識，推廣天然、健康的超級食物生活方式。
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold mb-4 border-l-4 border-brand-orange pl-3">快速連結</h4>
+                    <ul class="space-y-2 text-sm text-gray-300">
+                        <li><a href="#about" class="hover:text-brand-orange transition-colors">什麼是木鱉果</a></li>
+                        <li><a href="#nutrition" class="hover:text-brand-orange transition-colors">營養成分比較</a></li>
+                        <li><a href="#benefits" class="hover:text-brand-orange transition-colors">對身體的益處</a></li>
+                        <li><a href="#recipes" class="hover:text-brand-orange transition-colors">食用與烹調指引</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold mb-4 border-l-4 border-brand-orange pl-3">健康提示</h4>
+                    <p class="text-gray-400 text-xs leading-relaxed">
+                        本網站提供之資訊僅供健康知識參考與教育用途，不能替代專業醫療診斷或治療。如有特定疾病或健康疑問，請諮詢合格之醫師或營養師。
+                    </p>
+                </div>
+            </div>
+
+            <div class="pt-8 text-center text-xs text-gray-500">
+                &copy; 2026 木鱉果（天堂果）營養介紹網頁. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript 互動邏輯 -->
+    <script>
+        // 行動裝置選單開關
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 點擊選單項目後自動關閉行動選單
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // FAQ 手風琴效果
+        const faqBtns = document.querySelectorAll('.faq-btn');
+
+        faqBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const content = btn.nextElementSibling;
+                const icon = btn.querySelector('i');
+
+                // 切換顯示狀態
+                content.classList.toggle('hidden');
+                
+                // 圖示旋轉
+                if (content.classList.contains('hidden')) {
+                    icon.style.transform = 'rotate(0deg)';
+                } else {
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
