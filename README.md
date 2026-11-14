@@ -6,7 +6,7 @@
 
 ## 📌 專案簡介
 
-本專案收錄由 **Marco 曾** 開發與設計的 **43 件數位專案與創作**，涵蓋多領域實戰應用、演算法與純前端離線安全工具。  
+本專案收錄由 **Marco 曾** 開發與設計的 **44 件數位專案與創作**，涵蓋多領域實戰應用、演算法與純前端離線安全工具。  
 所有作品皆已完成系統化語意命名與類型歸檔，並透過根目錄下的互動式入口頁面 [`index.html`](index.html) 提供流暢的瀏覽、即時檢索、分類篩選與多媒體預覽體驗。
 
 ---
@@ -36,6 +36,7 @@ myworks/
 ├── apps/                       # Web 應用系統、平台與數據儀表板
 │   ├── ai-agent-market-research-dashboard.html
 │   ├── ai-tarot-reading-web-app.html
+│   ├── ai-video-vibe-coding-trends-dashboard.html
 │   ├── attention-magic-adventure.html
 │   ├── cute-weekly-horoscope-app.html
 │   ├── gac-fruit-superfood-guide.html
@@ -92,6 +93,7 @@ myworks/
 ## 🌟 重點作品亮點
 
 ### 1. 智慧應用與商業分析 (`apps/`)
+- **2026 AI 影片製作：Vibe Coding 決策儀表板**：Code-as-Video 程式化影片新典範，深度解析四大框架 (HyperFrames / Remotion / Clipkit / Manim)、OpenMontage 7階段管線與互動式 TCO 成本試算器。
 - **注意力魔法大冒險**：注意力喚醒與生命探索應用，支援兒童／大人雙模式切換、能量探測量表、外在微整理與信念宣告。
 - **2026 全球 AI Agent 產業研究儀表板**：深入分析 15 大跨產業地圖、商業變現模式與 Top 10 創業機會。
 - **微美地圖 (Micro Beauty Map)**：美容體驗社群與生活美容探索平台。

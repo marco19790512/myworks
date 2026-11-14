@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 AI 影片製作趨勢：Vibe Coding 架構與免費付費方案深度解析</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #FAF8F5;
+            color: #1E293B;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans TC", sans-serif;
+            overflow-x: hidden;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 380px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 340px;
+            }
+        }
+        .warm-card {
+            background-color: #FFFFFF;
+            border: 1px solid #E7E5E4;
+            box-shadow: 0 2px 8px rgba(28, 25, 23, 0.04);
+        }
+        .nav-pill.active {
+            background-color: #0F766E;
+            color: #FFFFFF;
+            border-color: #0F766E;
+        }
+        .tab-btn.active {
+            border-bottom: 3px solid #0F766E;
+            color: #0F766E;
+            font-weight: 700;
+        }
+        .stage-node.active {
+            background-color: #0F766E;
+            color: #FFFFFF;
+            border-color: #0F766E;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<!-- Chosen Palette: Warm Alabaster & Deep Teal (Main Background: #FAF8F5, Surface Cards: #FFFFFF, Primary Accent: #0F766E Deep Teal, Secondary Accent: #D97706 Warm Amber, Text: #1E293B Slate) -->
+<!-- Application Structure Plan: The SPA is organized into four task-oriented, interactive modules rather than a linear document dump: (1) Executive Overview & Paradigm Shift KPIs introducing Code-as-Video; (2) Core Architecture & Rendering Engine Lab featuring interactive framework deep-dives, a Chart.js performance/token benchmark chart, and an interactive 7-stage OpenMontage Agentic DAG pipeline; (3) Free vs. Paid Economics & Interactive TCO Simulator allowing users to adjust team size and monthly render volume to dynamically compute AWS Lambda + Licensing costs alongside a filterable comparison matrix of open-source frameworks and SaaS tools; (4) Strategic Selection Wizard & Hybrid Dual-Track Workflow recommending tailored stacks by user persona. This structure prioritizes active decision-making and cost-benefit synthesis. -->
+<!-- Visualization & Content Choices: 1. Rendering Speed & Token Efficiency Benchmark -> Goal: Compare -> Grouped Bar Chart (Chart.js Canvas) -> Interactive metric toggle (Speed Multiplier vs. Token Savings) -> Clearly illustrates Clipkit WebGPU and Strobe GPU zero-copy gains over traditional headless Chrome -> Chart.js. 2. OpenMontage 7-Stage Pipeline -> Goal: Organize -> Interactive HTML/CSS Flexbox Process Flow -> Clickable stage nodes updating a contextual detail panel -> Explains human-in-the-loop cost checkpoints without SVG/Mermaid -> Vanilla JS + Tailwind. 3. Interactive TCO Cost Simulator -> Goal: Compare/Change -> Dynamic Bar Chart (Chart.js Canvas) + Range Sliders -> Real-time recalculation of Remotion license thresholds (>3 employees / $0.01 per render) vs HyperFrames Apache 2.0 vs SaaS -> Chart.js + Vanilla JS. 4. Free vs. Paid Matrix -> Goal: Organize/Inform -> Filterable HTML Table -> Category pills (All, Free Open-Source, Paid SaaS) -> Easy scanning of pricing and use cases -> Vanilla JS. -->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+<body class="antialiased selection:bg-teal-100 selection:text-teal-900">
+
+    <header class="sticky top-0 z-40 bg-[#FAF8F5]/95 backdrop-blur border-b border-stone-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between py-3 gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-teal-700 text-white font-bold text-sm">VC</span>
+                    <div>
+                        <h1 class="text-base sm:text-lg font-bold text-slate-900 leading-tight">2026 AI 影片製作：Vibe Coding 決策儀表板</h1>
+                        <p class="text-xs text-stone-500">程式化影片架構、渲染效能與免費/付費方案深度比較</p>
+                    </div>
+                </div>
+                <nav class="flex flex-wrap gap-1.5 text-xs sm:text-sm">
+                    <a href="#overview" class="px-3 py-1.5 rounded-full border border-stone-300 bg-white hover:bg-stone-100 text-slate-700 font-medium transition">1. 典範轉移</a>
+                    <a href="#architecture" class="px-3 py-1.5 rounded-full border border-stone-300 bg-white hover:bg-stone-100 text-slate-700 font-medium transition">2. 核心架構與效能</a>
+                    <a href="#economics" class="px-3 py-1.5 rounded-full border border-stone-300 bg-white hover:bg-stone-100 text-slate-700 font-medium transition">3. 免費付費 TCO 試算</a>
+                    <a href="#strategy" class="px-3 py-1.5 rounded-full border border-stone-300 bg-white hover:bg-stone-100 text-slate-700 font-medium transition">4. 戰略選型指南</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-14">
+
+        <section id="overview" class="space-y-6">
+            <div class="warm-card rounded-2xl p-6 sm:p-8 border-l-4 border-l-teal-700">
+                <div class="inline-block px-3 py-1 rounded-full bg-teal-50 text-teal-800 text-xs font-semibold mb-3">
+                    Code-as-Video 程式化影片新典範
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">
+                    從時間軸剪輯走向自然語言驅動的「Vibe Coding」影片工程
+                </h2>
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed max-w-4xl">
+                    本節為您揭示 2026 年 AI 影片製作的核心變革。傳統如 After Effects 等 GUI 工具產出封閉的二進位檔案，難以納入 Git 版本控制或自動化量產。透過 Vibe Coding，創作者只需以自然語言指揮 Claude Code 或 Cursor 等 AI Agent，即可將分鏡與動效編寫為結構化程式碼（React、HTML 或 JSON），並透過無頭瀏覽器或 WebGPU 逐幀編譯為標準 MP4，無縫接入 CI/CD 行銷管線。
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+                    <div class="p-4 rounded-xl bg-stone-50 border border-stone-200">
+                        <div class="text-xs font-semibold text-stone-500 uppercase">極致渲染加速 (Clipkit)</div>
+                        <div class="text-2xl font-extrabold text-teal-700 mt-1">29.5x 更快</div>
+                        <p class="text-xs text-slate-600 mt-1">採用 JSON + 本地 WebGPU 引擎，中位數渲染僅需 3.4 秒，並節省 50% LLM Token。</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-stone-50 border border-stone-200">
+                        <div class="text-xs font-semibold text-stone-500 uppercase">GPU 零拷貝突破 (Strobe)</div>
+                        <div class="text-2xl font-extrabold text-amber-600 mt-1">3x ~ 11.6x</div>
+                        <p class="text-xs text-slate-600 mt-1">嵌入 CEF 156 並直連 NVENC 硬體編碼，繞過 CPU 搬運瓶頸，畫質無損。</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-stone-50 border border-stone-200">
+                        <div class="text-xs font-semibold text-stone-500 uppercase">企業級全免費授權</div>
+                        <div class="text-2xl font-extrabold text-teal-700 mt-1">$0 授權稅</div>
+                        <p class="text-xs text-slate-600 mt-1">HeyGen 開源的 HyperFrames 採 Apache 2.0 協議，不限團隊規模與渲染次數。</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-stone-50 border border-stone-200">
+                        <div class="text-xs font-semibold text-stone-500 uppercase">Remotion 免費門檻</div>
+                        <div class="text-2xl font-extrabold text-slate-800 mt-1">&le; 3 人團隊</div>
+                        <p class="text-xs text-slate-600 mt-1">個人與 3 人以下微型新創完全免費；4 人以上或 SaaS 自動化需付費授權。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="architecture" class="space-y-6">
+            <div>
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-900">核心技術架構：底層渲染引擎與多代理協作管線</h2>
+                <p class="text-slate-600 text-sm sm:text-base mt-1 leading-relaxed">
+                    本節深入剖析支撐 Vibe Coding 的四大程式化框架與底層硬體加速技術。您可以點擊下方頁籤比較各框架在 AI Agent 適配度與渲染確定性上的差異，透過右側圖表檢視渲染效能基準，並點擊探索 OpenMontage 如何透過七階段 DAG 管線防止 AI 生成失控。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div class="lg:col-span-7 warm-card rounded-2xl p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex border-b border-stone-200 overflow-x-auto gap-4 pb-1 mb-5" id="framework-tabs">
+                            <button type="button" class="tab-btn active pb-2 text-sm whitespace-nowrap transition" data-fw="hyperframes">HyperFrames (HTML/GSAP)</button>
+                            <button type="button" class="tab-btn pb-2 text-sm text-stone-500 hover:text-slate-800 whitespace-nowrap transition" data-fw="remotion">Remotion (React/TS)</button>
+                            <button type="button" class="tab-btn pb-2 text-sm text-stone-500 hover:text-slate-800 whitespace-nowrap transition" data-fw="clipkit">Clipkit (JSON/WebGPU)</button>
+                            <button type="button" class="tab-btn pb-2 text-sm text-stone-500 hover:text-slate-800 whitespace-nowrap transition" data-fw="manim">Manim / Python 短影音</button>
+                        </div>
+
+                        <div id="framework-detail" class="space-y-4">
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-stone-100 bg-amber-50/70 rounded-xl p-4">
+                        <div class="flex items-start gap-2.5">
+                            <span class="text-amber-600 font-bold text-base">&#9888;</span>
+                            <div class="text-xs text-slate-700 leading-relaxed">
+                                <strong class="text-slate-900">Vibe Coding 三大系統性挑戰：</strong>
+                                (1) <strong>上下文遺忘</strong>：大型 React 專案易觸發 LLM 幻覺與 Props 狀態脫鉤；
+                                (2) <strong>Token 經濟學</strong>：HyperFrames 的 DOM 結構消耗較多 Token，Clipkit JSON 可省 50%；
+                                (3) <strong>美學編譯器危機</strong>：語法正確不代表具備美感，企業需預先鎖定 CSS 樣式表規範。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 warm-card rounded-2xl p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <h3 class="text-base font-bold text-slate-900">渲染架構效能與加速基準</h3>
+                            <select id="perf-metric-select" class="text-xs border border-stone-300 rounded-lg px-2.5 py-1.5 bg-stone-50 text-slate-700 font-medium focus:outline-none focus:border-teal-700">
+                                <option value="speed">相對渲染速度倍率 (倍數越高越快)</option>
+                                <option value="tokens">LLM Token 消耗指數 (越低越省錢)</option>
+                            </select>
+                        </div>
+                        <p class="text-xs text-stone-500 mb-4" id="perf-chart-desc">
+                            以原生無頭瀏覽器架構為基準 (1x)，展示 WebGPU 與 Strobe GPU 零拷貝技術帶來的渲染速度飛躍。
+                        </p>
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="perfChart"></canvas>
+                    </div>
+
+                    <div class="mt-4 text-xs text-stone-500 bg-stone-50 p-3 rounded-lg border border-stone-200">
+                        <strong>技術關鍵：</strong>傳統 CDP 架構需將影格從 GPU 讀回主記憶體交由 CPU 壓縮；<strong>Strobe</strong> 嵌入 CEF 156 實現 GPU 記憶體直通 NVENC 硬體編碼器。
+                    </div>
+                </div>
+            </div>
+
+            <div class="warm-card rounded-2xl p-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                    <div>
+                        <h3 class="text-base sm:text-lg font-bold text-slate-900">智慧代理協作 (Agentic Orchestration)：OpenMontage 七階段 DAG 管線</h3>
+                        <p class="text-xs sm:text-sm text-slate-600">點擊下方任一階段節點，檢視 AI Agent 如何透過「導演技能 (Stage-director skills)」與人工確認檢查點實現端到端自動化。</p>
+                    </div>
+                    <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-teal-50 text-teal-800 text-xs font-medium">內建 12 條標準化生產管線</span>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 mb-4" id="dag-stages">
+                </div>
+
+                <div id="dag-detail-box" class="p-4 rounded-xl bg-stone-50 border border-stone-200 text-sm text-slate-700 transition-all">
+                </div>
+            </div>
+        </section>
+
+        <section id="economics" class="space-y-6">
+            <div>
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-900">免費與付費方案總體經濟學 (TCO) 與互動試算</h2>
+                <p class="text-slate-600 text-sm sm:text-base mt-1 leading-relaxed">
+                    選擇開源程式化框架或封閉式商業 SaaS，取決於團隊人數、每月產片量與畫面類型。請調整下方的<strong>團隊規模</strong>與<strong>月產片量滑桿</strong>，即時試算軟體授權費與 AWS Lambda 無伺服器運算成本的消長，並瀏覽下方完整方案比較表。
+                </p>
+            </div>
+
+            <div class="warm-card rounded-2xl p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    <div class="lg:col-span-5 space-y-5">
+                        <h3 class="text-base font-bold text-slate-900 border-b border-stone-200 pb-2">互動式月度成本試算器 (1080p / 60秒影片)</h3>
+
+                        <div>
+                            <div class="flex justify-between text-sm font-medium mb-1">
+                                <label for="team-size-slider" class="text-slate-700">企業 / 團隊總人數：</label>
+                                <span id="team-size-val" class="text-teal-700 font-bold">5 人</span>
+                            </div>
+                            <input type="range" id="team-size-slider" min="1" max="25" value="5" class="w-full accent-teal-700 cursor-pointer">
+                            <div class="flex justify-between text-[11px] text-stone-400 mt-0.5">
+                                <span>1人 (個人)</span>
+                                <span>3人 (Remotion 免費上限)</span>
+                                <span>25人+ (中大型企業)</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-sm font-medium mb-1">
+                                <label for="volume-slider" class="text-slate-700">每月自動化渲染影片數量：</label>
+                                <span id="volume-val" class="text-teal-700 font-bold">10,000 支</span>
+                            </div>
+                            <input type="range" id="volume-slider" min="100" max="50000" step="100" value="10000" class="w-full accent-teal-700 cursor-pointer">
+                            <div class="flex justify-between text-[11px] text-stone-400 mt-0.5">
+                                <span>100 支</span>
+                                <span>10,000 支 (報告基準)</span>
+                                <span>50,000 支</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between p-3 rounded-xl bg-stone-50 border border-stone-200">
+                            <div>
+                                <div class="text-xs font-bold text-slate-800">對外提供 SaaS 個人化影片服務</div>
+                                <div class="text-[11px] text-stone-500">開啟後將觸發 Remotion Automators ($0.01/次) 條款</div>
+                            </div>
+                            <input type="checkbox" id="saas-mode-toggle" checked class="w-4 h-4 accent-teal-700 cursor-pointer">
+                        </div>
+
+                        <div id="tco-recommendation" class="p-4 rounded-xl bg-teal-50 border border-teal-200 text-xs text-teal-950 leading-relaxed">
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-7">
+                        <div class="mb-2 flex items-center justify-between">
+                            <span class="text-sm font-bold text-slate-800">預估每月總擁有成本對比 (美元 USD / 月)</span>
+                            <span class="text-xs text-stone-500">含授權費 + 雲端運算預估</span>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="tcoChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="warm-card rounded-2xl p-6 space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <h3 class="text-base sm:text-lg font-bold text-slate-900">免費開源架構 vs. 付費商業平台全方位比較</h3>
+                        <p class="text-xs text-stone-500">程式化框架專精於動態圖形、數據與 UI；生成式 SaaS 專精於逼真人物與電影級物理畫面。</p>
+                    </div>
+                    <div class="flex flex-wrap gap-1.5" id="table-filters">
+                        <button type="button" class="nav-pill active px-3 py-1.5 rounded-full text-xs font-medium border border-stone-300 transition" data-filter="all">全部顯示 (9)</button>
+                        <button type="button" class="nav-pill px-3 py-1.5 rounded-full text-xs font-medium border border-stone-300 bg-white text-slate-700 hover:bg-stone-100 transition" data-filter="free">免費 / 開源程式化 (4)</button>
+                        <button type="button" class="nav-pill px-3 py-1.5 rounded-full text-xs font-medium border border-stone-300 bg-white text-slate-700 hover:bg-stone-100 transition" data-filter="paid">付費商業 SaaS (5)</button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                        <thead>
+                            <tr class="border-b-2 border-stone-200 text-stone-600 bg-stone-50">
+                                <th class="py-3 px-3 font-bold">工具 / 框架名稱</th>
+                                <th class="py-3 px-3 font-bold">類型與核心技術</th>
+                                <th class="py-3 px-3 font-bold">免費方案與限制</th>
+                                <th class="py-3 px-3 font-bold">付費模式與價格 (2026)</th>
+                                <th class="py-3 px-3 font-bold">最佳適用場景</th>
+                            </tr>
+                        </thead>
+                        <tbody id="comparison-tbody" class="divide-y divide-stone-200">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="strategy" class="space-y-6 pb-8">
+            <div>
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-900">戰略選型精靈與終極「混合雙軌制」工作流</h2>
+                <p class="text-slate-600 text-sm sm:text-base mt-1 leading-relaxed">
+                    建構程式化管線前期需投入約 30–50 小時工程成本（約 $3,000–$6,000 美元），但量產邊際成本趨近於零；SaaS 則能在數分鐘內產出首支影片。請點選最符合您現況的角色情境，獲取專屬技術棧建議與混合雙軌工作流配置。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3" id="persona-cards">
+            </div>
+
+            <div id="strategy-output" class="warm-card rounded-2xl p-6 sm:p-8 border-t-4 border-t-teal-700">
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-stone-200 bg-white py-6 text-center text-xs text-stone-500">
+        <div class="max-w-7xl mx-auto px-4">
+            資料來源：《2026年AI影片製作趨勢：Vibe Coding架構、工作流與免費付費方案深度解析》研究報告
+        </div>
+    </footer>
+
+    <script>
+        const frameworkData = {
+            hyperframes: {
+                title: "HyperFrames：專為 AI Agent 設計的 HTML 渲染引擎",
+                badge: "Apache 2.0 完全免費開源",
+                badgeClass: "bg-teal-100 text-teal-800",
+                summary: "由 HeyGen 於 2026 年正式開源，完全基於原生 HTML、CSS 與 GSAP/Lottie 網頁動畫庫。大型語言模型在預訓練時擁有海量 HTML/CSS 語料，因此 AI Agent 生成網頁標籤的準確率與創意多樣性遠高於 React。",
+                highlights: [
+                    "絕對確定性渲染 (Deterministic Rendering)：無頭瀏覽器擷取每一幀前，強制暫停 GSAP 時間軸並跳轉至精準影格時間點，杜絕掉幀與時間軸脫鉤。",
+                    "Agent-Native 技能包：提供 /hyperframes 指令集，讓 Claude Code 自動完成建案、HTML 編寫、字幕同步與 FFmpeg 壓製。",
+                    "企業級零授權風險：Apache 2.0 協議不限團隊規模與渲染次數，最適合大規模行銷自動化流水線。"
+                ]
+            },
+            remotion: {
+                title: "Remotion：基於 React 的成熟生態系與組件化思維",
+                badge: "Source-available (3人以下免費)",
+                badgeClass: "bg-amber-100 text-amber-800",
+                summary: "業界採用率最高的程式化影片框架，將每一幀畫面視為 React 組件，透過 useCurrentFrame 與 interpolate 將時間軸轉化為純函數式編程的 Props。",
+                highlights: [
+                    "企業設計系統無縫復用：具備 React 前端團隊的企業可直接調用現有 UI 組件，並支援 @remotion/three 整合 3D 場景。",
+                    "雲端分散式渲染 (Remotion Lambda)：可在 AWS 上平行開啟數十台虛擬機器切片渲染，大幅縮短長影片時間。",
+                    "Vibe Coding 摩擦力：React Hooks 規則較嚴格，大型專案易遇上下文視窗限制；外部動畫庫（如 GSAP）易與 Remotion 幀計算衝突。"
+                ]
+            },
+            clipkit: {
+                title: "Clipkit：捨棄瀏覽器的 JSON + 本地 WebGPU 極速引擎",
+                badge: "BSL 1.1 轉 Apache 2.0",
+                badgeClass: "bg-indigo-100 text-indigo-800",
+                summary: "架構最為激進的新興方案，完全捨棄無頭瀏覽器與龐大 DOM 結構，採用輕量級 JSON 協議與本地 WebGPU 引擎進行即時硬體渲染。",
+                highlights: [
+                    "渲染速度之王：處理 AI Agent 生成專案的中位數渲染時間僅 3.4 秒，比原生 Remotion 快 8.2 倍，比 HyperFrames 快 29.5 倍。",
+                    "極致節省 Token 成本：AI 僅需輸出精簡 JSON 標記語言，比 HyperFrames 節省高達 50% 的 LLM 推論 Token 消耗。",
+                    "免費與雲端彈性：瀏覽器端 WebGPU 渲染完全免費無浮水印；官方雲端渲染提供每月 250 分鐘免費額度。"
+                ]
+            },
+            manim: {
+                title: "Manim 與 Python 短影音自動化生態系",
+                badge: "MIT / 開源社群生態",
+                badgeClass: "bg-stone-200 text-stone-800",
+                summary: "針對科學數學教育（Manim）與自媒體短影音矩陣（MoneyPrinterTurbo / ShortGPT）的 Python 高度專用化自動化解決方案。",
+                highlights: [
+                    "Manim + manim-voiceover：結合 LLM 將數學公式轉為 Python 動畫，並對接 Whisper 或 ElevenLabs 實現旁白「逐詞精準對齊」。",
+                    "MoneyPrinterTurbo / ShortGPT：輸入關鍵字即可自動生成腳本、呼叫免費微軟 Edge-TTS 語音、抓取 Pexels 素材並自動上字幕。",
+                    "零硬體門檻：支援普通筆電或免費 Google Colab 環境掛機批量產出 TikTok / Shorts 垂直短影音。"
+                ]
+            }
+        };
+
+        const dagStagesData = [
+            { step: "1. Research", name: "研究與資料蒐集", desc: "Agent 自動檢索主題背景、產品更新日誌（如 GitHub PR）或外部知識庫，彙整結構化事實素材作為劇本基礎。", gate: "自動化執行" },
+            { step: "2. Proposal", name: "提案與預算估算", desc: "規劃影片敘事角度、預估片長與所需外部 API（如付費語音或擴散模型）的成本預算。", gate: "人工確認檢查點 (防止預算失控)" },
+            { step: "3. Script", name: "逐字稿與旁白撰寫", desc: "根據核准的提案撰寫具備節奏感的分鏡旁白腳本，並標記關鍵字強調與情緒轉折點。", gate: "自動化與自我修正" },
+            { step: "4. Scene Plan", name: "分鏡計畫與故事板", desc: "將腳本拆解為具體的時間軸分鏡表（Storyboard），定義轉場動效、鏡頭運動與版面配置邏輯。", gate: "人工確認故事板" },
+            { step: "5. Assets", name: "多媒體資產生成", desc: "依據分鏡需求調用 TTS 生成語音（計算逐詞時間戳），並呼叫擴散模型或圖庫獲取視覺素材。", gate: "成本高昂節點 (受控執行)" },
+            { step: "6. Edit", name: "程式化編輯決策", desc: "核心 Agent 讀取 Markdown 格式的「導演技能」，編寫 Remotion 組件或 HTML/CSS 動畫程式碼對齊音畫。", gate: "語法與時間軸驗證" },
+            { step: "7. Compose", name: "最終合成與壓製", desc: "自動選擇呼叫 Remotion 渲染動態圖層或直接透過 FFmpeg 進行音訊混音與高畫質 MP4 編碼輸出。", gate: "完成交付" }
+        ];
+
+        const toolsMatrixData = [
+            { name: "HyperFrames", category: "free", tech: "程式化框架 (HTML / CSS / GSAP)", freeTier: "完全免費 (Apache 2.0)，不限人數、渲染次數與商用", paidTier: "無軟體授權費 (僅負擔自建雲端運算費，萬支約 $22.17)", bestFor: "4人以上企業、大規模自動化行銷管線、AI Agent 最高適配度" },
+            { name: "Remotion", category: "free", tech: "程式化框架 (React / TypeScript)", freeTier: "個人、非營利組織及 3 人(含)以下企業完全免費商用", paidTier: "創作者 $25/人/月；自動化 $0.01/次(低消$100/月)；企業 $500+", bestFor: "1-3人新創工作室、擁有 React 設計系統的前端團隊" },
+            { name: "Clipkit", category: "free", tech: "程式化引擎 (JSON / WebGPU)", freeTier: "瀏覽器端 WebGPU 渲染完全免費無浮水印；雲端 250 分鐘/月", paidTier: "雲端渲染超出 250 分鐘後按用量計費", bestFor: "需要 3.4 秒極速反饋、節省 50% LLM Token 的動態數據卡片" },
+            { name: "MoneyPrinterTurbo / ShortGPT", category: "free", tech: "Python 自動化腳本 + Edge-TTS", freeTier: "完全免費開源 (MIT)，支援本地筆電或 Google Colab 部署", paidTier: "無軟體費 (僅需支付呼叫 OpenAI/Gemini 文案 API 的微額 Token 費)", bestFor: "TikTok / YouTube Shorts 無臉頻道矩陣、一鍵批量產片" },
+            { name: "Pexo", category: "paid", tech: "生成式 SaaS (多模型智能路由)", freeTier: "無永久免費商用方案 (依試用點數而定)", paidTier: "訂閱制或 API 點數按用量計費 (自動路由 Kling 3.0, Veo 3.1, Sora 2)", bestFor: "高擬真度人物動作、產品特寫與電影級 B-Roll 素材生成" },
+            { name: "InVideo AI", category: "paid", tech: "生成式 SaaS (Script-to-Video)", freeTier: "免費版具浮水印與功能限制", paidTier: "訂閱制：約 $20 – $60 美元 / 月", bestFor: "無程式與剪輯基礎的行銷人員，數分鐘內產出社群廣告片" },
+            { name: "Runway Gen-4.5", category: "paid", tech: "生成式 SaaS (VFX 與精細運鏡)", freeTier: "有限度免費試用點數", paidTier: "訂閱制：$15 美元 / 月起", bestFor: "專業電影製作者、VFX 特效師尋求極致動態流與運鏡控制" },
+            { name: "Kling AI (可靈)", category: "paid", tech: "生成式 SaaS (物理一致性與人體動態)", freeTier: "免費方案每日發放固定點數供測試", paidTier: "付費訂閱：$6 美元 / 月起 (高性價比)", bestFor: "頻繁進行圖生影片 (Image-to-Video) 與逼真人物動作測試" },
+            { name: "CapCut Pro (剪映)", category: "paid", tech: "商業剪輯 SaaS (AI 特效與智慧剪輯)", freeTier: "基礎剪輯功能免費", paidTier: "訂閱制：約 $19.99 美元 / 月 (含 1TB 雲端空間與 1200 AI 點數)", bestFor: "需結合手機/PC 端快速人工微調與流行社群轉場特效的創作者" }
+        ];
+
+        const personasData = [
+            {
+                id: "solo",
+                icon: "&#128187;",
+                title: "獨立開發者 / 1-3人新創",
+                subtitle: "零資金成本、快速驗證 MVP",
+                stack: "Remotion (免費授權) + Claude Code / Cursor + 本地硬體渲染",
+                why: "3 人以下團隊完全免疫 Remotion 商業授權費，可無償使用其龐大的 React 生態系與 3D 組件庫。搭配官方 Remotion Agent Skills，能將數週動畫開發壓縮至數小時。",
+                hybridSteps: [
+                    "Step 1 (Vibe Coding 骨架)：在終端機執行 npx skills add remotion-dev/skills，讓 Claude Code 自動生成專案架構與動效。",
+                    "Step 2 (視覺血肉補充)：若需真實人物或複雜背景，利用 Kling AI 每日免費點數生成局部圖生影片素材。",
+                    "Step 3 (本地免費渲染)：直接使用本地電腦 GPU 渲染輸出，全程軟體授權費為 $0。"
+                ]
+            },
+            {
+                id: "shorts",
+                icon: "&#128241;",
+                title: "短影音矩陣 / 無臉自媒體",
+                subtitle: "海量日更、極致壓低單片成本",
+                stack: "MoneyPrinterTurbo / ShortGPT + Edge-TTS + Pexels 免版權庫",
+                why: "短影音矩陣追求高頻率更新與極低邊際成本。Python 開源腳本透過微軟 Edge-TTS 解決昂貴的語音合成費，並在免費 Google Colab 或本地端實現全自動掛機產片。",
+                hybridSteps: [
+                    "Step 1 (關鍵字批量輸入)：透過 WebUI 輸入主題關鍵字，由平價 LLM (如 Gemini Flash) 批量生成分鏡腳本。",
+                    "Step 2 (零成本音畫匹配)：自動調用免費 Edge-TTS 生成高保真旁白，並自動檢索匹配直式畫面素材。",
+                    "Step 3 (自動字幕壓製)：透過 MoviePy / FFmpeg 自動對齊動態字幕，一鍵輸出 9:16 成品。"
+                ]
+            },
+            {
+                id: "enterprise",
+                icon: "&#127970;",
+                title: "4人以上企業 / SaaS 產品整合",
+                subtitle: "法務零風險、百萬級自動化規模",
+                stack: "HyperFrames (Apache 2.0) + AWS Lambda / Strobe 加速 + OpenMontage",
+                why: "團隊超過 3 人或對外提供個人化影片（如用戶年度回顧）時，Remotion 每次 $0.01 授權費將帶來龐大負擔。HyperFrames 採 Apache 2.0 完全免授權稅，且純 HTML 結構讓 AI 生成出錯率最低。",
+                hybridSteps: [
+                    "Step 1 (鎖定品牌樣式表)：由設計師預先定義標準 CSS 樣式表，解決「美學編譯器危機」，限制 AI 僅在規範內動態排版。",
+                    "Step 2 (DAG 管線調度)：導入 OpenMontage 架構，在生成高成本資產前設置人工確認檢查點。",
+                    "Step 3 (硬體加速渲染)：結合 Strobe GPU 零拷貝技術或 AWS Lambda，以極低邊際成本實現萬級自動化輸出。"
+                ]
+            },
+            {
+                id: "hybrid",
+                icon: "&#127916;",
+                title: "高階商業廣告 / 混合雙軌工作流",
+                subtitle: "電影級畫質 + 精準動態數據圖表",
+                stack: "Pexo / Runway Gen-4.5 (視覺血肉) + HyperFrames / Remotion (動態骨架) + Strobe",
+                why: "Vibe Coding 無法憑空編碼出逼真物理碰撞與電影級實景，而純生成式 SaaS 難以精準控制企業標準字體與動態數據圖表。混合雙軌制完美結合兩者優勢。",
+                hybridSteps: [
+                    "Step 1 (生成電影級 B-Roll)：使用 Pexo 智能路由 (Kling 3.0 / Veo 3.1 / Sora 2) 生成高擬真人物與產品特寫鏡頭。",
+                    "Step 2 (疊加程式化 CI 與數據)：將素材匯入 HyperFrames 或 Remotion，由 AI Agent 精準疊加品牌字體、動態圖表與 UI 轉場。",
+                    "Step 3 (極速高畫質合成)：透過 Strobe / FFmpeg 進行音畫精準對齊與無損編碼，交付商業級成片。"
+                ]
+            }
+        ];
+
+        function wrapLabel(label) {
+            if (label.length <= 16) return label;
+            const lines = [];
+            for (let i = 0; i < label.length; i += 16) {
+                lines.push(label.slice(i, i + 16));
+            }
+            return lines;
+        }
+
+        function renderFrameworkDetail(key) {
+            const data = frameworkData[key];
+            const container = document.getElementById("framework-detail");
+            container.innerHTML = `
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <h4 class="text-lg font-bold text-slate-900">${data.title}</h4>
+                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${data.badgeClass}">${data.badge}</span>
+                </div>
+                <p class="text-sm text-slate-600 leading-relaxed">${data.summary}</p>
+                <div class="space-y-2 pt-1">
+                    ${data.highlights.map(item => `
+                        <div class="flex items-start gap-2 text-xs sm:text-sm text-slate-700 bg-stone-50 p-2.5 rounded-lg border border-stone-200/80">
+                            <span class="text-teal-700 font-bold mt-0.5">&#10003;</span>
+                            <span>${item}</span>
+                        </div>
+                    `).join("")}
+                </div>
+            `;
+        }
+
+        document.querySelectorAll("#framework-tabs .tab-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                document.querySelectorAll("#framework-tabs .tab-btn").forEach(b => {
+                    b.classList.remove("active");
+                    b.classList.add("text-stone-500");
+                });
+                btn.classList.add("active");
+                btn.classList.remove("text-stone-500");
+                renderFrameworkDetail(btn.dataset.fw);
+            });
+        });
+
+        renderFrameworkDetail("hyperframes");
+
+        const perfCtx = document.getElementById("perfChart").getContext("2d");
+        const perfConfigs = {
+            speed: {
+                labels: ["HyperFrames (原生無頭瀏覽器)", "Remotion (原生無頭瀏覽器)", "Remotion + Strobe (GPU零拷貝)", "Clipkit (JSON + 本地WebGPU)"].map(wrapLabel),
+                datasetLabel: "相對渲染速度倍率 (倍數越高越快)",
+                data: [1.0, 3.6, 11.6, 29.5],
+                colors: ["#A8A29E", "#64748B", "#D97706", "#0F766E"],
+                desc: "以原生 HyperFrames 無頭瀏覽器為基準 (1x)，Clipkit WebGPU 達 29.5x 速度，Strobe 則為瀏覽器架構帶來高達 11.6x 加速。"
+            },
+            tokens: {
+                labels: ["HyperFrames (完整DOM與樣式)", "Remotion (React組件與Hooks)", "Clipkit (輕量級JSON協議)"].map(wrapLabel),
+                datasetLabel: "相對 LLM Token 消耗指數 (越低越省錢)",
+                data: [100, 78, 50],
+                colors: ["#D97706", "#64748B", "#0F766E"],
+                desc: "以 HyperFrames 龐大 DOM 結構的 Token 消耗為 100% 基準，Clipkit 採用純 JSON 結構可節省高達 50% 的 LLM 推論成本。"
+            }
+        };
+
+        let perfChart = new Chart(perfCtx, {
+            type: "bar",
+            data: {
+                labels: perfConfigs.speed.labels,
+                datasets: [{
+                    label: perfConfigs.speed.datasetLabel,
+                    data: perfConfigs.speed.data,
+                    backgroundColor: perfConfigs.speed.colors,
+                    borderRadius: 6,
+                    barPercentage: 0.6
+                }]
+            },
+            options: {
+                indexAxis: "y",
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            title: function(items) {
+                                const raw = items[0].label;
+                                return Array.isArray(raw) ? raw.join("") : raw;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: { color: "#E7E5E4" },
+                        ticks: { font: { size: 11 }, color: "#475569" }
+                    },
+                    y: {
+                        grid: { display: false },
+                        ticks: { font: { size: 11 }, color: "#1E293B" }
+                    }
+                }
+            }
+        });
+
+        document.getElementById("perf-metric-select").addEventListener("change", (e) => {
+            const cfg = perfConfigs[e.target.value];
+            document.getElementById("perf-chart-desc").textContent = cfg.desc;
+            perfChart.data.labels = cfg.labels;
+            perfChart.data.datasets[0].label = cfg.datasetLabel;
+            perfChart.data.datasets[0].data = cfg.data;
+            perfChart.data.datasets[0].backgroundColor = cfg.colors;
+            perfChart.update();
+        });
+
+        const dagContainer = document.getElementById("dag-stages");
+        const dagDetailBox = document.getElementById("dag-detail-box");
+
+        function renderDagDetail(idx) {
+            const st = dagStagesData[idx];
+            document.querySelectorAll(".stage-node").forEach((el, i) => {
+                if (i === idx) {
+                    el.classList.add("active");
+                } else {
+                    el.classList.remove("active");
+                }
+            });
+            dagDetailBox.innerHTML = `
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                    <span class="font-bold text-slate-900">${st.step} — ${st.name}</span>
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800">控制機制：${st.gate}</span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">${st.desc}</p>
+            `;
+        }
+
+        dagStagesData.forEach((st, idx) => {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "stage-node p-2.5 rounded-xl border border-stone-200 bg-white text-left transition shadow-sm hover:border-teal-600";
+            btn.innerHTML = `
+                <div class="text-[11px] font-bold opacity-80">${st.step}</div>
+                <div class="text-xs font-bold mt-0.5 truncate">${st.name}</div>
+            `;
+            btn.addEventListener("click", () => renderDagDetail(idx));
+            dagContainer.appendChild(btn);
+        });
+        renderDagDetail(0);
+
+        const tcoCtx = document.getElementById("tcoChart").getContext("2d");
+        let tcoChart = new Chart(tcoCtx, {
+            type: "bar",
+            data: {
+                labels: [
+                    wrapLabel("HyperFrames (Apache 2.0 + AWS)"),
+                    wrapLabel("Remotion (授權費 + AWS Lambda)"),
+                    wrapLabel("Clipkit (WebGPU免費 / 雲端計費)"),
+                    wrapLabel("商業生成式 SaaS (多帳號訂閱)")
+                ],
+                datasets: [
+                    {
+                        label: "軟體授權 / 訂閱費 (USD)",
+                        data: [0, 100, 0, 100],
+                        backgroundColor: "#D97706",
+                        borderRadius: 4
+                    },
+                    {
+                        label: "雲端運算 / API 用量費 (USD)",
+                        data: [22.17, 7.39, 15.00, 50],
+                        backgroundColor: "#0F766E",
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: "top",
+                        labels: { font: { size: 11 }, boxWidth: 12 }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: function(items) {
+                                const raw = items[0].label;
+                                return Array.isArray(raw) ? raw.join("") : raw;
+                            },
+                            label: function(ctx) {
+                                return `${ctx.dataset.label}: $${ctx.parsed.y.toFixed(2)}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                        grid: { display: false },
+                        ticks: { font: { size: 11 }, color: "#1E293B" }
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        grid: { color: "#E7E5E4" },
+                        ticks: {
+                            font: { size: 11 },
+                            color: "#475569",
+                            callback: (val) => "$" + val
+                        }
+                    }
+                }
+            }
+        });
+
+        function updateTcoSimulation() {
+            const teamSize = parseInt(document.getElementById("team-size-slider").value, 10);
+            const volume = parseInt(document.getElementById("volume-slider").value, 10);
+            const isSaasMode = document.getElementById("saas-mode-toggle").checked;
+
+            document.getElementById("team-size-val").textContent = `${teamSize} 人`;
+            document.getElementById("volume-val").textContent = `${volume.toLocaleString()} 支`;
+
+            const scaleFactor = volume / 10000;
+            const hfLicense = 0;
+            const hfCompute = 22.17 * scaleFactor;
+
+            let remotionLicense = 0;
+            if (isSaasMode) {
+                remotionLicense = Math.max(100, volume * 0.01);
+            } else if (teamSize > 3) {
+                remotionLicense = teamSize >= 15 ? 500 : teamSize * 25;
+            }
+            const remotionCompute = 7.39 * scaleFactor;
+
+            const clipkitLicense = 0;
+            const extraMins = Math.max(0, volume - 250);
+            const clipkitCompute = extraMins * 0.002;
+
+            const saasLicense = Math.max(20, teamSize * 20);
+            const saasCompute = volume > 200 ? (volume - 200) * 0.05 : 0;
+
+            tcoChart.data.datasets[0].data = [hfLicense, remotionLicense, clipkitLicense, saasLicense];
+            tcoChart.data.datasets[1].data = [hfCompute, remotionCompute, clipkitCompute, saasCompute];
+            tcoChart.update();
+
+            const hfTotal = (hfLicense + hfCompute).toFixed(2);
+            const remTotal = (remotionLicense + remotionCompute).toFixed(2);
+            const ckTotal = (clipkitLicense + clipkitCompute).toFixed(2);
+
+            let advice = "";
+            if (teamSize <= 3 && !isSaasMode) {
+                advice = `<strong>&#128161; 試算結論（微型團隊免疫期）：</strong>您的團隊為 ${teamSize} 人且非 SaaS 服務，<strong>Remotion 授權費為 $0</strong>，總月費僅約 <strong>$${remTotal}</strong>（運算最快），與 HyperFrames ($${hfTotal}) 皆極具優勢！`;
+            } else {
+                advice = `<strong>&#128161; 試算結論（企業規模化效益）：</strong>由於${isSaasMode ? "開啟了 SaaS 自動化模式" : "團隊超過 3 人"}，Remotion 月總成本升至 <strong>$${remTotal}</strong>；此時採用免授權費的 <strong>HyperFrames ($${hfTotal})</strong> 或 <strong>Clipkit ($${ckTotal})</strong> 可省下鉅額授權稅！`;
+            }
+            document.getElementById("tco-recommendation").innerHTML = advice;
+        }
+
+        document.getElementById("team-size-slider").addEventListener("input", updateTcoSimulation);
+        document.getElementById("volume-slider").addEventListener("input", updateTcoSimulation);
+        document.getElementById("saas-mode-toggle").addEventListener("change", updateTcoSimulation);
+        updateTcoSimulation();
+
+        function renderComparisonTable(filter) {
+            const tbody = document.getElementById("comparison-tbody");
+            const filtered = filter === "all" ? toolsMatrixData : toolsMatrixData.filter(t => t.category === filter);
+            tbody.innerHTML = filtered.map(row => {
+                const badge = row.category === "free"
+                    ? `<span class="inline-block px-2 py-0.5 rounded bg-teal-50 text-teal-800 text-[11px] font-semibold">免費 / 開源</span>`
+                    : `<span class="inline-block px-2 py-0.5 rounded bg-amber-50 text-amber-800 text-[11px] font-semibold">商業付費</span>`;
+                return `
+                    <tr class="hover:bg-stone-50/80 transition">
+                        <td class="py-3 px-3 font-bold text-slate-900 whitespace-nowrap">${row.name}<div class="mt-1">${badge}</div></td>
+                        <td class="py-3 px-3 text-slate-700">${row.tech}</td>
+                        <td class="py-3 px-3 text-slate-700">${row.freeTier}</td>
+                        <td class="py-3 px-3 text-slate-700">${row.paidTier}</td>
+                        <td class="py-3 px-3 text-slate-600">${row.bestFor}</td>
+                    </tr>
+                `;
+            }).join("");
+        }
+
+        document.querySelectorAll("#table-filters .nav-pill").forEach(btn => {
+            btn.addEventListener("click", () => {
+                document.querySelectorAll("#table-filters .nav-pill").forEach(b => {
+                    b.classList.remove("active");
+                    b.classList.add("bg-white", "text-slate-700");
+                });
+                btn.classList.add("active");
+                btn.classList.remove("bg-white", "text-slate-700");
+                renderComparisonTable(btn.dataset.filter);
+            });
+        });
+        renderComparisonTable("all");
+
+        const personaContainer = document.getElementById("persona-cards");
+        const strategyOutput = document.getElementById("strategy-output");
+
+        function renderPersonaStrategy(idx) {
+            const p = personasData[idx];
+            document.querySelectorAll(".persona-btn").forEach((el, i) => {
+                if (i === idx) {
+                    el.classList.add("border-teal-700", "bg-teal-50/50", "ring-2", "ring-teal-700/20");
+                    el.classList.remove("bg-white", "border-stone-200");
+                } else {
+                    el.classList.remove("border-teal-700", "bg-teal-50/50", "ring-2", "ring-teal-700/20");
+                    el.classList.add("bg-white", "border-stone-200");
+                }
+            });
+
+            strategyOutput.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                    <div class="lg:col-span-5 space-y-3">
+                        <div class="inline-block px-3 py-1 rounded-full bg-teal-100 text-teal-900 text-xs font-bold">推薦最佳技術組合</div>
+                        <h3 class="text-xl font-extrabold text-slate-900">${p.title}</h3>
+                        <div class="p-3.5 rounded-xl bg-stone-50 border border-stone-200 font-mono text-xs sm:text-sm text-teal-800 font-bold">
+                            ${p.stack}
+                        </div>
+                        <p class="text-sm text-slate-600 leading-relaxed">${p.why}</p>
+                    </div>
+                    <div class="lg:col-span-7 space-y-3">
+                        <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wider">落地執行與混合雙軌工作流步驟</h4>
+                        <div class="space-y-2.5">
+                            ${p.hybridSteps.map(step => `
+                                <div class="p-3.5 rounded-xl bg-stone-50 border border-stone-200 text-xs sm:text-sm text-slate-700 leading-relaxed">
+                                    ${step}
+                                </div>
+                            `).join("")}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        personasData.forEach((p, idx) => {
+            const card = document.createElement("button");
+            card.type = "button";
+            card.className = "persona-btn p-4 rounded-2xl border border-stone-200 bg-white text-left transition hover:border-teal-600 shadow-sm flex flex-col justify-between";
+            card.innerHTML = `
+                <div class="text-2xl mb-2">${p.icon}</div>
+                <div>
+                    <div class="font-bold text-sm text-slate-900">${p.title}</div>
+                    <div class="text-xs text-stone-500 mt-1">${p.subtitle}</div>
+                </div>
+            `;
+            card.addEventListener("click", () => renderPersonaStrategy(idx));
+            personaContainer.appendChild(card);
+        });
+        renderPersonaStrategy(0);
+    </script>
+</body>
+</html>
