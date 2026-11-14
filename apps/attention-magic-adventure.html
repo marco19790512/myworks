@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注意力魔法大冒險</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        [data-theme="light"] {
+            /* 明亮主題 (預設/兒童風格) */
+            --bg-body: #F0F9FF;
+            --text-main: #374151;
+            --text-muted: #4B5563;
+            --card-bg: #FFFFFF;
+            --card-shadow: rgba(0, 0, 0, 0.1);
+            --input-bg: #EFF6FF;
+            --input-border: #BFDBFE;
+            --btn-text: #FFFFFF;
+            
+            /* 各任務的主題色 */
+            --color-task1: #1D4ED8;
+            --border-task1: #60A5FA;
+            --color-task2: #15803D;
+            --border-task2: #4ADE80;
+            --color-task3: #BE185D;
+            --border-task3: #F472B6;
+            --color-task4: #7E22CE;
+            --border-task4: #C084FC;
+            --color-task5: #0369A1;
+            --border-task5: #38BDF8;
+            --color-task6: #B45309;
+            --border-task6: #FBBF24;
+            
+            /* 任務小區塊背景 */
+            --bg-sub-task2: #F0FDF4;
+            --bg-sub-task2-hover: #DCFCE7;
+            --bg-sub-task4: #FAF5FF;
+            --bg-sub-task4-hover: #F3E8FF;
+            --border-sub-task4: #E9D5FF;
+            --bg-sub-task6: #FFFBEB;
+            --border-sub-task6: #FDE68A;
+            
+            /* 測驗結果反差色 */
+            --res-high-bg: #FEF2F2;
+            --res-high-border: #FCA5A5;
+            --res-high-text: #DC2626;
+            --res-low-bg: #F0FDF4;
+            --res-low-border: #86EFAC;
+            --res-low-text: #16A34A;
+        }
+
+        [data-theme="dark"] {
+            /* 深邃夜主題 (高反差) */
+            --bg-body: #111827;
+            --text-main: #F9FAFB;
+            --text-muted: #E5E7EB;
+            --card-bg: #1F2937;
+            --card-shadow: rgba(0, 0, 0, 0.5);
+            --input-bg: #374151;
+            --input-border: #6B7280;
+            --btn-text: #111827;
+
+            --color-task1: #93C5FD;
+            --border-task1: #3B82F6;
+            --color-task2: #86EFAC;
+            --border-task2: #22C55E;
+            --color-task3: #F9A8D4;
+            --border-task3: #EC4899;
+            --color-task4: #D8B4FE;
+            --border-task4: #A855F7;
+            --color-task5: #7DD3FC;
+            --border-task5: #0EA5E9;
+            --color-task6: #FDE047;
+            --border-task6: #EAB308;
+
+            --bg-sub-task2: #374151;
+            --bg-sub-task2-hover: #4B5563;
+            --bg-sub-task4: #374151;
+            --bg-sub-task4-hover: #4B5563;
+            --border-sub-task4: #6B7280;
+            --bg-sub-task6: #374151;
+            --border-sub-task6: #6B7280;
+
+            --res-high-bg: rgba(127, 29, 29, 0.4);
+            --res-high-border: #F87171;
+            --res-high-text: #FCA5A5;
+            --res-low-bg: rgba(20, 83, 45, 0.4);
+            --res-low-border: #4ADE80;
+            --res-low-text: #86EFAC;
+        }
+
+        [data-theme="warm"] {
+            /* 溫暖木主題 (柔和) */
+            --bg-body: #FFFBEB;
+            --text-main: #451A03;
+            --text-muted: #78350F;
+            --card-bg: #FEF3C7;
+            --card-shadow: rgba(120, 53, 15, 0.15);
+            --input-bg: #FFFBEB;
+            --input-border: #F59E0B;
+            --btn-text: #FFFFFF;
+
+            --color-task1: #9A3412;
+            --border-task1: #F97316;
+            --color-task2: #065F46;
+            --border-task2: #10B981;
+            --color-task3: #9D174D;
+            --border-task3: #F43F5E;
+            --color-task4: #5B21B6;
+            --border-task4: #8B5CF6;
+            --color-task5: #1E3A8A;
+            --border-task5: #60A5FA;
+            --color-task6: #92400E;
+            --border-task6: #F59E0B;
+
+            --bg-sub-task2: #FDE68A;
+            --bg-sub-task2-hover: #FCD34D;
+            --bg-sub-task4: #EDE9FE;
+            --bg-sub-task4-hover: #DDD6FE;
+            --border-sub-task4: #C4B5FD;
+            --bg-sub-task6: #FFFBEB;
+            --border-sub-task6: #F59E0B;
+
+            --res-high-bg: #FEE2E2;
+            --res-high-border: #EF4444;
+            --res-high-text: #991B1B;
+            --res-low-bg: #D1FAE5;
+            --res-low-border: #10B981;
+            --res-low-text: #065F46;
+        }
+
+        /* 應用變數 */
+        body {
+            font-family: 'Nunito', 'Microsoft JhengHei', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+        
+        .theme-card {
+            background-color: var(--card-bg);
+            box-shadow: 0 10px 25px -5px var(--card-shadow), 0 8px 10px -6px var(--card-shadow);
+            transition: background-color 0.4s ease, border-color 0.4s ease;
+        }
+        
+        .theme-text-main { color: var(--text-main); }
+        .theme-text-muted { color: var(--text-muted); }
+        .theme-input { 
+            background-color: var(--input-bg); 
+            border-color: var(--input-border); 
+            color: var(--text-main);
+        }
+        .theme-input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.7;
+        }
+        
+        /* 任務特定色彩應用 */
+        .task1-border { border-left-color: var(--border-task1); }
+        .task1-text { color: var(--color-task1); }
+        .task2-border { border-left-color: var(--border-task2); }
+        .task2-text { color: var(--color-task2); }
+        .task2-sub-bg { background-color: var(--bg-sub-task2); }
+        .task2-sub-bg:hover { background-color: var(--bg-sub-task2-hover); }
+        .task3-border { border-left-color: var(--border-task3); }
+        .task3-text { color: var(--color-task3); }
+        .task4-border { border-left-color: var(--border-task4); }
+        .task4-text { color: var(--color-task4); }
+        .task4-sub-bg { background-color: var(--bg-sub-task4); border-color: var(--border-sub-task4); color: var(--color-task4); }
+        .task4-sub-bg:hover { background-color: var(--bg-sub-task4-hover); border-color: var(--border-task4); }
+        
+        .task5-border { border-left-color: var(--border-task5); }
+        .task5-text { color: var(--color-task5); }
+        .task6-border { border-left-color: var(--border-task6); }
+        .task6-text { color: var(--color-task6); }
+        .task6-sub-bg { background-color: var(--bg-sub-task6); border-color: var(--border-sub-task6); }
+
+        .res-high-box { background-color: var(--res-high-bg); border-color: var(--res-high-border); }
+        .res-high-title { color: var(--res-high-text); }
+        .res-low-box { background-color: var(--res-low-bg); border-color: var(--res-low-border); }
+        .res-low-title { color: var(--res-low-text); }
+        .btn-outline-theme { color: var(--text-main); border-color: var(--input-border); background-color: var(--input-bg); }
+        .btn-outline-theme:hover { opacity: 0.85; }
+
+        .bounce-hover:hover {
+            transform: translateY(-5px);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .completed-card {
+            border: 4px solid var(--border-task2);
+            background-color: var(--bg-sub-task2);
+        }
+        
+        /* 模式切換按鈕樣式 */
+        .mode-btn {
+            transition: all 0.3s ease;
+        }
+        .mode-btn.active {
+            background-color: var(--color-task1);
+            color: var(--btn-text);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .mode-btn.inactive {
+            background-color: transparent;
+            color: var(--text-muted);
+        }
+        .mode-btn.inactive:hover {
+            background-color: var(--input-bg);
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 sm:p-8" data-theme="light">
+
+    <!-- 慶祝用的 Canvas -->
+    <canvas id="confetti" class="fixed top-0 left-0 w-full h-full pointer-events-none z-50"></canvas>
+
+    <div class="max-w-3xl mx-auto space-y-6">
+        
+        <!-- 控制面板 (模式與主題切換) -->
+        <div class="flex flex-col sm:flex-row justify-between items-center p-4 rounded-2xl theme-card mb-8 gap-4">
+            <div class="flex gap-2 bg-black/5 p-1 rounded-xl">
+                <button onclick="setMode('child')" id="btnChild" class="mode-btn active px-4 py-2 rounded-lg font-bold text-sm sm:text-base">🧒 兒童模式</button>
+                <button onclick="setMode('adult')" id="btnAdult" class="mode-btn inactive px-4 py-2 rounded-lg font-bold text-sm sm:text-base">🧑 大人模式</button>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="text-sm font-semibold theme-text-muted">佈景：</span>
+                <button onclick="setTheme('light')" class="w-8 h-8 rounded-full bg-[#F0F9FF] border-2 border-gray-300 transform hover:scale-110 transition" title="明亮主題"></button>
+                <button onclick="setTheme('dark')" class="w-8 h-8 rounded-full bg-gray-800 border-2 border-gray-500 transform hover:scale-110 transition" title="深邃夜主題"></button>
+                <button onclick="setTheme('warm')" class="w-8 h-8 rounded-full bg-[#FEF3C7] border-2 border-amber-300 transform hover:scale-110 transition" title="溫暖木主題"></button>
+            </div>
+        </div>
+
+        <!-- 歡迎區塊 -->
+        <header class="text-center p-8 rounded-3xl theme-card border-t-8 border-yellow-400 fade-in">
+            <h1 id="txt_title" class="text-3xl sm:text-4xl font-extrabold task1-text mb-4">✨ 注意力魔法大冒險 ✨</h1>
+            <p id="txt_desc1" class="text-lg sm:text-xl theme-text-muted mb-4 leading-relaxed">
+                哈囉！你最近有沒有覺得心裡有點緊緊的，好像有一團毛線打結了？<br>
+                其實，我們每個人都有一個叫做<strong>「注意力」</strong>的神奇能量！<br>
+                當能量卡在煩惱上的時候，我們就會覺得好累。
+            </p>
+            <p id="txt_desc2" class="text-md sm:text-lg task2-sub-bg p-4 rounded-xl task2-text font-semibold inline-block transition">
+                別擔心！我們一起把「神奇能量」找回來，讓大腦重新變輕鬆吧！
+            </p>
+        </header>
+
+        <!-- 能量測試表 -->
+        <section id="energyTest" class="p-6 rounded-3xl theme-card fade-in border-t-4 border-blue-400">
+            <div class="text-center mb-6">
+                <h2 id="txt_test_title" class="text-2xl font-bold task1-text mb-2">🔋 能量探測儀</h2>
+                <p id="txt_test_desc" class="theme-text-muted">請憑直覺調整下方的拉桿，看看你現在的狀態：</p>
+            </div>
+            
+            <div class="space-y-6 max-w-xl mx-auto">
+                <div>
+                    <label id="txt_test_q1" class="block font-semibold mb-2 theme-text-muted">1. 身體緊繃程度 (越右邊越緊繃)</label>
+                    <input type="range" id="slider1" min="1" max="10" value="5" class="w-full accent-blue-500">
+                </div>
+                <div>
+                    <label id="txt_test_q2" class="block font-semibold mb-2 theme-text-muted">2. 腦中思緒混亂程度 (越右邊越亂)</label>
+                    <input type="range" id="slider2" min="1" max="10" value="5" class="w-full accent-green-500">
+                </div>
+                <div>
+                    <label id="txt_test_q3" class="block font-semibold mb-2 theme-text-muted">3. 對未來的清晰度 (越右邊越迷惘)</label>
+                    <input type="range" id="slider3" min="1" max="10" value="5" class="w-full accent-purple-500">
+                </div>
+                
+                <div class="text-center pt-4">
+                    <button onclick="calculateEnergy()" class="bg-gray-800 hover:bg-black text-white font-bold py-3 px-8 rounded-full transition transform hover:scale-105 shadow-lg">
+                        <span id="txt_test_btn">檢測我的能量狀態</span> 🪄
+                    </button>
+                </div>
+            </div>
+
+            <!-- 測試結果與導航 -->
+            <div id="testResult" class="hidden mt-8 p-6 rounded-2xl bg-opacity-20 border-2 text-center fade-in">
+                <h3 id="txt_res_title" class="text-xl font-bold mb-2"></h3>
+                <p id="txt_res_desc" class="mb-6"></p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <button onclick="showSection('basic')" id="btn_go_basic" class="py-3 px-6 rounded-xl font-bold border-2 transition hover:shadow-md"></button>
+                    <button onclick="showSection('advanced')" id="btn_go_adv" class="py-3 px-6 rounded-xl font-bold border-2 transition hover:shadow-md"></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 初階區塊容器 -->
+        <div id="basicJourney" class="hidden space-y-6 fade-in">
+            <div class="text-center py-4">
+                <h2 id="txt_basic_header" class="text-2xl font-bold task2-text">🌱 初階練習：注意力喚醒與釋放</h2>
+                <p id="txt_basic_sub" class="theme-text-muted">完成這些小任務，解除當下的緊繃感。</p>
+            </div>
+
+            <!-- 任務一：尋寶小偵探 / 環境感知練習 -->
+            <section id="task1" class="p-6 rounded-3xl theme-card bounce-hover border-l-8 task1-border">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="text-4xl">🔍</div>
+                    <h2 id="txt_task1_title" class="text-2xl font-bold task1-text">任務一：尋寶小偵探</h2>
+                </div>
+                <p id="txt_task1_desc" class="theme-text-muted mb-4"></p>
+                <input type="text" id="task1Input" class="w-full p-4 rounded-xl theme-input border focus:ring-2 focus:ring-blue-400 outline-none transition mb-4">
+                <button id="btn_task1" onclick="completeTask('task1')" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-full w-full sm:w-auto transition">
+                </button>
+            </section>
+
+            <!-- 任務二：空間小魔法 / 外在微整理 -->
+            <section id="task2" class="p-6 rounded-3xl theme-card bounce-hover border-l-8 task2-border">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="text-4xl">🧹</div>
+                    <h2 id="txt_task2_title" class="text-2xl font-bold task2-text">任務二：空間小魔法</h2>
+                </div>
+                <p id="txt_task2_desc" class="theme-text-muted mb-4"></p>
+                <div class="space-y-3 mb-6">
+                    <label class="flex items-center gap-3 p-3 rounded-xl task2-sub-bg cursor-pointer transition border border-transparent">
+                        <input type="checkbox" class="w-6 h-6 text-green-500 rounded focus:ring-green-400" onchange="checkTask2()">
+                        <span id="txt_task2_opt1" class="font-semibold theme-text-main"></span>
+                    </label>
+                    <label class="flex items-center gap-3 p-3 rounded-xl task2-sub-bg cursor-pointer transition border border-transparent">
+                        <input type="checkbox" class="w-6 h-6 text-green-500 rounded focus:ring-green-400" onchange="checkTask2()">
+                        <span id="txt_task2_opt2" class="font-semibold theme-text-main"></span>
+                    </label>
+                    <label class="flex items-center gap-3 p-3 rounded-xl task2-sub-bg cursor-pointer transition border border-transparent">
+                        <input type="checkbox" class="w-6 h-6 text-green-500 rounded focus:ring-green-400" onchange="checkTask2()">
+                        <span id="txt_task2_opt3" class="font-semibold theme-text-main"></span>
+                    </label>
+                </div>
+                <button id="btnTask2" disabled class="bg-gray-400 cursor-not-allowed text-white font-bold py-3 px-6 rounded-full w-full sm:w-auto transition" onclick="completeTask('task2')"></button>
+            </section>
+
+            <!-- 任務三：腦袋大掃除清單 / 認知卸載 -->
+            <section id="task3" class="p-6 rounded-3xl theme-card bounce-hover border-l-8 task3-border">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="text-4xl">📝</div>
+                    <h2 id="txt_task3_title" class="text-2xl font-bold task3-text">任務三：腦袋大掃除清單</h2>
+                </div>
+                <p id="txt_task3_desc" class="theme-text-muted mb-4"></p>
+                <div class="flex gap-2 mb-4">
+                    <input type="text" id="todoInput" class="flex-1 p-3 rounded-xl theme-input border focus:ring-2 focus:ring-pink-400 outline-none">
+                    <button onclick="addTodo()" id="btn_task3_add" class="bg-pink-500 text-white hover:bg-pink-600 font-bold py-3 px-6 rounded-xl transition"></button>
+                </div>
+                <ul id="todoList" class="space-y-2 mb-6"></ul>
+                <button id="btn_task3" onclick="completeTask('task3')" class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-6 rounded-full w-full sm:w-auto transition"></button>
+            </section>
+
+            <!-- 任務四：超能力咒語 / 信念自我宣告 -->
+            <section id="task4" class="p-6 rounded-3xl theme-card bounce-hover border-l-8 task4-border">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="text-4xl">🌟</div>
+                    <h2 id="txt_task4_title" class="text-2xl font-bold task4-text">任務四：超能力咒語</h2>
+                </div>
+                <p id="txt_task4_desc" class="theme-text-muted mb-4">
+                    有時候覺得自己做不到？沒關係，大聲唸出下面的咒語，把它從「懷疑」變成「完全相信」，找回自己的力量！
+                </p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                    <button id="txt_task4_spell1" onclick="chantSpell(this)" class="p-6 border-2 rounded-2xl text-xl font-bold task4-sub-bg transition transform hover:scale-105">
+                        「我知道我可以進步！」 🗣️
+                    </button>
+                    <button id="txt_task4_spell2" onclick="chantSpell(this)" class="p-6 border-2 rounded-2xl text-xl font-bold task4-sub-bg transition transform hover:scale-105">
+                        「這件事情由我來決定！」 🗣️
+                    </button>
+                </div>
+                <button id="btn_task4" onclick="completeTask('task4')" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-6 rounded-full w-full sm:w-auto transition">
+                    我唸完咒語了，感覺充滿力量！⚡
+                </button>
+            </section>
+        </div>
+
+        <!-- 進階區塊容器 (深度探索) -->
+        <div id="advancedJourney" class="hidden space-y-6 fade-in">
+            <div class="text-center py-4">
+                <h2 id="txt_adv_header" class="text-2xl font-bold task5-text">🚀 進階探索：生命藍圖與信念</h2>
+                <p id="txt_adv_sub" class="theme-text-muted">當你感覺平靜時，可以深入探索自己的內心世界。</p>
+            </div>
+
+            <!-- 任務五：信念庫存檢視 -->
+            <section id="task5" class="p-6 rounded-3xl theme-card bounce-hover border-l-8 task5-border">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="text-4xl">👓</div>
+                    <h2 id="txt_task5_title" class="text-2xl font-bold task5-text">進階一：信念庫存檢視</h2>
+                </div>
+                <p id="txt_task5_desc" class="theme-text-muted mb-4">
+                    信念是塗抹了色彩的鏡片，它決定了我們如何看待世界。請寫下你對下列事物的直覺看法（不需要自我批判）：
+                </p>
+                <div class="space-y-4 mb-6">
+                    <div>
+                        <label id="txt_task5_q1" class="block font-semibold mb-1 theme-text-muted">關於「人際關係」，我所相信的是：</label>
+                        <input type="text" class="w-full p-3 theme-input rounded-xl border focus:ring-2 focus:ring-sky-400">
+                    </div>
+                    <div>
+                        <label id="txt_task5_q2" class="block font-semibold mb-1 theme-text-muted">關於「工作/學習」，我所相信的是：</label>
+                        <input type="text" class="w-full p-3 theme-input rounded-xl border focus:ring-2 focus:ring-sky-400">
+                    </div>
+                    <div>
+                        <label id="txt_task5_q3" class="block font-semibold mb-1 theme-text-muted">關於「我自己」，我所相信的是：</label>
+                        <input type="text" class="w-full p-3 theme-input rounded-xl border focus:ring-2 focus:ring-sky-400">
+                    </div>
+                </div>
+                <button id="btn_task5" onclick="completeTask('task5')" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-6 rounded-full w-full sm:w-auto transition">
+                    檢視完畢，我更了解自己了 ✅
+                </button>
+            </section>
+
+            <!-- 任務六：與生命目標結盟 -->
+            <section id="task6" class="p-6 rounded-3xl theme-card bounce-hover border-l-8 task6-border">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="text-4xl">🗺️</div>
+                    <h2 id="txt_task6_title" class="text-2xl font-bold task6-text">進階二：與生命目標結盟</h2>
+                </div>
+                <p id="txt_task6_desc" class="theme-text-muted mb-4">
+                    當我們不清楚目標時，自己會成為自己的絆腳石。試著填寫你的生命藍圖，為目標加上能量：
+                </p>
+                <div class="task6-sub-bg p-5 rounded-2xl border space-y-4 mb-6">
+                    <p class="font-bold text-lg task6-text">我的生命目標是...</p>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span id="txt_task6_p1" class="theme-text-main font-medium">去學會 (能力)</span>
+                        <input type="text" class="flex-1 min-w-[150px] p-2 theme-input rounded border-b-2 border-amber-400 focus:outline-none" placeholder="...">
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span id="txt_task6_p2" class="theme-text-main font-medium">擁有更多的 (特徵)</span>
+                        <input type="text" class="flex-1 min-w-[150px] p-2 theme-input rounded border-b-2 border-amber-400 focus:outline-none" placeholder="...">
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span id="txt_task6_p3" class="theme-text-main font-medium">擁有更少的 (特徵)</span>
+                        <input type="text" class="flex-1 min-w-[150px] p-2 theme-input rounded border-b-2 border-amber-400 focus:outline-none" placeholder="...">
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span id="txt_task6_p4" class="theme-text-main font-medium">因此，我能是個更好的 (角色)</span>
+                        <input type="text" class="flex-1 min-w-[150px] p-2 theme-input rounded border-b-2 border-amber-400 focus:outline-none" placeholder="...">
+                    </div>
+                </div>
+                <button id="btn_task6" onclick="completeTask('task6')" class="bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-6 rounded-full w-full sm:w-auto transition">
+                    藍圖設定完成，充滿能量！ 🚀
+                </button>
+            </section>
+        </div>
+
+        <!-- 結語區塊 -->
+        <footer id="successMessage" class="hidden text-center p-8 rounded-3xl theme-card border-4 border-yellow-400 fade-in">
+            <div class="text-6xl mb-4">🏆</div>
+            <h2 id="txt_success_title" class="text-3xl font-extrabold task1-text mb-4">太棒了！冒險大成功！</h2>
+            <p id="txt_success_desc" class="text-lg theme-text-muted">
+                你已經學會了找回「注意力超能力」的方法。<br>
+                現在你是不是覺得肩膀比較不緊，心裡也輕鬆多了呢？<br>
+                下次如果又覺得卡卡的，記得隨時回來玩這個闖關遊戲喔！
+            </p>
+        </footer>
+
+    </div>
+
+    <script>
+        // === 文字內容資料庫 (支援模式切換) ===
+        const contentData = {
+            child: {
+                title: "✨ 注意力魔法大冒險 ✨",
+                desc1: "哈囉！你最近有沒有覺得心裡有點緊緊的，好像有一團毛線打結了？<br>其實，我們每個人都有一個叫做<strong>「注意力」</strong>的神奇能量！<br>當能量卡在煩惱上的時候，我們就會覺得好累。",
+                desc2: "別擔心！我們先來測量一下你的能量狀態，再決定要進行哪一種魔法練習吧！",
+                
+                // 測驗區
+                test_title: "🔋 魔法能量探測儀",
+                test_desc: "請憑直覺拉動拉桿，看看你現在的心情：",
+                test_q1: "1. 身體像石頭一樣緊緊的嗎？ (越右邊越緊繃)",
+                test_q2: "2. 腦袋裡有很多小怪獸在吵架嗎？ (越右邊越亂)",
+                test_q3: "3. 覺得明天不知道要做什麼？ (越右邊越迷惘)",
+                test_btn: "檢測我的魔法能量 🪄",
+                res_high_title: "🚨 哎呀！能量有點卡住了！",
+                res_high_desc: "探測儀顯示你的能量目前比較緊繃。建議先從【初階練習】開始，把打結的毛線解開吧！",
+                res_low_title: "🌟 哇！你的能量很穩定喔！",
+                res_low_desc: "探測儀顯示你現在滿平靜的！你可以選擇快速做一下【初階練習】，或是直接挑戰【進階探索】認識更厲害的自己！",
+                btn_go_basic: "➡️ 前往初階練習 (解開緊繃)",
+                btn_go_adv: "🚀 挑戰進階探索 (認識自己)",
+
+                basic_header: "🌱 初階魔法：找回注意力",
+                basic_sub: "完成這些小任務，把卡住的神奇能量找回來！",
+
+                task1_title: "任務一：尋寶小偵探",
+                task1_desc: "站起來走一走！在房間裡找一個東西（比如你的鉛筆盒、一本書，或是一盆植物）。<br>仔細看一看它，它長什麼樣子呢？什麼顏色？<br><span class='text-sm opacity-80'>※ 如果發呆分心了也沒關係，輕輕地把注意力找回來就好，不用罵自己喔！</span>",
+                task1_ph: "例如：我找到一個紅色的圓形時鐘...",
+                task1_btn: "我描述完了！✅",
+                task1_btn_done: "🎉 任務完成！",
+                
+                task2_title: "任務二：空間小魔法",
+                task2_desc: "當外面的環境變乾淨，我們的頭腦也會跟著變清楚喔！請選一個小地方來施展魔法：",
+                task2_opt1: "把書桌上的垃圾丟掉",
+                task2_opt2: "把鉛筆盒裡的筆排整齊",
+                task2_opt3: "丟掉一個早就壞掉不想修的玩具/文具",
+                task2_btn_empty: "請至少完成一個小魔法 ✨",
+                task2_btn_ready: "我施展魔法了！✅",
+                task2_btn_done: "🎉 任務完成！",
+                
+                task3_title: "任務三：腦袋大掃除清單",
+                task3_desc: "腦袋裡裝太多「等等要做的事」，會讓我們很緊張。把它們寫下來交給清單保管，大腦就可以休息囉！",
+                task3_ph: "例如：明天要交數學作業...",
+                task3_btn_add: "新增",
+                task3_btn: "清單寫好囉，腦袋空空了！✅",
+                task3_btn_done: "🎉 任務完成！",
+                
+                task4_title: "任務四：超能力咒語",
+                task4_desc: "有時候覺得自己做不到？沒關係，大聲唸出下面的咒語，把它從「懷疑」變成「完全相信」，找回自己的力量！",
+                task4_spell1: "「我知道我可以進步！」 🗣️",
+                task4_spell2: "「這件事情由我來決定！」 🗣️",
+                task4_btn: "我唸完咒語了，感覺充滿力量！⚡",
+                task4_btn_done: "🎉 任務完成！",
+
+                adv_header: "🚀 進階魔法：未來超級英雄藍圖",
+                adv_sub: "當你覺得心情輕鬆時，一起來設計專屬你的隱形眼鏡與未來藍圖！",
+
+                task5_title: "進階一：找尋隱形眼鏡 (信念)",
+                task5_desc: "我們心裡都有副「隱形眼鏡」，它決定了我們怎麼看世界。你覺得下面這些事是什麼呢？",
+                task5_q1: "關於「交朋友」，我覺得：",
+                task5_q2: "關於「上學/寫作業」，我覺得：",
+                task5_q3: "關於「我自己」，我覺得：",
+                task5_btn: "我看見自己的隱形眼鏡了 ✅",
+                task5_btn_done: "🎉 任務完成！",
+
+                task6_title: "進階二：超級英雄藍圖",
+                task6_desc: "英雄都有目標！試著填寫你的藍圖，讓自己充滿能量：",
+                task6_p1: "我想學會 (什麼能力)",
+                task6_p2: "我想擁有更多的 (比如勇氣、開心)",
+                task6_p3: "我想減少一點 (比如生氣、害怕)",
+                task6_p4: "這樣，我就可以成為一個更棒的 (比如大哥哥、好幫手)",
+                task6_btn: "藍圖畫好囉，準備出發！ 🚀",
+                task6_btn_done: "🎉 任務完成！",
+
+                success_title: "太棒了！冒險大成功！",
+                success_desc: `你已經成功找回了「注意力超能力」，也幫大腦換上全新的魔法隱形眼鏡囉！<br><br>
+                🌟 <strong>預期結果：</strong><br>
+                你會發現原本覺得害怕或煩惱的事情變少了，心裡覺得更清楚！你已經從一個『一直躲避小怪獸的受苦者』，變成了一個『充滿好奇心的超級探險家』！<br><br>
+                🌈 <strong>給你的小鼓勵：</strong><br>
+                記住，你才是自己世界的真正魔法師，所有的力量都在你手中！如果下次又覺得卡卡的，記得隨時回來這裡。<br><br>
+                如果你想要繼續探索好玩的事物，或是想看看宇宙想給你什麼小提示，歡迎來玩玩看這個神奇的：<br>
+                <a href='https://ai365.fans/83292185' target='_blank' class='inline-block mt-6 bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-8 rounded-full transition transform hover:scale-105 shadow-lg'>🔮 魔法塔羅牌小遊戲</a>`
+            },
+            adult: {
+                title: "🎯 注意力釋放與生命探索",
+                desc1: "您好。當我們感到緊繃或焦慮時，往往是因為內心的「渴求」或「排斥」，使得注意力過度固著在特定的事物上，消耗了我們的心智能量。",
+                desc2: "在進行練習前，請先透過簡短的檢測表評估您目前的狀態，系統將引導您進入適合的釋放階段。",
+                
+                // 測驗區
+                test_title: "📊 身心能量檢測表",
+                test_desc: "請憑直覺調整下方的量表，真實反映您當下的感受：",
+                test_q1: "1. 身體緊繃程度 (右側代表極度緊繃、無法放鬆)",
+                test_q2: "2. 思緒混亂程度 (右側代表思緒紛飛、難以集中)",
+                test_q3: "3. 對現狀與未來的迷惘度 (右側代表感到強烈無力與迷惘)",
+                test_btn: "分析當下狀態 📊",
+                res_high_title: "⚠️ 注意力高度固著，建議先進行釋放",
+                res_high_desc: "檢測顯示您目前處於較高壓、緊繃的狀態。建議您先進入【初階練習】，透過外在微整理與喚醒意志力，釋放固著的注意力。",
+                res_low_title: "✅ 狀態平穩，適合深度探索",
+                res_low_desc: "檢測顯示您目前身心相對平靜，具備自由的注意力。您可以選擇重溫【初階練習】，或直接進入【進階探索】檢視信念與生命目標。",
+                btn_go_basic: "➡️ 前往初階練習 (釋放注意力)",
+                btn_go_adv: "🚀 進入進階探索 (信念與藍圖)",
+
+                basic_header: "🌱 初階練習：引導與釋放",
+                basic_sub: "透過具體的行動，創造出自由的注意力，解除身心的緊繃狀態。",
+
+                task1_title: "步驟一：環境感知練習",
+                task1_desc: "這是一個喚醒意志力的練習。請尋找周遭的一樣物品，並客觀地描述它的細節。<br><span class='text-sm opacity-80'>※ 如果在過程中發現自己分心了，只需要輕柔地將注意力帶回來繼續做，不需要責備自己。</span>",
+                task1_ph: "例如：我觀察到桌上有一杯水，杯子是透明玻璃材質...",
+                task1_btn: "描述完成 ✅",
+                task1_btn_done: "✅ 步驟完成",
+                
+                task2_title: "步驟二：外在空間微整理",
+                task2_desc: "將注意力轉移到具體且可控的物理環境上，能有效釋放注意力並減輕心理壓力。請選擇一項執行：",
+                task2_opt1: "清理桌面，丟除不需要的廢棄物",
+                task2_opt2: "將抽屜、櫥櫃或檔案整理得有條理",
+                task2_opt3: "丟掉一個原本想要修理卻一直擱置的壞掉物品",
+                task2_btn_empty: "請至少完成一項整理 ✨",
+                task2_btn_ready: "整理完成 ✅",
+                task2_btn_done: "✅ 步驟完成",
+                
+                task3_title: "步驟三：認知卸載清單",
+                task3_desc: "將腦中盤旋的待辦事項或擔憂具象化，讓大腦知道這些事情已經被妥善記錄，藉此釋放認知空間。",
+                task3_ph: "例如：明天下午三點前要繳交電費帳單...",
+                task3_btn_add: "新增記錄",
+                task3_btn: "事項已記錄，釋放完成 ✅",
+                task3_btn_done: "✅ 步驟完成",
+                
+                task4_title: "步驟四：信念自我宣告",
+                task4_desc: "緊繃有時來自於對現況的無力感。試著在心中感受以下句子，並刻意將你的相信程度從「懷疑」轉移到「完全確定」，找回主控權。",
+                task4_spell1: "「我能改進目前的狀況。」 🗣️",
+                task4_spell2: "「這件事情由我來決定。」 🗣️",
+                task4_btn: "宣告完成，找回主控權 ⚡",
+                task4_btn_done: "✅ 步驟完成",
+
+                adv_header: "🚀 進階探索：信念管理與生命藍圖",
+                adv_sub: "人生最大的難題是『決定要相信什麼』。透過檢視信念與確立目標，與生命重新結盟。",
+
+                task5_title: "進階一：信念庫存檢視",
+                task5_desc: "信念是塗抹了色彩的鏡片，它將我們想要經歷的經驗篩選出來。請不加批判地寫下您對下列領域直覺的相信：",
+                task5_q1: "關於「人際關係」，我所相信的是：",
+                task5_q2: "關於「工作與事業」，我所相信的是：",
+                task5_q3: "關於「我自己」，我所相信的是：",
+                task5_btn: "檢視完成，覺察提升 ✅",
+                task5_btn_done: "✅ 步驟完成",
+
+                task6_title: "進階二：與生命目標結盟",
+                task6_desc: "引發個人不結盟的主因是缺乏肯定的目標或擁有衝突的目標。請完成下方的生命藍圖，為您的目標加上能量：",
+                task6_p1: "我的生命目標是去學會 (能力)",
+                task6_p2: "擁有更多的 (正向特徵)",
+                task6_p3: "擁有更少的 (負向特徵)",
+                task6_p4: "因此，我能是個更好的 (角色)",
+                task6_btn: "目標結盟完成 🚀",
+                task6_btn_done: "✅ 步驟完成",
+
+                success_title: "✨ 探索與釋放完成！",
+                success_desc: `您已成功引導並釋放了固著的注意力，並深入檢視了自己的生命藍圖。<br><br>
+                🌟 <strong>預期結果 (新的領悟與氣質變化)：</strong><br>
+                <strong>重建個人現實：</strong>站在全新的「我」那裡，您會發現一切變得比較清晰，威脅感與壓力隨之降低。<br>
+                <strong>態度轉變：</strong>您已從一個「受苦的倖存者」，成功轉變為一個「充滿興趣的探索者」。<br><br>
+                🌈 <strong>給您的鼓勵與引導：</strong><br>
+                所有的力氣都不是用來灌輸您該相信什麼，而是由您自己決定。請帶著這份新的覺察，繼續自在地探索生活。未來若感到壓力，歡迎隨時回來進行這套練習。<br><br>
+                若您想為目前的狀態尋求一些直覺的指引，或探索意識的更多可能性，歡迎點擊下方連結：<br>
+                <a href='https://ai365.fans/83292185' target='_blank' class='inline-block mt-6 bg-purple-600 text-white hover:bg-purple-700 font-bold py-3 px-8 rounded-full transition transform hover:scale-105 shadow-lg border-2 border-purple-800'>🔮 塔羅牌指引測驗</a>`
+            }
+        };
+
+        let currentMode = 'child';
+        let completedTasks = { task1: false, task2: false, task3: false, task4: false, task5: false, task6: false };
+
+        // === 模式切換邏輯 ===
+        function setMode(mode) {
+            currentMode = mode;
+            const data = contentData[mode];
+
+            // 更新按鈕外觀
+            document.getElementById('btnChild').className = `mode-btn px-4 py-2 rounded-lg font-bold text-sm sm:text-base ${mode === 'child' ? 'active' : 'inactive'}`;
+            document.getElementById('btnAdult').className = `mode-btn px-4 py-2 rounded-lg font-bold text-sm sm:text-base ${mode === 'adult' ? 'active' : 'inactive'}`;
+
+            // 更新所有文字
+            document.getElementById('txt_title').innerHTML = data.title;
+            document.getElementById('txt_desc1').innerHTML = data.desc1;
+            document.getElementById('txt_desc2').innerHTML = data.desc2;
+            
+            // 測試區文字
+            document.getElementById('txt_test_title').innerHTML = data.test_title;
+            document.getElementById('txt_test_desc').innerHTML = data.test_desc;
+            document.getElementById('txt_test_q1').innerHTML = data.test_q1;
+            document.getElementById('txt_test_q2').innerHTML = data.test_q2;
+            document.getElementById('txt_test_q3').innerHTML = data.test_q3;
+            document.getElementById('txt_test_btn').innerHTML = data.test_btn;
+            
+            // 結果導航文字
+            document.getElementById('btn_go_basic').innerHTML = data.btn_go_basic;
+            document.getElementById('btn_go_adv').innerHTML = data.btn_go_adv;
+            
+            // 重新計算若結果已顯示
+            if(!document.getElementById('testResult').classList.contains('hidden')){
+                calculateEnergy(); 
+            }
+
+            document.getElementById('txt_basic_header').innerHTML = data.basic_header;
+            document.getElementById('txt_basic_sub').innerHTML = data.basic_sub;
+
+            document.getElementById('txt_task1_title').innerHTML = data.task1_title;
+            document.getElementById('txt_task1_desc').innerHTML = data.task1_desc;
+            document.getElementById('task1Input').placeholder = data.task1_ph;
+            if(!completedTasks.task1) document.getElementById('btn_task1').innerHTML = data.task1_btn;
+            else document.getElementById('btn_task1').innerHTML = data.task1_btn_done;
+
+            document.getElementById('txt_task2_title').innerHTML = data.task2_title;
+            document.getElementById('txt_task2_desc').innerHTML = data.task2_desc;
+            document.getElementById('txt_task2_opt1').innerHTML = data.task2_opt1;
+            document.getElementById('txt_task2_opt2').innerHTML = data.task2_opt2;
+            document.getElementById('txt_task2_opt3').innerHTML = data.task2_opt3;
+            if(!completedTasks.task2) checkTask2(); // 重新驗證按鈕文字
+            else document.getElementById('btnTask2').innerHTML = data.task2_btn_done;
+
+            document.getElementById('txt_task3_title').innerHTML = data.task3_title;
+            document.getElementById('txt_task3_desc').innerHTML = data.task3_desc;
+            document.getElementById('todoInput').placeholder = data.task3_ph;
+            document.getElementById('btn_task3_add').innerHTML = data.task3_btn_add;
+            if(!completedTasks.task3) document.getElementById('btn_task3').innerHTML = data.task3_btn;
+            else document.getElementById('btn_task3').innerHTML = data.task3_btn_done;
+
+            document.getElementById('txt_task4_title').innerHTML = data.task4_title;
+            document.getElementById('txt_task4_desc').innerHTML = data.task4_desc;
+            document.getElementById('txt_task4_spell1').innerHTML = data.task4_spell1;
+            document.getElementById('txt_task4_spell2').innerHTML = data.task4_spell2;
+            if(!completedTasks.task4) document.getElementById('btn_task4').innerHTML = data.task4_btn;
+            else document.getElementById('btn_task4').innerHTML = data.task4_btn_done;
+
+            // 進階探索文字
+            document.getElementById('txt_adv_header').innerHTML = data.adv_header;
+            document.getElementById('txt_adv_sub').innerHTML = data.adv_sub;
+            
+            document.getElementById('txt_task5_title').innerHTML = data.task5_title;
+            document.getElementById('txt_task5_desc').innerHTML = data.task5_desc;
+            document.getElementById('txt_task5_q1').innerHTML = data.task5_q1;
+            document.getElementById('txt_task5_q2').innerHTML = data.task5_q2;
+            document.getElementById('txt_task5_q3').innerHTML = data.task5_q3;
+            if(!completedTasks.task5) document.getElementById('btn_task5').innerHTML = data.task5_btn;
+            else document.getElementById('btn_task5').innerHTML = data.task5_btn_done;
+            
+            document.getElementById('txt_task6_title').innerHTML = data.task6_title;
+            document.getElementById('txt_task6_desc').innerHTML = data.task6_desc;
+            document.getElementById('txt_task6_p1').innerHTML = data.task6_p1;
+            document.getElementById('txt_task6_p2').innerHTML = data.task6_p2;
+            document.getElementById('txt_task6_p3').innerHTML = data.task6_p3;
+            document.getElementById('txt_task6_p4').innerHTML = data.task6_p4;
+            if(!completedTasks.task6) document.getElementById('btn_task6').innerHTML = data.task6_btn;
+            else document.getElementById('btn_task6').innerHTML = data.task6_btn_done;
+
+
+            document.getElementById('txt_success_title').innerHTML = data.success_title;
+            document.getElementById('txt_success_desc').innerHTML = data.success_desc;
+        }
+        
+        // === 能量測試邏輯 ===
+        function calculateEnergy() {
+            const v1 = parseInt(document.getElementById('slider1').value);
+            const v2 = parseInt(document.getElementById('slider2').value);
+            const v3 = parseInt(document.getElementById('slider3').value);
+            const avg = (v1 + v2 + v3) / 3;
+            
+            const resDiv = document.getElementById('testResult');
+            const resTitle = document.getElementById('txt_res_title');
+            const resDesc = document.getElementById('txt_res_desc');
+            const btnBasic = document.getElementById('btn_go_basic');
+            const btnAdv = document.getElementById('btn_go_adv');
+            
+            const data = contentData[currentMode];
+            
+            resDiv.classList.remove('hidden');
+            
+            if (avg > 5) {
+                // 高壓力狀態 -> 建議初階
+                resDiv.className = "mt-8 p-6 rounded-2xl border-2 text-center fade-in res-high-box";
+                resTitle.innerHTML = data.res_high_title;
+                resTitle.className = "text-xl font-bold mb-2 res-high-title";
+                resDesc.innerHTML = data.res_high_desc;
+                resDesc.className = "mb-6 theme-text-main";
+                
+                btnBasic.className = "py-3 px-6 rounded-xl font-bold border-2 transition shadow-md bg-red-600 text-white border-red-700 hover:bg-red-700 transform hover:scale-105";
+                btnAdv.className = "py-3 px-6 rounded-xl font-bold border-2 transition btn-outline-theme";
+            } else {
+                // 平穩狀態 -> 建議進階
+                resDiv.className = "mt-8 p-6 rounded-2xl border-2 text-center fade-in res-low-box";
+                resTitle.innerHTML = data.res_low_title;
+                resTitle.className = "text-xl font-bold mb-2 res-low-title";
+                resDesc.innerHTML = data.res_low_desc;
+                resDesc.className = "mb-6 theme-text-main";
+                
+                btnBasic.className = "py-3 px-6 rounded-xl font-bold border-2 transition btn-outline-theme";
+                btnAdv.className = "py-3 px-6 rounded-xl font-bold border-2 transition shadow-md bg-green-600 text-white border-green-700 hover:bg-green-700 transform hover:scale-105";
+            }
+        }
+        
+        function showSection(type) {
+            const basic = document.getElementById('basicJourney');
+            const adv = document.getElementById('advancedJourney');
+            
+            basic.classList.remove('hidden');
+            if (type === 'advanced') {
+                adv.classList.remove('hidden');
+                setTimeout(() => adv.scrollIntoView({ behavior: 'smooth' }), 100);
+            } else {
+                adv.classList.add('hidden'); // 如果點初階，可以隱藏進階避免混淆，或依需求決定
+                setTimeout(() => basic.scrollIntoView({ behavior: 'smooth' }), 100);
+            }
+        }
+
+        // === 主題切換邏輯 ===
+        function setTheme(theme) {
+            document.body.setAttribute('data-theme', theme);
+        }
+
+        // === 任務完成共用函數 ===
+        function completeTask(taskId) {
+            if(completedTasks[taskId]) return; 
+
+            completedTasks[taskId] = true;
+            const taskElement = document.getElementById(taskId);
+            
+            taskElement.classList.add('completed-card');
+            
+            // 找到按鈕並更改狀態
+            const btnId = taskId === 'task2' ? 'btnTask2' : `btn_${taskId}`;
+            const btn = document.getElementById(btnId);
+            if(btn) {
+                btn.innerHTML = contentData[currentMode][`${taskId}_btn_done`];
+                // 移除原有的特定顏色
+                btn.classList.remove('bg-blue-500', 'bg-pink-500', 'bg-purple-500', 'bg-sky-600', 'bg-amber-600');
+                btn.classList.remove('hover:bg-blue-600', 'hover:bg-pink-600', 'hover:bg-purple-600', 'hover:bg-sky-700', 'hover:bg-amber-700');
+                btn.classList.add('bg-green-600', 'cursor-default');
+                btn.style.backgroundColor = '';
+                btn.style.color = '#ffffff';
+                btn.onclick = null; 
+            }
+
+            checkAllCompleted();
+        }
+
+        // 任務二：檢查是否有打勾
+        function checkTask2() {
+            if(completedTasks.task2) return;
+            const checkboxes = document.querySelectorAll('#task2 input[type="checkbox"]');
+            const btn = document.getElementById('btnTask2');
+            let isChecked = false;
+            
+            checkboxes.forEach(cb => { if(cb.checked) isChecked = true; });
+
+            if(isChecked) {
+                btn.disabled = false;
+                btn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                btn.classList.add('bg-green-600', 'hover:bg-green-700');
+                btn.style.backgroundColor = '';
+                btn.innerHTML = contentData[currentMode].task2_btn_ready;
+            } else {
+                btn.disabled = true;
+                btn.style.backgroundColor = '';
+                btn.classList.remove('bg-green-600', 'hover:bg-green-700');
+                btn.classList.add('bg-gray-400', 'cursor-not-allowed');
+                btn.innerHTML = contentData[currentMode].task2_btn_empty;
+            }
+        }
+
+        // 任務三：新增清單功能
+        function addTodo() {
+            const input = document.getElementById('todoInput');
+            const val = input.value.trim();
+            if(val !== '') {
+                const ul = document.getElementById('todoList');
+                const li = document.createElement('li');
+                li.className = "p-3 rounded-lg flex justify-between items-center fade-in theme-input border";
+                li.innerHTML = `<span>📌 ${val}</span> <button onclick="this.parentElement.remove()" class="text-red-400 hover:text-red-600 text-xl font-bold">×</button>`;
+                ul.appendChild(li);
+                input.value = '';
+            }
+        }
+        
+        const todoInputElement = document.getElementById('todoInput');
+        if(todoInputElement) {
+            todoInputElement.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') addTodo();
+            });
+        }
+
+        // 任務四：點擊咒語的特效
+        function chantSpell(btn) {
+            if(completedTasks['task4']) return;
+            btn.style.backgroundColor = 'var(--color-task4)';
+            btn.style.color = '#ffffff';
+            btn.classList.add('scale-105');
+            setTimeout(() => {
+                btn.classList.remove('scale-105');
+                btn.style.backgroundColor = 'var(--bg-sub-task4)';
+                btn.style.color = 'var(--color-task4)';
+            }, 300);
+        }
+
+        // 檢查是否全部完成
+        function checkAllCompleted() {
+            // 現在我們有6個任務，只要完成當前顯示的旅程就算過關，但簡單起見，我們只要任一區域的任務全數完成就可觸發慶祝。
+            // 這裡設定：若 (1-4全完成) 或 (5-6全完成) 則顯示成功訊息。
+            const basicDone = (completedTasks.task1 && completedTasks.task2 && completedTasks.task3 && completedTasks.task4);
+            const advDone = (completedTasks.task5 && completedTasks.task6);
+            
+            if(basicDone || advDone) {
+                const successMsg = document.getElementById('successMessage');
+                if (successMsg.classList.contains('hidden')) {
+                    successMsg.classList.remove('hidden');
+                    setTimeout(() => {
+                        successMsg.scrollIntoView({ behavior: 'smooth' });
+                        fireConfetti();
+                    }, 300);
+                }
+            }
+        }
+
+        // 簡單的 Canvas 碎紙花特效
+        function fireConfetti() {
+            const canvas = document.getElementById('confetti');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            const colors = ['#fce18a', '#ff726d', '#b48def', '#f4306d', '#4ade80'];
+
+            for(let i = 0; i < 100; i++) {
+                particles.push({
+                    x: canvas.width / 2,
+                    y: canvas.height / 2 + 200,
+                    r: Math.random() * 6 + 2,
+                    dx: Math.random() * 10 - 5,
+                    dy: Math.random() * -10 - 5,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    tilt: Math.floor(Math.random() * 10) - 10,
+                    tiltAngleInc: (Math.random() * 0.07) + 0.05,
+                    tiltAngle: 0
+                });
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                let active = false;
+
+                particles.forEach(p => {
+                    p.tiltAngle += p.tiltAngleInc;
+                    p.y += (Math.cos(p.tiltAngle) + 1 + p.r / 2) / 2;
+                    p.x += Math.sin(p.tiltAngle) * 2 + p.dx;
+                    p.dy += 0.05; 
+                    p.y += p.dy;
+
+                    if(p.y <= canvas.height) active = true;
+
+                    ctx.beginPath();
+                    ctx.lineWidth = p.r;
+                    ctx.strokeStyle = p.color;
+                    ctx.moveTo(p.x + p.tilt + p.r, p.y);
+                    ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r);
+                    ctx.stroke();
+                });
+
+                if(active) requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        window.addEventListener('resize', () => {
+            const canvas = document.getElementById('confetti');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // 頁面載入時自動初始化預設模式文字
+        window.addEventListener('DOMContentLoaded', () => {
+            setMode('child');
+        });
+    </script>
+</body>
+</html>

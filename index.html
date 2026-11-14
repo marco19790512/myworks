@@ -81,7 +81,7 @@
             <div class="flex items-center gap-4">
                 <div class="text-xs text-slate-500 hidden md:flex items-center gap-2">
                     <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span>共收錄 42 件數位創作與專案</span>
+                    <span>共收錄 43 件數位創作與專案</span>
                 </div>
                 <a href="#projects" class="text-xs font-semibold px-4 py-2 rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition">
                     瀏覽作品 <i class="fa-solid fa-arrow-down ml-1"></i>
@@ -140,7 +140,7 @@
                     <i class="fa-solid fa-laptop-code"></i>
                 </div>
                 <div>
-                    <div class="text-lg font-bold text-slate-800 leading-tight">11</div>
+                    <div class="text-lg font-bold text-slate-800 leading-tight">12</div>
                     <div class="text-xs text-slate-500">應用系統 (Apps)</div>
                 </div>
             </div>
@@ -179,10 +179,10 @@
         <!-- Category Filter Tabs -->
         <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-8 no-scrollbar scroll-smooth">
             <button class="filter-btn active px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-white text-slate-600 border border-slate-200 hover:border-slate-300" data-category="all">
-                全部作品 <span class="ml-1 opacity-75 font-normal" id="count-all">(42)</span>
+                全部作品 <span class="ml-1 opacity-75 font-normal" id="count-all">(43)</span>
             </button>
             <button class="filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-white text-slate-600 border border-slate-200 hover:border-slate-300" data-category="apps">
-                <i class="fa-solid fa-laptop-code mr-1.5 text-blue-500"></i>應用系統 <span class="ml-1 opacity-75 font-normal">(11)</span>
+                <i class="fa-solid fa-laptop-code mr-1.5 text-blue-500"></i>應用系統 <span class="ml-1 opacity-75 font-normal">(12)</span>
             </button>
             <button class="filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition whitespace-nowrap bg-white text-slate-600 border border-slate-200 hover:border-slate-300" data-category="games">
                 <i class="fa-solid fa-gamepad mr-1.5 text-emerald-500"></i>互動遊戲 <span class="ml-1 opacity-75 font-normal">(6)</span>
@@ -263,7 +263,18 @@
     <!-- Scripts: Data & Interactivity -->
     <script>
         const projects = [
-            // --- APPS (11) ---
+            // --- APPS (12) ---
+            {
+                title: "✨ 注意力魔法大冒險 (專注與身心探索)",
+                category: "apps",
+                categoryLabel: "應用系統",
+                categoryColor: "blue",
+                icon: "fa-solid fa-wand-sparkles",
+                path: "apps/attention-magic-adventure.html",
+                desc: "雙模式注意力喚醒與生命探索應用！支援兒童/大人雙視角、三款質感佈景切換、能量探測儀與認知卸載練習。",
+                tags: ["注意力訓練", "身心能量", "兒童/大人雙模式", "互動應用"],
+                type: "web"
+            },
             {
                 title: "2026 全球 AI Agent 產業研究儀表板",
                 category: "apps",
