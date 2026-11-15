@@ -6,7 +6,7 @@
 
 ## 📌 專案簡介
 
-本專案收錄由 **Marco 曾** 開發與設計的 **44 件數位專案與創作**，涵蓋多領域實戰應用、演算法與純前端離線安全工具。  
+本專案收錄由 **Marco 曾** 開發與設計的 **42 件數位專案與創作**，涵蓋多領域實戰應用、演算法與純前端離線安全工具。  
 所有作品皆已完成系統化語意命名與類型歸檔，並透過根目錄下的互動式入口頁面 [`index.html`](index.html) 提供流暢的瀏覽、即時檢索、分類篩選與多媒體預覽體驗。
 
 ---
@@ -30,7 +30,6 @@ myworks/
 │   ├── marco-good-morning-cartoon-avatar.jpg
 │   ├── marco-tseng-ai-pm-practice.png
 │   ├── marco-tseng-career-expertise-infographic.png
-│   ├── marco-tseng-consultant-profile.html
 │   └── marco-tseng-consulting-landing.html
 │
 ├── apps/                       # Web 應用系統、平台與數據儀表板
@@ -40,7 +39,6 @@ myworks/
 │   ├── attention-magic-adventure.html
 │   ├── cute-weekly-horoscope-app.html
 │   ├── gac-fruit-superfood-guide.html
-│   ├── global-snack-group-buying-order-form.html
 │   ├── global-snack-group-buying-system.html
 │   ├── kenichi-ohmae-wisdom-gallery.html
 │   ├── micro-beauty-map-web-app.html
