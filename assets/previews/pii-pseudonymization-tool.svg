@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <rect width="640" height="360" fill="#EEF2FF"/>
+  <rect width="640" height="52" fill="#312E81"/>
+  <text x="24" y="32" fill="#FFF" font-family="sans-serif" font-size="15" font-weight="bold">🎭 個資假名化與去識別化工具 (Local PII Pseudonymizer)</text>
+  <rect x="24" y="70" width="592" height="44" rx="10" fill="#FFF" stroke="#C7D2FE"/>
+  <rect x="34" y="77" width="140" height="30" rx="8" fill="#4F46E5"/><text x="104" y="96" fill="#FFF" font-size="11" font-weight="bold" text-anchor="middle">假名化處理</text>
+  <rect x="182" y="77" width="140" height="30" rx="8" fill="#EEF2FF"/><text x="252" y="96" fill="#4338CA" font-size="11" font-weight="bold" text-anchor="middle">反向還原 (Revert)</text>
+  <text x="596" y="96" fill="#059669" font-size="11" font-weight="bold" text-anchor="end">● 關聯保留加密中</text>
+  <!-- Mapping boxes -->
+  <rect x="24" y="132" width="256" height="204" rx="14" fill="#FFF" stroke="#C7D2FE"/>
+  <text x="44" y="160" fill="#312E81" font-size="13" font-weight="bold">原始資料 (Original)</text>
+  <rect x="44" y="178" width="216" height="36" rx="8" fill="#F8FAFC"/><text x="56" y="200" fill="#334155" font-family="monospace" font-size="11">王小明 (ID: A123456789)</text>
+  <rect x="44" y="224" width="216" height="36" rx="8" fill="#F8FAFC"/><text x="56" y="246" fill="#334155" font-family="monospace" font-size="11">李美麗 (ID: B234567890)</text>
+  <rect x="44" y="270" width="216" height="36" rx="8" fill="#F8FAFC"/><text x="56" y="292" fill="#334155" font-family="monospace" font-size="11">王小明 (ID: A123456789)</text>
+
+  <text x="320" y="236" fill="#4F46E5" font-size="28" font-weight="bold" text-anchor="middle">⇄</text>
+
+  <rect x="360" y="132" width="256" height="204" rx="14" fill="#FFF" stroke="#818CF8" stroke-width="2"/>
+  <text x="380" y="160" fill="#4338CA" font-size="13" font-weight="bold">假名代號 (Pseudonym)</text>
+  <rect x="380" y="178" width="216" height="36" rx="8" fill="#EEF2FF"/><text x="392" y="200" fill="#3730A3" font-family="monospace" font-size="11">USER_7A9F (關聯一致)</text>
+  <rect x="380" y="224" width="216" height="36" rx="8" fill="#EEF2FF"/><text x="392" y="246" fill="#3730A3" font-family="monospace" font-size="11">USER_3C1B</text>
+  <rect x="380" y="270" width="216" height="36" rx="8" fill="#EEF2FF"/><text x="392" y="292" fill="#3730A3" font-family="monospace" font-size="11">USER_7A9F (關聯一致)</text>
+</svg>

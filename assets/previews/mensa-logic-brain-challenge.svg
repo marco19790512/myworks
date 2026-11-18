@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <rect width="640" height="360" fill="#0F172A"/>
+  <text x="320" y="38" fill="#38BDF8" font-family="sans-serif" font-size="18" font-weight="800" text-anchor="middle">🧠 GAM266 燒腦遊戲大挑戰 - 門薩邏輯特訓網</text>
+  <!-- Matrix 3x3 -->
+  <rect x="60" y="66" width="250" height="250" rx="16" fill="#1E293B" stroke="#334155"/>
+  <g stroke="#475569" fill="#0F172A">
+    <rect x="78" y="84" width="64" height="64" rx="8"/><rect x="153" y="84" width="64" height="64" rx="8"/><rect x="228" y="84" width="64" height="64" rx="8"/>
+    <rect x="78" y="159" width="64" height="64" rx="8"/><rect x="153" y="159" width="64" height="64" rx="8"/><rect x="228" y="159" width="64" height="64" rx="8"/>
+    <rect x="78" y="234" width="64" height="64" rx="8"/><rect x="153" y="234" width="64" height="64" rx="8"/><rect x="228" y="234" width="64" height="64" rx="8" fill="#1E3A8A" stroke="#38BDF8" stroke-width="2"/>
+  </g>
+  <circle cx="110" cy="116" r="14" fill="#38BDF8"/><polygon points="185,100 201,130 169,130" fill="#F472B6"/><rect x="246" y="102" width="28" height="28" fill="#A3E635"/>
+  <text x="260" y="274" fill="#38BDF8" font-family="sans-serif" font-size="24" font-weight="bold" text-anchor="middle">?</text>
+  <!-- Options -->
+  <rect x="336" y="66" width="244" height="250" rx="16" fill="#1E293B" stroke="#334155"/>
+  <text x="356" y="98" fill="#F8FAFC" font-family="sans-serif" font-size="13" font-weight="bold">請推導出空白處應填入的圖形：</text>
+  <rect x="356" y="120" width="96" height="64" rx="10" fill="#0F172A" stroke="#38BDF8"/><text x="404" y="158" fill="#38BDF8" font-size="16" text-anchor="middle">A</text>
+  <rect x="464" y="120" width="96" height="64" rx="10" fill="#0F172A" stroke="#475569"/><text x="512" y="158" fill="#94A3B8" font-size="16" text-anchor="middle">B</text>
+  <rect x="356" y="198" width="96" height="64" rx="10" fill="#0F172A" stroke="#475569"/><text x="404" y="236" fill="#94A3B8" font-size="16" text-anchor="middle">C</text>
+  <rect x="464" y="198" width="96" height="64" rx="10" fill="#0F172A" stroke="#475569"/><text x="512" y="236" fill="#94A3B8" font-size="16" text-anchor="middle">D</text>
+  <text x="458" y="295" fill="#10B981" font-family="monospace" font-size="12" text-anchor="middle">IQ 推演等級：門薩進階</text>
+</svg>

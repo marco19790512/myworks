@@ -804,6 +804,34 @@
                 const badgeStyle = colorStyles[p.categoryColor] || "bg-slate-100 text-slate-600 border-slate-200";
                 const iconBg = iconBgStyles[p.categoryColor] || "bg-slate-100 text-slate-600";
                 
+                // Determine preview visual
+                let previewMedia = "";
+                if (p.type === "video") {
+                    previewMedia = `
+                        <video src="${p.path}#t=1" preload="metadata" muted class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"></video>
+                        <div class="absolute inset-0 bg-black/20 flex items-center justify-center group-hover:bg-black/10 transition">
+                            <div class="w-12 h-12 rounded-full bg-white/90 text-violet-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-play ml-0.5"></i>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    let previewSrc = p.path;
+                    if (p.type === "web") {
+                        const slug = p.path.split('/').pop().replace('.html', '');
+                        previewSrc = `assets/previews/${slug}.svg`;
+                    } else if (p.type === "audio") {
+                        previewSrc = "assets/previews/champagne-gold-afternoon-audio.svg";
+                    }
+                    previewMedia = `
+                        <img src="${previewSrc}" alt="${p.title} 示意圖" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    `;
+                }
+
+                const previewWrapper = p.type === "web"
+                    ? `<a href="${p.path}" target="_blank" class="relative block aspect-[16/9] w-full overflow-hidden bg-slate-100 border-b border-slate-200/70">${previewMedia}</a>`
+                    : `<button type="button" onclick="openMediaPreview('${p.title}', '${p.path}', '${p.type}')" class="relative block aspect-[16/9] w-full overflow-hidden bg-slate-100 border-b border-slate-200/70 text-left cursor-pointer">${previewMedia}</button>`;
+
                 let actionBtn = "";
                 if (p.type === "web") {
                     actionBtn = `
@@ -836,41 +864,44 @@
                 }
 
                 return `
-                    <div class="glass-card rounded-2xl p-5 flex flex-col justify-between hover:shadow-xl hover:border-brand-200 transition-all duration-300 group">
-                        <div>
-                            <!-- Header with Category & Icon -->
-                            <div class="flex items-start justify-between gap-3 mb-3.5">
-                                <span class="text-[11px] font-bold px-2.5 py-1 rounded-full border ${badgeStyle}">
-                                    ${p.categoryLabel}
-                                </span>
-                                <div class="w-10 h-10 rounded-xl ${iconBg} flex items-center justify-center text-sm shadow-sm group-hover:scale-110 transition-transform">
-                                    <i class="${p.icon}"></i>
-                                </div>
+                    <div class="glass-card rounded-2xl overflow-hidden flex flex-col justify-between hover:shadow-xl hover:border-brand-200 transition-all duration-300 group">
+                        <div class="relative">
+                            ${previewWrapper}
+                            <!-- Floating Category & Icon Badges -->
+                            <span class="absolute top-3 left-3 text-[11px] font-bold px-2.5 py-1 rounded-full border shadow-sm backdrop-blur-md bg-white/90 ${badgeStyle} pointer-events-none">
+                                ${p.categoryLabel}
+                            </span>
+                            <div class="absolute top-3 right-3 w-8 h-8 rounded-lg ${iconBg} backdrop-blur-md bg-white/90 flex items-center justify-center text-xs shadow-sm pointer-events-none">
+                                <i class="${p.icon}"></i>
                             </div>
-
-                            <!-- Title -->
-                            <h3 class="font-bold text-slate-900 text-base mb-2 group-hover:text-brand-600 transition leading-snug">
-                                ${p.title}
-                            </h3>
-
-                            <!-- Description -->
-                            <p class="text-xs text-slate-600 leading-relaxed line-clamp-3 mb-4">
-                                ${p.desc}
-                            </p>
                         </div>
 
-                        <div>
-                            <!-- Tags -->
-                            <div class="flex flex-wrap gap-1.5 mb-4">
-                                ${p.tags.map(tag => `
-                                    <span class="text-[10px] font-medium px-2 py-0.5 rounded-md bg-slate-100/90 text-slate-600">
-                                        #${tag}
-                                    </span>
-                                `).join('')}
+                        <div class="p-5 flex flex-col flex-grow justify-between">
+                            <div>
+                                <!-- Title -->
+                                <h3 class="font-bold text-slate-900 text-base mb-2 group-hover:text-brand-600 transition leading-snug">
+                                    ${p.title}
+                                </h3>
+
+                                <!-- Description -->
+                                <p class="text-xs text-slate-600 leading-relaxed line-clamp-3 mb-4">
+                                    ${p.desc}
+                                </p>
                             </div>
 
-                            <!-- Action Button -->
-                            ${actionBtn}
+                            <div>
+                                <!-- Tags -->
+                                <div class="flex flex-wrap gap-1.5 mb-4">
+                                    ${p.tags.map(tag => `
+                                        <span class="text-[10px] font-medium px-2 py-0.5 rounded-md bg-slate-100/90 text-slate-600">
+                                            #${tag}
+                                        </span>
+                                    `).join('')}
+                                </div>
+
+                                <!-- Action Button -->
+                                ${actionBtn}
+                            </div>
                         </div>
                     </div>
                 `;

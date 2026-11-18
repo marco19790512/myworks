@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <defs>
+    <linearGradient id="goldBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#451A03"/>
+      <stop offset="50%" stop-color="#92400E"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="360" fill="url(#goldBg)"/>
+  <!-- Vinyl Disc -->
+  <circle cx="190" cy="180" r="110" fill="#1C1917" stroke="#FDE68A" stroke-width="3"/>
+  <circle cx="190" cy="180" r="85" fill="none" stroke="#44403C" stroke-width="1"/>
+  <circle cx="190" cy="180" r="65" fill="none" stroke="#44403C" stroke-width="1"/>
+  <circle cx="190" cy="180" r="38" fill="#F59E0B"/>
+  <circle cx="190" cy="180" r="10" fill="#1C1917"/>
+  <!-- Title & Waveform -->
+  <text x="340" y="128" fill="#FDE68A" font-family="serif" font-size="12" letter-spacing="3">ORIGINAL SOUNDTRACK</text>
+  <text x="340" y="162" fill="#FFF" font-family="serif" font-size="24" font-weight="bold">Champagne Gold</text>
+  <text x="340" y="192" fill="#FEF3C7" font-family="serif" font-size="24" font-weight="bold">Afternoon</text>
+  <!-- Waveform bars -->
+  <g fill="#FDE047">
+    <rect x="340" y="226" width="8" height="24" rx="4"/><rect x="356" y="216" width="8" height="44" rx="4"/>
+    <rect x="372" y="206" width="8" height="64" rx="4"/><rect x="388" y="220" width="8" height="36" rx="4"/>
+    <rect x="404" y="212" width="8" height="52" rx="4"/><rect x="420" y="228" width="8" height="20" rx="4"/>
+    <rect x="436" y="214" width="8" height="48" rx="4"/><rect x="452" y="204" width="8" height="68" rx="4"/>
+    <rect x="468" y="218" width="8" height="40" rx="4"/><rect x="484" y="226" width="8" height="24" rx="4"/>
+    <rect x="500" y="212" width="8" height="52" rx="4"/><rect x="516" y="222" width="8" height="32" rx="4"/>
+  </g>
+</svg>

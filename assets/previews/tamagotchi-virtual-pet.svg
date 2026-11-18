@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <rect width="640" height="360" fill="#FEF9C3"/>
+  <!-- Retro Device Shell -->
+  <rect x="130" y="22" width="380" height="316" rx="48" fill="#F43F5E" stroke="#BE123C" stroke-width="6"/>
+  <!-- LCD Screen -->
+  <rect x="172" y="54" width="296" height="196" rx="16" fill="#ECFCCB" stroke="#4D7C0F" stroke-width="4"/>
+  <text x="188" y="76" fill="#365314" font-family="monospace" font-size="11" font-weight="bold">🐣 第 5 天  |  標準模式</text>
+  <!-- Cute Pet -->
+  <circle cx="320" cy="138" r="34" fill="#FACC15" stroke="#854D0E" stroke-width="3"/>
+  <circle cx="308" cy="132" r="4" fill="#1C1917"/><circle cx="332" cy="132" r="4" fill="#1C1917"/>
+  <polygon points="315,140 325,140 320,147" fill="#EA580C"/>
+  <text x="320" y="190" fill="#3F6212" font-family="sans-serif" font-size="12" font-weight="bold" text-anchor="middle">「啾啾！今天心情超好～」</text>
+  <!-- Status Bars -->
+  <text x="190" y="216" fill="#365314" font-size="10">🍖 飽足 85%</text>
+  <rect x="255" y="208" width="90" height="8" rx="4" fill="#BEF264"/><rect x="255" y="208" width="76" height="8" rx="4" fill="#4D7C0F"/>
+  <text x="190" y="234" fill="#365314" font-size="10">⚽ 快樂 90%</text>
+  <rect x="255" y="226" width="90" height="8" rx="4" fill="#BEF264"/><rect x="255" y="226" width="81" height="8" rx="4" fill="#4D7C0F"/>
+  <!-- Buttons -->
+  <circle cx="220" cy="292" r="22" fill="#FACC15" stroke="#CA8A04" stroke-width="3"/><text x="220" y="296" fill="#713F12" font-size="10" font-weight="bold" text-anchor="middle">餵食</text>
+  <circle cx="320" cy="296" r="22" fill="#FACC15" stroke="#CA8A04" stroke-width="3"/><text x="320" y="300" fill="#713F12" font-size="10" font-weight="bold" text-anchor="middle">玩耍</text>
+  <circle cx="420" cy="292" r="22" fill="#FACC15" stroke="#CA8A04" stroke-width="3"/><text x="420" y="296" fill="#713F12" font-size="10" font-weight="bold" text-anchor="middle">打掃</text>
+</svg>

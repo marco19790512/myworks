@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <rect width="640" height="360" fill="#450A0A"/>
+  <rect width="640" height="44" fill="#7F1D1D"/>
+  <text x="24" y="28" fill="#FEF08A" font-family="sans-serif" font-size="15" font-weight="800">🏮 太鼓達人：和太鼓大作戰 - Taiko Master</text>
+  <text x="616" y="28" fill="#FDE047" font-family="monospace" font-size="13" font-weight="bold" text-anchor="end">SCORE: 18,450  |  COMBO: 42</text>
+  <!-- Drum Track -->
+  <rect x="0" y="96" width="640" height="120" fill="#1C1917"/>
+  <line x1="0" y1="96" x2="640" y2="96" stroke="#F59E0B" stroke-width="3"/>
+  <line x1="0" y1="216" x2="640" y2="216" stroke="#F59E0B" stroke-width="3"/>
+  <!-- Hit Zone -->
+  <circle cx="110" cy="156" r="36" fill="none" stroke="#FDE047" stroke-width="4" stroke-dasharray="6,4"/>
+  <!-- Notes -->
+  <circle cx="195" cy="156" r="24" fill="#EF4444" stroke="#FFF" stroke-width="4"/><text x="195" y="162" fill="#FFF" font-size="11" font-weight="bold" text-anchor="middle">DON</text>
+  <circle cx="295" cy="156" r="24" fill="#3B82F6" stroke="#FFF" stroke-width="4"/><text x="295" y="162" fill="#FFF" font-size="11" font-weight="bold" text-anchor="middle">KA</text>
+  <circle cx="405" cy="156" r="24" fill="#EF4444" stroke="#FFF" stroke-width="4"/><text x="405" y="162" fill="#FFF" font-size="11" font-weight="bold" text-anchor="middle">DON</text>
+  <circle cx="520" cy="156" r="30" fill="#F59E0B" stroke="#FFF" stroke-width="4"/><text x="520" y="162" fill="#FFF" font-size="12" font-weight="bold" text-anchor="middle">大咚!</text>
+  <!-- Soul Gauge -->
+  <rect x="200" y="62" width="416" height="16" rx="8" fill="#1C1917" stroke="#F59E0B"/>
+  <rect x="202" y="64" width="320" height="12" rx="6" fill="#FACC15"/>
+  <text x="190" y="75" fill="#FEF08A" font-size="12" font-weight="bold" text-anchor="end">魂</text>
+  <!-- Keys -->
+  <g font-family="monospace" font-size="12" font-weight="bold" text-anchor="middle">
+    <rect x="130" y="250" width="84" height="64" rx="12" fill="#1D4ED8" stroke="#93C5FD" stroke-width="2"/><text x="172" y="280" fill="#FFF">[D]</text><text x="172" y="300" fill="#BFDBFE" font-size="10">KA 左邊</text>
+    <rect x="228" y="250" width="84" height="64" rx="12" fill="#DC2626" stroke="#FCA5A5" stroke-width="2"/><text x="270" y="280" fill="#FFF">[F]</text><text x="270" y="300" fill="#FECACA" font-size="10">DON 左面</text>
+    <rect x="326" y="250" width="84" height="64" rx="12" fill="#DC2626" stroke="#FCA5A5" stroke-width="2"/><text x="368" y="280" fill="#FFF">[J]</text><text x="368" y="300" fill="#FECACA" font-size="10">DON 右面</text>
+    <rect x="424" y="250" width="84" height="64" rx="12" fill="#1D4ED8" stroke="#93C5FD" stroke-width="2"/><text x="466" y="280" fill="#FFF">[K]</text><text x="466" y="300" fill="#BFDBFE" font-size="10">KA 右邊</text>
+  </g>
+</svg>

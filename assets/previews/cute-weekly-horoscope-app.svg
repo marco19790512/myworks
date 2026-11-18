@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <defs>
+    <linearGradient id="horoBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FDF2F8"/>
+      <stop offset="100%" stop-color="#EEF2FF"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="360" fill="url(#horoBg)"/>
+  <text x="320" y="42" fill="#DB2777" font-family="sans-serif" font-size="20" font-weight="800" text-anchor="middle">✨ 萌萌星願 Weekly Horoscope ✨</text>
+  <text x="320" y="64" fill="#6B7280" font-family="sans-serif" font-size="11" text-anchor="middle">12 星座每週療癒運勢 · 幸運色 · 溫柔指引小卡</text>
+  <!-- Zodiac Grid -->
+  <g font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="middle">
+    <rect x="36" y="84" width="132" height="118" rx="16" fill="#FFF" stroke="#F9A8D4" stroke-width="2"/>
+    <text x="102" y="116" font-size="24">♈</text><text x="102" y="142" fill="#BE185D">牡羊座</text>
+    <text x="102" y="162" fill="#F59E0B" font-size="10">★★★★★ 行動力爆棚</text>
+    <rect x="58" y="174" width="88" height="18" rx="9" fill="#FCE7F3"/><text x="102" y="187" fill="#DB2777" font-size="9">幸運色：珊瑚粉</text>
+
+    <rect x="182" y="84" width="132" height="118" rx="16" fill="#FFF" stroke="#DDD6FE" stroke-width="2"/>
+    <text x="248" y="116" font-size="24">♉</text><text x="248" y="142" fill="#6D28D9">金牛座</text>
+    <text x="248" y="162" fill="#F59E0B" font-size="10">★★★★☆ 財運穩步升</text>
+    <rect x="204" y="174" width="88" height="18" rx="9" fill="#EDE9FE"/><text x="248" y="187" fill="#7C3AED" font-size="9">幸運色：奶油黃</text>
+
+    <rect x="328" y="84" width="132" height="118" rx="16" fill="#FFF" stroke="#BAE6FD" stroke-width="2"/>
+    <text x="394" y="116" font-size="24">♊</text><text x="394" y="142" fill="#0369A1">雙子座</text>
+    <text x="394" y="162" fill="#F59E0B" font-size="10">★★★★★ 靈感大爆發</text>
+    <rect x="350" y="174" width="88" height="18" rx="9" fill="#E0F2FE"/><text x="394" y="187" fill="#0284C7" font-size="9">幸運色：天空藍</text>
+
+    <rect x="474" y="84" width="132" height="118" rx="16" fill="#FFF" stroke="#A7F3D0" stroke-width="2"/>
+    <text x="540" y="116" font-size="24">♋</text><text x="540" y="142" fill="#047857">巨蟹座</text>
+    <text x="540" y="162" fill="#F59E0B" font-size="10">★★★★☆ 貴人來相助</text>
+    <rect x="496" y="174" width="88" height="18" rx="9" fill="#D1FAE5"/><text x="540" y="187" fill="#059669" font-size="9">幸運色：薄荷綠</text>
+  </g>
+  <!-- Detail Card -->
+  <rect x="36" y="218" width="570" height="118" rx="18" fill="#FFF" stroke="#FBCFE8"/>
+  <text x="56" y="248" fill="#BE185D" font-family="sans-serif" font-size="14" font-weight="bold">💖 本週星語小叮嚀</text>
+  <text x="56" y="274" fill="#4B5563" font-family="sans-serif" font-size="12">「放慢腳步傾聽內心聲音，每一個小小善意都會在週五轉化為意想不到的驚喜！」</text>
+  <rect x="56" y="294" width="160" height="24" rx="12" fill="#F472B6"/><text x="136" y="310" fill="#FFF" font-family="sans-serif" font-size="10" font-weight="bold" text-anchor="middle">點擊抽本週幸運籤詩 ✨</text>
+</svg>

@@ -22,8 +22,9 @@
 
 ```plaintext
 myworks/
-├── index.html                  # 作品集互動首頁（含即時搜尋、分類標籤、多媒體 Lightbox）
+├── index.html                  # 作品集互動首頁（含卡片示意圖、即時搜尋、分類標籤、Lightbox）
 ├── README.md                   # 專案詳細說明文件
+├── HANDOVER.md                 # 專案交接文件與維護 SOP
 │
 ├── about/                      # 個人簡介、顧問服務與實戰經歷
 │   ├── cozy-creative-desk-diorama.png
@@ -53,6 +54,7 @@ myworks/
 │   └── shinchan-autumn-dream-illustration.jpg
 │
 ├── assets/                     # 品牌視覺識別規範與設計素材
+│   ├── previews/               # 27 張首頁作品專屬 SVG 介面示意圖
 │   └── micro-beauty-map-brand-style-guide.png
 │
 ├── games/                      # 互動小遊戲、抽獎與邏輯思維挑戰

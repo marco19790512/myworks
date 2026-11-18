@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
+  <rect width="640" height="360" fill="#F8FAFC"/>
+  <rect width="640" height="52" fill="#065F46"/>
+  <text x="24" y="32" fill="#FFF" font-family="sans-serif" font-size="15" font-weight="bold">🕵️ 本地端個資匿名化工具 (資料不離身 · 安全無虞)</text>
+  <rect x="40" y="76" width="560" height="100" rx="16" fill="#ECFDF5" stroke="#10B981" stroke-width="2" stroke-dasharray="8,4"/>
+  <text x="320" y="118" fill="#065F46" font-family="sans-serif" font-size="15" font-weight="bold" text-anchor="middle">拖曳或點擊上傳 Excel / CSV 檔案</text>
+  <text x="320" y="144" fill="#047857" font-family="sans-serif" font-size="11" text-anchor="middle">所有解析與匿名化遮罩皆直接在瀏覽器執行，絕不上傳伺服器</text>
+  <!-- Masked Fields -->
+  <rect x="40" y="196" width="176" height="132" rx="12" fill="#FFF" stroke="#CBD5E1"/>
+  <text x="58" y="226" fill="#0F172A" font-size="13" font-weight="bold">姓名遮罩</text>
+  <text x="58" y="256" fill="#94A3B8" font-family="monospace" font-size="12">張志豪 →</text>
+  <text x="58" y="284" fill="#059669" font-family="monospace" font-size="16" font-weight="bold">張*豪</text>
+
+  <rect x="232" y="196" width="176" height="132" rx="12" fill="#FFF" stroke="#CBD5E1"/>
+  <text x="250" y="226" fill="#0F172A" font-size="13" font-weight="bold">電話遮罩</text>
+  <text x="250" y="256" fill="#94A3B8" font-family="monospace" font-size="12">0912345678 →</text>
+  <text x="250" y="284" fill="#059669" font-family="monospace" font-size="15" font-weight="bold">0912-***-678</text>
+
+  <rect x="424" y="196" width="176" height="132" rx="12" fill="#FFF" stroke="#CBD5E1"/>
+  <text x="442" y="226" fill="#0F172A" font-size="13" font-weight="bold">身分證/Email</text>
+  <text x="442" y="256" fill="#94A3B8" font-family="monospace" font-size="12">A123456789 →</text>
+  <text x="442" y="284" fill="#059669" font-family="monospace" font-size="15" font-weight="bold">A123****89</text>
+</svg>
